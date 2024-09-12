@@ -46,8 +46,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribePublicDirectConnectTunnelRoutes", req, cb);
     }
     /**
-     * 查询物理专线接入点
-
+     * 查询物理专线接入点。
      */
     async DescribeAccessPoints(req, cb) {
         return this.request("DescribeAccessPoints", req, cb);
@@ -65,20 +64,19 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("CreateDirectConnectTunnel", req, cb);
     }
     /**
-     * 本接口（DescribeDirectConnectTunnelExtra）用于查询专用通道扩展信息
+     * 查询专用通道扩展信息。
      */
     async DescribeDirectConnectTunnelExtra(req, cb) {
         return this.request("DescribeDirectConnectTunnelExtra", req, cb);
     }
     /**
-     * 删除物理专线。
-只能删除处于已连接状态的物理专线。
+     * 删除物理专线。只能删除处于已连接状态的物理专线。
      */
     async DeleteDirectConnect(req, cb) {
         return this.request("DeleteDirectConnect", req, cb);
     }
     /**
-     * 接受专用通道申请
+     * 接受专用通道申请。
      */
     async AcceptDirectConnectTunnel(req, cb) {
         return this.request("AcceptDirectConnectTunnel", req, cb);
@@ -90,7 +88,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeInternetAddressStatistics", req, cb);
     }
     /**
-     * 删除专用通道
+     * 删除专用通道。
      */
     async DeleteDirectConnectTunnel(req, cb) {
         return this.request("DeleteDirectConnectTunnel", req, cb);
@@ -135,7 +133,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("CreateDirectConnect", req, cb);
     }
     /**
-     * 拒绝专用通道申请
+     * 拒绝专用通道申请。
      */
     async RejectDirectConnectTunnel(req, cb) {
         return this.request("RejectDirectConnectTunnel", req, cb);
@@ -153,7 +151,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ReleaseInternetAddress", req, cb);
     }
     /**
-     * 修改专用通道属性
+     * 修改专用通道属性。
      */
     async ModifyDirectConnectTunnelAttribute(req, cb) {
         return this.request("ModifyDirectConnectTunnelAttribute", req, cb);

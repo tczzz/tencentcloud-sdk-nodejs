@@ -78,9 +78,9 @@ it("emr.v20190103.DescribeImpalaQueries", async function () {
     }
 })
 
-it("emr.v20190103.ModifyResourceScheduleConfig", async function () {
+it("emr.v20190103.DescribeYarnQueue", async function () {
     try {
-       const data = await client.ModifyResourceScheduleConfig({})
+       const data = await client.DescribeYarnQueue({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -88,9 +88,19 @@ it("emr.v20190103.ModifyResourceScheduleConfig", async function () {
     }
 })
 
-it("emr.v20190103.InquirePriceRenewEmr", async function () {
+it("emr.v20190103.ModifyYarnQueueV2", async function () {
     try {
-       const data = await client.InquirePriceRenewEmr({})
+       const data = await client.ModifyYarnQueueV2({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.DeployYarnConf", async function () {
+    try {
+       const data = await client.DeployYarnConf({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -168,6 +178,16 @@ it("emr.v20190103.DescribeHBaseTableOverview", async function () {
     }
 })
 
+it("emr.v20190103.DescribeServiceNodeInfos", async function () {
+    try {
+       const data = await client.DescribeServiceNodeInfos({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("emr.v20190103.DescribeInstances", async function () {
     try {
        const data = await client.DescribeInstances({})
@@ -178,9 +198,19 @@ it("emr.v20190103.DescribeInstances", async function () {
     }
 })
 
-it("emr.v20190103.RunJobFlow", async function () {
+it("emr.v20190103.ModifyYarnDeploy", async function () {
     try {
-       const data = await client.RunJobFlow({})
+       const data = await client.ModifyYarnDeploy({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.TerminateTasks", async function () {
+    try {
+       const data = await client.TerminateTasks({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -191,6 +221,16 @@ it("emr.v20190103.RunJobFlow", async function () {
 it("emr.v20190103.TerminateClusterNodes", async function () {
     try {
        const data = await client.TerminateClusterNodes({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.ResetYarnConfig", async function () {
+    try {
+       const data = await client.ResetYarnConfig({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -218,9 +258,49 @@ it("emr.v20190103.DeleteUserManagerUserList", async function () {
     }
 })
 
+it("emr.v20190103.TerminateSLInstance", async function () {
+    try {
+       const data = await client.TerminateSLInstance({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("emr.v20190103.AddUsersForUserManager", async function () {
     try {
        const data = await client.AddUsersForUserManager({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.ModifyAutoRenewFlag", async function () {
+    try {
+       const data = await client.ModifyAutoRenewFlag({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.CreateSLInstance", async function () {
+    try {
+       const data = await client.CreateSLInstance({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.DescribeSLInstanceList", async function () {
+    try {
+       const data = await client.DescribeSLInstanceList({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -268,6 +348,16 @@ it("emr.v20190103.DescribeInstanceRenewNodes", async function () {
     }
 })
 
+it("emr.v20190103.StartStopServiceOrMonitor", async function () {
+    try {
+       const data = await client.StartStopServiceOrMonitor({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("emr.v20190103.ModifyResourceScheduler", async function () {
     try {
        const data = await client.ModifyResourceScheduler({})
@@ -278,9 +368,9 @@ it("emr.v20190103.ModifyResourceScheduler", async function () {
     }
 })
 
-it("emr.v20190103.SyncPodState", async function () {
+it("emr.v20190103.DescribeResourceScheduleDiffDetail", async function () {
     try {
-       const data = await client.SyncPodState({})
+       const data = await client.DescribeResourceScheduleDiffDetail({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -288,9 +378,19 @@ it("emr.v20190103.SyncPodState", async function () {
     }
 })
 
-it("emr.v20190103.StartStopServiceOrMonitor", async function () {
+it("emr.v20190103.DescribeSLInstance", async function () {
     try {
-       const data = await client.StartStopServiceOrMonitor({})
+       const data = await client.DescribeSLInstance({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.ModifySLInstance", async function () {
+    try {
+       const data = await client.ModifySLInstance({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -328,6 +428,26 @@ it("emr.v20190103.AddMetricScaleStrategy", async function () {
     }
 })
 
+it("emr.v20190103.DescribeYarnScheduleHistory", async function () {
+    try {
+       const data = await client.DescribeYarnScheduleHistory({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.ModifyResourceScheduleConfig", async function () {
+    try {
+       const data = await client.ModifyResourceScheduleConfig({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("emr.v20190103.DescribeJobFlow", async function () {
     try {
        const data = await client.DescribeJobFlow({})
@@ -358,9 +478,19 @@ it("emr.v20190103.DescribeEmrOverviewMetrics", async function () {
     }
 })
 
-it("emr.v20190103.TerminateTasks", async function () {
+it("emr.v20190103.SyncPodState", async function () {
     try {
-       const data = await client.TerminateTasks({})
+       const data = await client.SyncPodState({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.InquirePriceRenewEmr", async function () {
+    try {
+       const data = await client.InquirePriceRenewEmr({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -418,6 +548,16 @@ it("emr.v20190103.DescribeClusterNodes", async function () {
     }
 })
 
+it("emr.v20190103.DescribeTrinoQueryInfo", async function () {
+    try {
+       const data = await client.DescribeTrinoQueryInfo({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("emr.v20190103.DescribeInstancesList", async function () {
     try {
        const data = await client.DescribeInstancesList({})
@@ -451,6 +591,16 @@ it("emr.v20190103.DescribeInsightList", async function () {
 it("emr.v20190103.ScaleOutCluster", async function () {
     try {
        const data = await client.ScaleOutCluster({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("emr.v20190103.RunJobFlow", async function () {
+    try {
+       const data = await client.RunJobFlow({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

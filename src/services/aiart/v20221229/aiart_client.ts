@@ -32,6 +32,7 @@ import {
   ChangeClothesResponse,
   SubmitTextToImageProJobResponse,
   SubmitTrainPortraitModelJobRequest,
+  SketchToImageRequest,
   TextToImageRequest,
   GenerateAvatarRequest,
   LogoRect,
@@ -39,6 +40,7 @@ import {
   SubmitTrainPortraitModelJobResponse,
   QueryDrawPortraitJobRequest,
   ImageToImageResponse,
+  SketchToImageResponse,
   ChangeClothesRequest,
   ReplaceBackgroundResponse,
   UploadTrainPortraitImagesResponse,
@@ -55,6 +57,17 @@ import {
 export class Client extends AbstractClient {
   constructor(clientConfig: ClientConfig) {
     super("aiart.tencentcloudapi.com", "2022-12-29", clientConfig)
+  }
+
+  /**
+     * 线稿生图接口支持上传一张黑白线稿图，按照指定的主体对象以及样式、颜色、材质、风格等的文本描述prompt ，对线稿图进行色彩填充与细节描绘，得到一张完整绘制的图像。生成图分辨率默认为1024:1024。
+线稿生图默认提供1个并发任务数，代表最多能同时处理1个已提交的任务，上一个任务处理完毕后才能开始处理下一个任务。
+     */
+  async SketchToImage(
+    req: SketchToImageRequest,
+    cb?: (error: string, rep: SketchToImageResponse) => void
+  ): Promise<SketchToImageResponse> {
+    return this.request("SketchToImage", req, cb)
   }
 
   /**
@@ -180,7 +193,9 @@ export class Client extends AbstractClient {
   }
 
   /**
-     * 智能文生图接口基于文生图（标准版）模型，将根据输入的文本描述，智能生成与之相关的结果图。
+     * **本接口已迁移至腾讯混元大模型-文生图轻量版，即将停止此处维护，可切换至 [文生图轻量版 API](https://cloud.tencent.com/document/product/1729/108738) 继续使用。**
+
+智能文生图接口基于文生图（标准版）模型，将根据输入的文本描述，智能生成与之相关的结果图。
 
 智能文生图默认提供3个并发任务数，代表最多能同时处理3个已提交的任务，上一个任务处理完毕后才能开始处理下一个任务。
      */

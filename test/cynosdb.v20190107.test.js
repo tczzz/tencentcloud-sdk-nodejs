@@ -48,6 +48,16 @@ it("cynosdb.v20190107.DescribeBackupConfig", async function () {
     }
 })
 
+it("cynosdb.v20190107.ModifyBinlogConfig", async function () {
+    try {
+       const data = await client.ModifyBinlogConfig({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("cynosdb.v20190107.CreateProxyEndPoint", async function () {
     try {
        const data = await client.CreateProxyEndPoint({})
@@ -358,9 +368,9 @@ it("cynosdb.v20190107.DescribeClusterInstanceGrps", async function () {
     }
 })
 
-it("cynosdb.v20190107.OfflineCluster", async function () {
+it("cynosdb.v20190107.DescribeIsolatedInstances", async function () {
     try {
-       const data = await client.OfflineCluster({})
+       const data = await client.DescribeIsolatedInstances({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -688,6 +698,16 @@ it("cynosdb.v20190107.SwitchClusterZone", async function () {
     }
 })
 
+it("cynosdb.v20190107.SearchClusterDatabases", async function () {
+    try {
+       const data = await client.SearchClusterDatabases({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("cynosdb.v20190107.AddInstances", async function () {
     try {
        const data = await client.AddInstances({})
@@ -761,6 +781,16 @@ it("cynosdb.v20190107.DescribeParamTemplates", async function () {
 it("cynosdb.v20190107.DeleteBackup", async function () {
     try {
        const data = await client.DeleteBackup({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("cynosdb.v20190107.DescribeServerlessStrategy", async function () {
+    try {
+       const data = await client.DescribeServerlessStrategy({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -928,6 +958,16 @@ it("cynosdb.v20190107.AssociateSecurityGroups", async function () {
     }
 })
 
+it("cynosdb.v20190107.DescribeBinlogConfig", async function () {
+    try {
+       const data = await client.DescribeBinlogConfig({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("cynosdb.v20190107.DescribeResourcePackageSaleSpec", async function () {
     try {
        const data = await client.DescribeResourcePackageSaleSpec({})
@@ -958,9 +998,9 @@ it("cynosdb.v20190107.DescribeAuditRuleWithInstanceIds", async function () {
     }
 })
 
-it("cynosdb.v20190107.IsolateInstance", async function () {
+it("cynosdb.v20190107.ExportInstanceErrorLogs", async function () {
     try {
-       const data = await client.IsolateInstance({})
+       const data = await client.ExportInstanceErrorLogs({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -1038,9 +1078,9 @@ it("cynosdb.v20190107.ReloadBalanceProxyNode", async function () {
     }
 })
 
-it("cynosdb.v20190107.SearchClusterDatabases", async function () {
+it("cynosdb.v20190107.OfflineCluster", async function () {
     try {
-       const data = await client.SearchClusterDatabases({})
+       const data = await client.OfflineCluster({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -1088,9 +1128,9 @@ it("cynosdb.v20190107.ModifyAccountDescription", async function () {
     }
 })
 
-it("cynosdb.v20190107.SwitchClusterVpc", async function () {
+it("cynosdb.v20190107.ModifyServerlessStrategy", async function () {
     try {
-       const data = await client.SwitchClusterVpc({})
+       const data = await client.ModifyServerlessStrategy({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -1278,6 +1318,16 @@ it("cynosdb.v20190107.DescribeBackupDownloadUrl", async function () {
     }
 })
 
+it("cynosdb.v20190107.SwitchClusterVpc", async function () {
+    try {
+       const data = await client.SwitchClusterVpc({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("cynosdb.v20190107.CreateProxy", async function () {
     try {
        const data = await client.CreateProxy({})
@@ -1448,9 +1498,9 @@ it("cynosdb.v20190107.DescribeParamTemplateDetail", async function () {
     }
 })
 
-it("cynosdb.v20190107.ExportInstanceErrorLogs", async function () {
+it("cynosdb.v20190107.IsolateInstance", async function () {
     try {
-       const data = await client.ExportInstanceErrorLogs({})
+       const data = await client.IsolateInstance({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

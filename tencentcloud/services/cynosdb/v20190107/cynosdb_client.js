@@ -46,6 +46,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeBackupConfig", req, cb);
     }
     /**
+     * 该接口（ModifyBinlogConfig）用于修改Binlog配置
+     */
+    async ModifyBinlogConfig(req, cb) {
+        return this.request("ModifyBinlogConfig", req, cb);
+    }
+    /**
      * 创建数据库代理连接点
      */
     async CreateProxyEndPoint(req, cb) {
@@ -232,10 +238,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeClusterInstanceGrps", req, cb);
     }
     /**
-     * 销毁集群
+     * 本接口(DescribeIsolatedInstances)用于查询回收站实例列表。
      */
-    async OfflineCluster(req, cb) {
-        return this.request("OfflineCluster", req, cb);
+    async DescribeIsolatedInstances(req, cb) {
+        return this.request("DescribeIsolatedInstances", req, cb);
     }
     /**
      * 查询实例错误日志列表
@@ -430,6 +436,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("SwitchClusterZone", req, cb);
     }
     /**
+     * 本接口(SearchClusterDatabases)搜索集群数据库列表
+     */
+    async SearchClusterDatabases(req, cb) {
+        return this.request("SearchClusterDatabases", req, cb);
+    }
+    /**
      * 本接口（AddInstances）用于集群添加实例
      */
     async AddInstances(req, cb) {
@@ -476,6 +488,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DeleteBackup(req, cb) {
         return this.request("DeleteBackup", req, cb);
+    }
+    /**
+     * 查询serverless策略
+     */
+    async DescribeServerlessStrategy(req, cb) {
+        return this.request("DescribeServerlessStrategy", req, cb);
     }
     /**
      * 暂停serverless集群
@@ -574,6 +592,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("AssociateSecurityGroups", req, cb);
     }
     /**
+     * 该接口（DescribeBinlogConfig）用于查询binlog配置
+     */
+    async DescribeBinlogConfig(req, cb) {
+        return this.request("DescribeBinlogConfig", req, cb);
+    }
+    /**
      * 查询资源包规格
      */
     async DescribeResourcePackageSaleSpec(req, cb) {
@@ -592,10 +616,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeAuditRuleWithInstanceIds", req, cb);
     }
     /**
-     * 本接口(IsolateInstance)用于隔离实例。
+     * 此接口（ExportInstanceErrorLogs）用于导出实例错误日志。
      */
-    async IsolateInstance(req, cb) {
-        return this.request("IsolateInstance", req, cb);
+    async ExportInstanceErrorLogs(req, cb) {
+        return this.request("ExportInstanceErrorLogs", req, cb);
     }
     /**
      * 开启多可用区部署
@@ -640,10 +664,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ReloadBalanceProxyNode", req, cb);
     }
     /**
-     * 本接口(SearchClusterDatabases)搜索集群数据库列表
+     * 销毁集群
      */
-    async SearchClusterDatabases(req, cb) {
-        return this.request("SearchClusterDatabases", req, cb);
+    async OfflineCluster(req, cb) {
+        return this.request("OfflineCluster", req, cb);
     }
     /**
      * 修改审计规则模板
@@ -670,10 +694,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ModifyAccountDescription", req, cb);
     }
     /**
-     * 更换集群vpc
+     * 修改serverless策略
      */
-    async SwitchClusterVpc(req, cb) {
-        return this.request("SwitchClusterVpc", req, cb);
+    async ModifyServerlessStrategy(req, cb) {
+        return this.request("ModifyServerlessStrategy", req, cb);
     }
     /**
      * 创建数据库
@@ -784,6 +808,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeBackupDownloadUrl", req, cb);
     }
     /**
+     * 更换集群vpc
+     */
+    async SwitchClusterVpc(req, cb) {
+        return this.request("SwitchClusterVpc", req, cb);
+    }
+    /**
      * 创建数据库代理
      */
     async CreateProxy(req, cb) {
@@ -888,10 +918,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeParamTemplateDetail", req, cb);
     }
     /**
-     * 此接口（ExportInstanceErrorLogs）用于导出实例错误日志。
+     * 本接口(IsolateInstance)用于隔离实例。
      */
-    async ExportInstanceErrorLogs(req, cb) {
-        return this.request("ExportInstanceErrorLogs", req, cb);
+    async IsolateInstance(req, cb) {
+        return this.request("IsolateInstance", req, cb);
     }
 }
 exports.Client = Client;

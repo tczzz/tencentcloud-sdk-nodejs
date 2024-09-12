@@ -358,6 +358,16 @@ it("dcdb.v20180411.DescribeDBSyncMode", async function () {
     }
 })
 
+it("dcdb.v20180411.DescribeDCDBBinlogTime", async function () {
+    try {
+       const data = await client.DescribeDCDBBinlogTime({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("dcdb.v20180411.DescribeProjectSecurityGroups", async function () {
     try {
        const data = await client.DescribeProjectSecurityGroups({})
@@ -618,6 +628,16 @@ it("dcdb.v20180411.ModifyInstanceVport", async function () {
     }
 })
 
+it("dcdb.v20180411.TerminateDedicatedDBInstance", async function () {
+    try {
+       const data = await client.TerminateDedicatedDBInstance({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("dcdb.v20180411.DescribeDBSecurityGroups", async function () {
     try {
        const data = await client.DescribeDBSecurityGroups({})
@@ -658,9 +678,9 @@ it("dcdb.v20180411.CancelDcnJob", async function () {
     }
 })
 
-it("dcdb.v20180411.TerminateDedicatedDBInstance", async function () {
+it("dcdb.v20180411.DescribeBackupConfigs", async function () {
     try {
-       const data = await client.TerminateDedicatedDBInstance({})
+       const data = await client.DescribeBackupConfigs({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -681,6 +701,16 @@ it("dcdb.v20180411.CloneAccount", async function () {
 it("dcdb.v20180411.CreateTmpDCDBInstance", async function () {
     try {
        const data = await client.CreateTmpDCDBInstance({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("dcdb.v20180411.ModifyBackupConfigs", async function () {
+    try {
+       const data = await client.ModifyBackupConfigs({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

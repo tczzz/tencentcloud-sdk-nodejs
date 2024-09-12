@@ -124,11 +124,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ModifyExecStrategy", req, cb);
     }
     /**
-     * <p style="color:red;">[注意：该版本只满足广州区部分白名单客户使用]</p>
-注册事件监听器
+     * 数据集成大屏任务状态统计趋势
      */
-    async RegisterEventListener(req, cb) {
-        return this.request("RegisterEventListener", req, cb);
+    async DescribeIntegrationStatisticsTaskStatusTrend(req, cb) {
+        return this.request("DescribeIntegrationStatisticsTaskStatusTrend", req, cb);
     }
     /**
      * 建hive表
@@ -293,6 +292,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeEventConsumeTasks", req, cb);
     }
     /**
+     * 更新工作流下任务调度信息
+     */
+    async RenewWorkflowSchedulerInfoDs(req, cb) {
+        return this.request("RenewWorkflowSchedulerInfoDs", req, cb);
+    }
+    /**
      * 获取离线任务长连接Token
      */
     async DescribeOfflineTaskToken(req, cb) {
@@ -339,6 +344,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DescribeQualityScore(req, cb) {
         return this.request("DescribeQualityScore", req, cb);
+    }
+    /**
+     * 获取cos token
+     */
+    async GetCosToken(req, cb) {
+        return this.request("GetCosToken", req, cb);
     }
     /**
      * 数据质量概览页面触发维度分布统计接口
@@ -727,6 +738,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeDependOpsTasks", req, cb);
     }
     /**
+     * 资源管理-判断资源文件是否存在
+     */
+    async JudgeResourceFile(req, cb) {
+        return this.request("JudgeResourceFile", req, cb);
+    }
+    /**
      * 提交集成任务
      */
     async CommitIntegrationTask(req, cb) {
@@ -755,6 +772,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DescribeBatchOperateTask(req, cb) {
         return this.request("DescribeBatchOperateTask", req, cb);
+    }
+    /**
+     * 通过任务查询表的血缘关系
+     */
+    async DescribeTaskLineage(req, cb) {
+        return this.request("DescribeTaskLineage", req, cb);
     }
     /**
      * 获取资源管理目录树
@@ -820,6 +843,13 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeColumnsMeta", req, cb);
     }
     /**
+     * <p style="color:red;">[注意：该版本只满足广州区部分白名单客户使用]</p>
+注册事件监听器
+     */
+    async RegisterEventListener(req, cb) {
+        return this.request("RegisterEventListener", req, cb);
+    }
+    /**
      * 获取值班表列表
      */
     async DescribeDutyScheduleList(req, cb) {
@@ -842,6 +872,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async CheckIntegrationTaskNameExists(req, cb) {
         return this.request("CheckIntegrationTaskNameExists", req, cb);
+    }
+    /**
+     * 查询表的分区详情信息
+     */
+    async DescribeTablePartitions(req, cb) {
+        return this.request("DescribeTablePartitions", req, cb);
     }
     /**
      * 分页查询质量规则
@@ -946,10 +982,10 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeInstanceLogFile", req, cb);
     }
     /**
-     * 数据集成大屏任务状态统计趋势
+     * 异步批量创建任务版本
      */
-    async DescribeIntegrationStatisticsTaskStatusTrend(req, cb) {
-        return this.request("DescribeIntegrationStatisticsTaskStatusTrend", req, cb);
+    async BatchCreateTaskVersionAsync(req, cb) {
+        return this.request("BatchCreateTaskVersionAsync", req, cb);
     }
     /**
      * 更新监控状态
@@ -1084,6 +1120,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DeleteTaskAlarmRegular", req, cb);
     }
     /**
+     * 获取待提交任务预提交校验信息
+     */
+    async DescribePendingSubmitTaskList(req, cb) {
+        return this.request("DescribePendingSubmitTaskList", req, cb);
+    }
+    /**
      * 规则执行结果列表查询
      */
     async DescribeRuleExecResults(req, cb) {
@@ -1149,6 +1191,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async ModifyTaskAlarmRegular(req, cb) {
         return this.request("ModifyTaskAlarmRegular", req, cb);
+    }
+    /**
+     * 获取工作流调度信息
+     */
+    async DescribeWorkflowSchedulerInfoDs(req, cb) {
+        return this.request("DescribeWorkflowSchedulerInfoDs", req, cb);
     }
     /**
      * 删除用户自定义函数

@@ -219,6 +219,10 @@ export interface ModifyStaffRequest {
      */
     Nick?: string;
     /**
+     * 座席工号
+     */
+    StaffNo?: string;
+    /**
      * 绑定技能组ID列表
      */
     SkillGroupIds?: Array<number | bigint>;
@@ -820,11 +824,11 @@ export interface StaffStatusMetrics {
  */
 export interface DescribeTelCdrRequest {
     /**
-     * 起始时间戳，Unix 秒级时间戳
+     * 起始时间戳，Unix 秒级时间戳，最大支持近180天。
      */
     StartTimeStamp: number;
     /**
-     * 结束时间戳，Unix 秒级时间戳
+     * 结束时间戳，Unix 秒级时间戳，结束时间与开始时间的区间范围小于90天。
      */
     EndTimeStamp: number;
     /**
@@ -2394,6 +2398,16 @@ export interface TelCdrInfo {
      */
     AsrUrl?: string;
     /**
+     * AsrUrl的状态：Complete
+  已完成;
+  Processing
+  正在生成中;
+  NotExists
+  无记录(未开启生成离线asr或者无套餐包)
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AsrStatus?: string;
+    /**
      * 录音转存第三方COS地址
   注意：此字段可能返回 null，表示取不到有效值。
      */
@@ -2482,7 +2496,7 @@ export interface DeleteStaffRequest {
      */
     SdkAppId: number;
     /**
-     * 待删除客服邮箱列表
+     * 待删除客服邮箱列表，一次最大支持200个。
      */
     StaffList: Array<string>;
 }
@@ -3439,14 +3453,14 @@ export interface DescribeAutoCalloutTasksRequest {
  */
 export interface DescribeChatMessagesRequest {
     /**
+     * 应用 ID，可以查看 https://console.cloud.tencent.com/ccc
+     */
+    SdkAppId: number;
+    /**
      * 实例 ID（废弃）
      * @deprecated
      */
     InstanceId?: number;
-    /**
-     * 应用 ID，可以查看 https://console.cloud.tencent.com/ccc
-     */
-    SdkAppId?: number;
     /**
      * 服务记录ID（废弃）
      * @deprecated

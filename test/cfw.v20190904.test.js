@@ -178,16 +178,6 @@ it("cfw.v20190904.ModifyNatSequenceRules", async function () {
     }
 })
 
-it("cfw.v20190904.DeleteVpcInstance", async function () {
-    try {
-       const data = await client.DeleteVpcInstance({})
-       expect(data).to.be.ok
-    } catch(error) {
-      expect(error.requestId).to.be.ok
-      expect(error.code).to.be.ok
-    }
-})
-
 it("cfw.v20190904.DescribeUnHandleEventTabList", async function () {
     try {
        const data = await client.DescribeUnHandleEventTabList({})
@@ -211,6 +201,16 @@ it("cfw.v20190904.CreateNatFwInstance", async function () {
 it("cfw.v20190904.ModifyBlockTop", async function () {
     try {
        const data = await client.ModifyBlockTop({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("cfw.v20190904.DeleteRemoteAccessDomain", async function () {
+    try {
+       const data = await client.DeleteRemoteAccessDomain({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok
@@ -271,6 +271,16 @@ it("cfw.v20190904.ModifyEdgeIpSwitch", async function () {
 it("cfw.v20190904.DescribeBlockByIpTimesList", async function () {
     try {
        const data = await client.DescribeBlockByIpTimesList({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("cfw.v20190904.DescribeNatFwDnatRule", async function () {
+    try {
+       const data = await client.DescribeNatFwDnatRule({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

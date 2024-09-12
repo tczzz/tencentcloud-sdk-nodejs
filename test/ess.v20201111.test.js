@@ -268,6 +268,16 @@ it("ess.v20201111.CreateUserAutoSignSealUrl", async function () {
     }
 })
 
+it("ess.v20201111.DescribeOrganizationAuthStatus", async function () {
+    try {
+       const data = await client.DescribeOrganizationAuthStatus({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("ess.v20201111.RenewAutoSignLicense", async function () {
     try {
        const data = await client.RenewAutoSignLicense({})
@@ -438,6 +448,16 @@ it("ess.v20201111.CreateFlowSignUrl", async function () {
     }
 })
 
+it("ess.v20201111.CreateBatchInitOrganizationUrl", async function () {
+    try {
+       const data = await client.CreateBatchInitOrganizationUrl({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("ess.v20201111.CancelUserAutoSignEnableUrl", async function () {
     try {
        const data = await client.CancelUserAutoSignEnableUrl({})
@@ -558,6 +578,16 @@ it("ess.v20201111.CreateFlowBlockchainEvidenceUrl", async function () {
     }
 })
 
+it("ess.v20201111.CreateBatchOrganizationRegistrationTasks", async function () {
+    try {
+       const data = await client.CreateBatchOrganizationRegistrationTasks({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("ess.v20201111.DescribeUserVerifyStatus", async function () {
     try {
        const data = await client.DescribeUserVerifyStatus({})
@@ -578,9 +608,9 @@ it("ess.v20201111.ModifyIntegrationRole", async function () {
     }
 })
 
-it("ess.v20201111.CreateBatchOrganizationRegistrationTasks", async function () {
+it("ess.v20201111.CreateBatchOrganizationAuthorizationUrl", async function () {
     try {
-       const data = await client.CreateBatchOrganizationRegistrationTasks({})
+       const data = await client.CreateBatchOrganizationAuthorizationUrl({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

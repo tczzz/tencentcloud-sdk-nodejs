@@ -558,6 +558,16 @@ it("essbasic.v20210526.ChannelCreateFlowApprovers", async function () {
     }
 })
 
+it("essbasic.v20210526.CreatePersonAuthCertificateImage", async function () {
+    try {
+       const data = await client.CreatePersonAuthCertificateImage({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("essbasic.v20210526.CreatePartnerAutoSignAuthUrl", async function () {
     try {
        const data = await client.CreatePartnerAutoSignAuthUrl({})
@@ -661,6 +671,16 @@ it("essbasic.v20210526.SyncProxyOrganization", async function () {
 it("essbasic.v20210526.ChannelCreateFlowGroupByTemplates", async function () {
     try {
        const data = await client.ChannelCreateFlowGroupByTemplates({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("essbasic.v20210526.CreateBatchInitOrganizationUrl", async function () {
+    try {
+       const data = await client.CreateBatchInitOrganizationUrl({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

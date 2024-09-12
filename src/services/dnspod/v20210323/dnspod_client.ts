@@ -25,6 +25,7 @@ import {
   ModifyDomainToGroupRequest,
   RollbackSnapshotRequest,
   DeleteDomainAliasResponse,
+  DescribeDomainShareUserListResponse,
   DescribeVASStatisticRequest,
   DeleteDomainBatchResponse,
   RecordGroupInfo,
@@ -114,6 +115,7 @@ import {
   ModifyDomainUnlockResponse,
   DescribeDomainLogListRequest,
   DescribeDomainListResponse,
+  DescribeUserDetailResponse,
   ModifyRecordBatchRequest,
   WhoisContactAddress,
   SnapshotConfig,
@@ -139,7 +141,7 @@ import {
   SubdomainAnalyticsInfo,
   CustomLineInfo,
   ModifyRecordBatchDetail,
-  DescribeUserDetailResponse,
+  DescribeDomainShareUserListRequest,
   DeleteDomainBatchDetail,
   CreateDomainRequest,
   ModifyDomainCustomLineRequest,
@@ -202,6 +204,7 @@ import {
   WhoisInfo,
   DownloadSnapshotResponse,
   PreviewDetail,
+  DomainShareUserInfo,
   TagItem,
   CreateRecordGroupResponse,
   DescribeDomainGroupListRequest,
@@ -732,6 +735,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 获取指定域名的已共享列表
+   */
+  async DescribeDomainShareUserList(
+    req: DescribeDomainShareUserListRequest,
+    cb?: (error: string, rep: DescribeDomainShareUserListResponse) => void
+  ): Promise<DescribeDomainShareUserListResponse> {
+    return this.request("DescribeDomainShareUserList", req, cb)
+  }
+
+  /**
    * 按分类返回线路列表
    */
   async DescribeRecordLineCategoryList(
@@ -792,8 +805,9 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 批量删除解析记录
-   */
+     * 批量删除解析记录
+备注：因存储限制， 建议一次批量删除最多2000条
+     */
   async DeleteRecordBatch(
     req: DeleteRecordBatchRequest,
     cb?: (error: string, rep: DeleteRecordBatchResponse) => void

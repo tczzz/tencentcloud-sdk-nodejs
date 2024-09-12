@@ -18,25 +18,57 @@
 import { AbstractClient } from "../../../common/abstract_client"
 import { ClientConfig } from "../../../common/interface"
 import {
-  DescribeAutoScalingConfigurationResponse,
-  DescribeClusterStorageOptionRequest,
   ClusterOverview,
-  QueueOverview,
-  DescribeClustersRequest,
-  SetAutoScalingConfigurationRequest,
   NodeOverview,
-  DescribeNodesRequest,
-  DeleteNodesResponse,
-  AddClusterStorageOptionResponse,
   DescribeInitNodeScriptsRequest,
   DeleteClusterResponse,
   ExpansionNodeConfig,
   NodeActivity,
-  Placement,
+  CreateWorkspacesResponse,
+  SpaceVirtualPrivateCloud,
+  ManagerNodeOverview,
+  DeleteClusterRequest,
+  SystemDisk,
+  TerminateWorkspacesResponse,
+  ModifyInitNodeScriptsRequest,
+  AttachNodesRequest,
+  SpaceChargePrepaid,
+  DescribeWorkspacesResponse,
+  Tag,
+  GooseFSOption,
+  StorageOptionOverview,
+  AddNodesResponse,
+  DescribeAutoScalingConfigurationResponse,
+  DescribeClustersRequest,
+  TagSpecification,
+  DeleteNodesResponse,
+  AddClusterStorageOptionResponse,
+  DescribeWorkspacesRequest,
   AddQueueRequest,
+  QueueConfigOverview,
+  Placement,
+  DescribeNodesResponse,
+  GooseFSOptionOverview,
+  DeleteClusterStorageOptionRequest,
+  RunMonitorServiceEnabled,
+  ExpansionNodeConfigOverview,
+  GooseFSxOptionOverview,
+  DetachNodesResponse,
+  DescribeClusterStorageOptionRequest,
+  StorageOption,
   LoginNodeOverview,
-  CFSOption,
+  ModifyWorkspacesAttributeResponse,
+  DescribeClustersResponse,
+  DescribeClusterActivitiesResponse,
+  DescribeInitNodeScriptsResponse,
+  DeleteQueueResponse,
+  DataDisk,
+  QueueOverview,
+  LoginSettings,
+  EnhancedService,
+  RunAutomationServiceEnabled,
   ClusterActivity,
+  DescribeQueuesResponse,
   CreateClusterResponse,
   RunSecurityServiceEnabled,
   DescribeQueuesRequest,
@@ -44,51 +76,39 @@ import {
   CreateClusterRequest,
   AddQueueResponse,
   DescribeClusterStorageOptionResponse,
-  DescribeQueuesResponse,
-  GooseFSOptionOverview,
-  EnhancedService,
-  InstanceChargePrepaid,
-  Tag,
-  LoginNode,
-  StorageOptionOverview,
   NodeScript,
   ModifyInitNodeScriptsResponse,
-  ManagerNodeOverview,
   ManagerNode,
-  DeleteClusterRequest,
-  ComputeNodeOverview,
-  SystemDisk,
-  LoginSettings,
-  GooseFSOption,
-  RunAutomationServiceEnabled,
-  DescribeClusterActivitiesRequest,
-  DeleteQueueRequest,
+  ModifyWorkspacesAttributeRequest,
   Filter,
-  AddNodesRequest,
-  CFSOptionOverview,
-  DeleteClusterStorageOptionRequest,
-  AddClusterStorageOptionRequest,
-  GooseFSxOption,
-  RunMonitorServiceEnabled,
-  QueueConfigOverview,
-  VirtualPrivateCloud,
-  ExpansionNodeConfigOverview,
-  ModifyInitNodeScriptsRequest,
-  GooseFSxOptionOverview,
-  QueueConfig,
-  DescribeAutoScalingConfigurationRequest,
-  StorageOption,
-  InternetAccessible,
+  SpaceInfo,
+  TerminateWorkspacesRequest,
   ComputeNode,
   DeleteNodesRequest,
-  DescribeClustersResponse,
   DeleteClusterStorageOptionResponse,
-  DescribeNodesResponse,
-  DescribeClusterActivitiesResponse,
-  DescribeInitNodeScriptsResponse,
-  DataDisk,
-  DeleteQueueResponse,
-  AddNodesResponse,
+  SpaceInternetAccessible,
+  SpaceDataDisk,
+  SetAutoScalingConfigurationRequest,
+  DescribeNodesRequest,
+  DetachNodesRequest,
+  AttachNodesResponse,
+  LoginNode,
+  CFSOption,
+  CreateWorkspacesRequest,
+  SpaceSystemDisk,
+  ComputeNodeOverview,
+  QueueConfig,
+  DescribeClusterActivitiesRequest,
+  AddNodesRequest,
+  CFSOptionOverview,
+  DeleteQueueRequest,
+  AddClusterStorageOptionRequest,
+  GooseFSxOption,
+  SpacePlacement,
+  VirtualPrivateCloud,
+  DescribeAutoScalingConfigurationRequest,
+  InternetAccessible,
+  InstanceChargePrepaid,
 } from "./thpc_models"
 
 /**
@@ -98,16 +118,6 @@ import {
 export class Client extends AbstractClient {
   constructor(clientConfig: ClientConfig) {
     super("thpc.tencentcloudapi.com", "2023-03-21", clientConfig)
-  }
-
-  /**
-   * 本接口 (DescribeClusterStorageOption) 用于查询集群存储选项信息。
-   */
-  async DescribeClusterStorageOption(
-    req: DescribeClusterStorageOptionRequest,
-    cb?: (error: string, rep: DescribeClusterStorageOptionResponse) => void
-  ): Promise<DescribeClusterStorageOptionResponse> {
-    return this.request("DescribeClusterStorageOption", req, cb)
   }
 
   /**
@@ -121,13 +131,23 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口 (ModifyInitNodeScripts) 用于修改节点初始化脚本。
+   * 本接口 (TerminateWorkspaces) 用于主动退还工作空间。
    */
-  async ModifyInitNodeScripts(
-    req: ModifyInitNodeScriptsRequest,
-    cb?: (error: string, rep: ModifyInitNodeScriptsResponse) => void
-  ): Promise<ModifyInitNodeScriptsResponse> {
-    return this.request("ModifyInitNodeScripts", req, cb)
+  async TerminateWorkspaces(
+    req: TerminateWorkspacesRequest,
+    cb?: (error: string, rep: TerminateWorkspacesResponse) => void
+  ): Promise<TerminateWorkspacesResponse> {
+    return this.request("TerminateWorkspaces", req, cb)
+  }
+
+  /**
+   * 本接口 (ModifyWorkspacesAttribute) 用于修改工作空间的属性（目前只支持修改工作空间的名称）。
+   */
+  async ModifyWorkspacesAttribute(
+    req: ModifyWorkspacesAttributeRequest,
+    cb?: (error: string, rep: ModifyWorkspacesAttributeResponse) => void
+  ): Promise<ModifyWorkspacesAttributeResponse> {
+    return this.request("ModifyWorkspacesAttribute", req, cb)
   }
 
   /**
@@ -143,13 +163,93 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（AddClusterStorageOption）用于添加集群存储选项信息。
+   * 本接口 (CreateWorkspaces) 用于创建工作空间。
    */
-  async AddClusterStorageOption(
-    req: AddClusterStorageOptionRequest,
-    cb?: (error: string, rep: AddClusterStorageOptionResponse) => void
-  ): Promise<AddClusterStorageOptionResponse> {
-    return this.request("AddClusterStorageOption", req, cb)
+  async CreateWorkspaces(
+    req: CreateWorkspacesRequest,
+    cb?: (error: string, rep: CreateWorkspacesResponse) => void
+  ): Promise<CreateWorkspacesResponse> {
+    return this.request("CreateWorkspaces", req, cb)
+  }
+
+  /**
+   * 本接口(DescribeQueues)用于查询指定集群队列概览信息列表。
+   */
+  async DescribeQueues(
+    req: DescribeQueuesRequest,
+    cb?: (error: string, rep: DescribeQueuesResponse) => void
+  ): Promise<DescribeQueuesResponse> {
+    return this.request("DescribeQueues", req, cb)
+  }
+
+  /**
+   * 本接口(AddNodes)用于添加一个或者多个计算节点或者登录节点到指定集群。
+   */
+  async AddNodes(
+    req: AddNodesRequest,
+    cb?: (error: string, rep: AddNodesResponse) => void
+  ): Promise<AddNodesResponse> {
+    return this.request("AddNodes", req, cb)
+  }
+
+  /**
+   * 本接口 (DetachNodes) 用于将一个或者多个计算节点从集群中移除，但是不销毁指定计算资源。
+   */
+  async DetachNodes(
+    req: DetachNodesRequest,
+    cb?: (error: string, rep: DetachNodesResponse) => void
+  ): Promise<DetachNodesResponse> {
+    return this.request("DetachNodes", req, cb)
+  }
+
+  /**
+   * 本接口（DeleteCluster）用于删除一个指定的集群。
+   */
+  async DeleteCluster(
+    req: DeleteClusterRequest,
+    cb?: (error: string, rep: DeleteClusterResponse) => void
+  ): Promise<DeleteClusterResponse> {
+    return this.request("DeleteCluster", req, cb)
+  }
+
+  /**
+   * 本接口 (DeleteClusterStorageOption) 用于删除集群存储选项信息。
+   */
+  async DeleteClusterStorageOption(
+    req: DeleteClusterStorageOptionRequest,
+    cb?: (error: string, rep: DeleteClusterStorageOptionResponse) => void
+  ): Promise<DeleteClusterStorageOptionResponse> {
+    return this.request("DeleteClusterStorageOption", req, cb)
+  }
+
+  /**
+   * 本接口（DescribeWorkspaces）用于查询工作空间列表。
+   */
+  async DescribeWorkspaces(
+    req: DescribeWorkspacesRequest,
+    cb?: (error: string, rep: DescribeWorkspacesResponse) => void
+  ): Promise<DescribeWorkspacesResponse> {
+    return this.request("DescribeWorkspaces", req, cb)
+  }
+
+  /**
+   * 本接口 (DescribeNodes) 用于查询指定集群节点概览信息列表。
+   */
+  async DescribeNodes(
+    req: DescribeNodesRequest,
+    cb?: (error: string, rep: DescribeNodesResponse) => void
+  ): Promise<DescribeNodesResponse> {
+    return this.request("DescribeNodes", req, cb)
+  }
+
+  /**
+   * 本接口（DescribeClusters）用于查询集群列表。
+   */
+  async DescribeClusters(
+    req: DescribeClustersRequest,
+    cb?: (error: string, rep: DescribeClustersResponse) => void
+  ): Promise<DescribeClustersResponse> {
+    return this.request("DescribeClusters", req, cb)
   }
 
   /**
@@ -175,16 +275,6 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口 (DescribeNodes) 用于查询指定集群节点概览信息列表。
-   */
-  async DescribeNodes(
-    req: DescribeNodesRequest,
-    cb?: (error: string, rep: DescribeNodesResponse) => void
-  ): Promise<DescribeNodesResponse> {
-    return this.request("DescribeNodes", req, cb)
-  }
-
-  /**
    * 本接口 (DescribeInitNodeScripts) 用于查询节点初始化脚本列表。
    */
   async DescribeInitNodeScripts(
@@ -195,36 +285,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-     * 本接口(DeleteQueue)用于从指定集群删除队列。
-* 本接口为目前只支持SchedulerType为SLURM的集群。
-
-* 删除队列时，需要保证队列内不存在节点。
-     */
-  async DeleteQueue(
-    req: DeleteQueueRequest,
-    cb?: (error: string, rep: DeleteQueueResponse) => void
-  ): Promise<DeleteQueueResponse> {
-    return this.request("DeleteQueue", req, cb)
-  }
-
-  /**
-   * 本接口 (DeleteClusterStorageOption) 用于删除集群存储选项信息。
+   * 本接口 (AttachNodes) 用于绑定一个或者多个计算节点指定资源到指定集群中。
    */
-  async DeleteClusterStorageOption(
-    req: DeleteClusterStorageOptionRequest,
-    cb?: (error: string, rep: DeleteClusterStorageOptionResponse) => void
-  ): Promise<DeleteClusterStorageOptionResponse> {
-    return this.request("DeleteClusterStorageOption", req, cb)
-  }
-
-  /**
-   * 本接口(AddNodes)用于添加一个或者多个计算节点或者登录节点到指定集群。
-   */
-  async AddNodes(
-    req: AddNodesRequest,
-    cb?: (error: string, rep: AddNodesResponse) => void
-  ): Promise<AddNodesResponse> {
-    return this.request("AddNodes", req, cb)
+  async AttachNodes(
+    req: AttachNodesRequest,
+    cb?: (error: string, rep: AttachNodesResponse) => void
+  ): Promise<AttachNodesResponse> {
+    return this.request("AttachNodes", req, cb)
   }
 
   /**
@@ -238,26 +305,6 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（DescribeClusters）用于查询集群列表。
-   */
-  async DescribeClusters(
-    req: DescribeClustersRequest,
-    cb?: (error: string, rep: DescribeClustersResponse) => void
-  ): Promise<DescribeClustersResponse> {
-    return this.request("DescribeClusters", req, cb)
-  }
-
-  /**
-   * 本接口（DeleteCluster）用于删除一个指定的集群。
-   */
-  async DeleteCluster(
-    req: DeleteClusterRequest,
-    cb?: (error: string, rep: DeleteClusterResponse) => void
-  ): Promise<DeleteClusterResponse> {
-    return this.request("DeleteCluster", req, cb)
-  }
-
-  /**
    * 本接口（DescribeClusterActivities）用于查询集群活动历史记录列表。
    */
   async DescribeClusterActivities(
@@ -268,12 +315,45 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口(DescribeQueues)用于查询指定集群队列概览信息列表。
+   * 本接口 (DescribeClusterStorageOption) 用于查询集群存储选项信息。
    */
-  async DescribeQueues(
-    req: DescribeQueuesRequest,
-    cb?: (error: string, rep: DescribeQueuesResponse) => void
-  ): Promise<DescribeQueuesResponse> {
-    return this.request("DescribeQueues", req, cb)
+  async DescribeClusterStorageOption(
+    req: DescribeClusterStorageOptionRequest,
+    cb?: (error: string, rep: DescribeClusterStorageOptionResponse) => void
+  ): Promise<DescribeClusterStorageOptionResponse> {
+    return this.request("DescribeClusterStorageOption", req, cb)
+  }
+
+  /**
+   * 本接口 (ModifyInitNodeScripts) 用于修改节点初始化脚本。
+   */
+  async ModifyInitNodeScripts(
+    req: ModifyInitNodeScriptsRequest,
+    cb?: (error: string, rep: ModifyInitNodeScriptsResponse) => void
+  ): Promise<ModifyInitNodeScriptsResponse> {
+    return this.request("ModifyInitNodeScripts", req, cb)
+  }
+
+  /**
+   * 本接口（AddClusterStorageOption）用于添加集群存储选项信息。
+   */
+  async AddClusterStorageOption(
+    req: AddClusterStorageOptionRequest,
+    cb?: (error: string, rep: AddClusterStorageOptionResponse) => void
+  ): Promise<AddClusterStorageOptionResponse> {
+    return this.request("AddClusterStorageOption", req, cb)
+  }
+
+  /**
+     * 本接口(DeleteQueue)用于从指定集群删除队列。
+* 本接口为目前只支持SchedulerType为SLURM的集群。
+
+* 删除队列时，需要保证队列内不存在节点。
+     */
+  async DeleteQueue(
+    req: DeleteQueueRequest,
+    cb?: (error: string, rep: DeleteQueueResponse) => void
+  ): Promise<DeleteQueueResponse> {
+    return this.request("DeleteQueue", req, cb)
   }
 }

@@ -275,6 +275,10 @@ export interface DescribeCNAMERequest {
      * 服务节点 ID（从查询域名可绑定服务节点接口DescribeDomainRegion中获取）
      */
     ClusterId: string;
+    /**
+     * 域名类型，0:拉流域名 1:推流域名
+     */
+    DomainType?: number;
 }
 /**
  * 获取云录像下载URL返回的数据
@@ -446,6 +450,16 @@ export interface DescribeCNAMEResponse {
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
     RequestId?: string;
+}
+/**
+ * ISUP智能安全接入 API返回数据
+ */
+export interface ISAPIOutputData {
+    /**
+     * 输出参数
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    OutputData?: string;
 }
 /**
  * UpdateOrganization返回参数结构体
@@ -1932,6 +1946,23 @@ export interface ListGatewaysData {
     TotalCount?: number;
 }
 /**
+ * CallISAPI请求参数结构体
+ */
+export interface CallISAPIRequest {
+    /**
+     * 设备ID
+     */
+    DeviceId: string;
+    /**
+     * url 资源
+     */
+    Url: string;
+    /**
+     * 输入参数
+     */
+    InputData?: string;
+}
+/**
  * AddRecordRetrieveTask请求参数结构体
  */
 export interface AddRecordRetrieveTaskRequest {
@@ -2084,6 +2115,19 @@ export interface RecordPlaybackUrl {
     Hls?: string;
 }
 /**
+ * 列举子任务列表
+ */
+export interface ListSubTasksData {
+    /**
+     * 子任务列表
+     */
+    List?: Array<SubTaskData>;
+    /**
+     * 子任务数量
+     */
+    TotalCount?: number;
+}
+/**
  * 组织目录下的未添加到实时上云计划中的通道数量返回数据
  */
 export interface ListOrganizationChannelNumbersData {
@@ -2097,17 +2141,17 @@ export interface ListOrganizationChannelNumbersData {
     NotInPlanCount?: number;
 }
 /**
- * 列举子任务列表
+ * CallISAPI返回参数结构体
  */
-export interface ListSubTasksData {
+export interface CallISAPIResponse {
     /**
-     * 子任务列表
+     * 返回数据
      */
-    List?: Array<SubTaskData>;
+    Data?: ISAPIOutputData;
     /**
-     * 子任务数量
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
-    TotalCount?: number;
+    RequestId?: string;
 }
 /**
  * ListRecordPlanDevices请求参数结构体
@@ -2388,6 +2432,11 @@ export interface DescribeDomainData {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     CertId?: string;
+    /**
+     * 域名类型 0:拉流域名 1:推流域名
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DomainType?: number;
 }
 /**
  * ListRecordBackupTemplates返回参数结构体
@@ -2763,6 +2812,16 @@ export interface DescribeDeviceData {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     SubscribeSwitch?: number;
+    /**
+     * RTMP推流地址自定义appName
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AppName?: string;
+    /**
+     * RTMP推流地址自定义streamName
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    StreamName?: string;
 }
 /**
  * AddUserDevice请求参数结构体
@@ -2824,6 +2883,14 @@ export interface AddUserDeviceRequest {
      * 设备 SN，仅IVCP 协议设备需要
      */
     SNCode?: string;
+    /**
+     * RTMP推流地址自定义AppName（仅RTMP需要，支持英文、数字组合限制32个字符内）
+     */
+    AppName?: string;
+    /**
+     * RTMP推流地址自定义StreamName（仅RTMP需要，支持英文、数字组合限制32个字符内）
+     */
+    StreamName?: string;
 }
 /**
  * ListRecordBackupPlanDevices返回参数结构体
@@ -3273,6 +3340,18 @@ export interface DescribeVideoDownloadUrlRequest {
      * 是否返回内网下载URL，默认是false，返回公网下载URL，true则返回内网下载URL
      */
     IsInternal?: boolean;
+    /**
+     * 设置URL的有效期, 最小值是1秒, 最大值是86400秒, 不设置的话, 默认是600秒
+     */
+    Expires?: number;
+    /**
+     * 下载的MP4文件是否支持G711音频编码.
+  注意: 如果云端录像中的音频编码为AAC, 那么下载的MP4默认是支持AAC编码的
+  如果云端录像中的音频编码为G711且 IsSupportG711设置为true时, 下载的MP4是支持G711音频编码
+  如果云端录像中的音频编码为G711且 IsSupportG711设置为false时, 下载的MP4是不支持G711音频编码
+  该参数只对FileType为mp4才有效, 不设置的话, 默认是false
+     */
+    IsSupportG711?: boolean;
 }
 /**
  * DescribeGatewayVersion返回参数结构体

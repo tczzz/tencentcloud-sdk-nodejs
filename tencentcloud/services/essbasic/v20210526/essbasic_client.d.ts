@@ -1,6 +1,6 @@
 import { AbstractClient } from "../../../common/abstract_client";
 import { ClientConfig } from "../../../common/interface";
-import { SyncProxyOrganizationResponse, ChannelCreateConvertTaskApiResponse, ChannelCreateFlowRemindsResponse, ChannelDeleteSealPoliciesRequest, ChannelBatchCancelFlowsResponse, ChannelDescribeSignFaceVideoRequest, ChannelDisableUserAutoSignResponse, DescribeExtendedServiceAuthDetailResponse, CreateLegalSealQrCodeResponse, DescribeCancelFlowsTaskResponse, CreateEmployeeQualificationSealQrCodeResponse, ChannelCreateFlowGroupByTemplatesResponse, ChannelCreateFlowSignReviewRequest, DescribeFlowDetailInfoRequest, ChannelCancelUserAutoSignEnableUrlResponse, ModifyExtendedServiceRequest, DescribeResourceUrlsByFlowsRequest, CreateChannelOrganizationInfoChangeUrlResponse, ChannelCreateFlowSignUrlResponse, ChannelCreateBatchSignUrlResponse, ChannelCreatePrepareFlowResponse, OperateChannelTemplateResponse, ChannelCreateRoleRequest, CreateConsoleLoginUrlResponse, ChannelDeleteRoleUsersRequest, ChannelCreateUserRolesResponse, SyncProxyOrganizationRequest, ChannelCreatePrepareFlowRequest, ChannelCreateFlowRemindsRequest, ChannelCreateSealPolicyResponse, ChannelDescribeSignFaceVideoResponse, ChannelCancelFlowResponse, ChannelCreateWebThemeConfigRequest, CreateFlowGroupSignReviewResponse, ChannelCreateConvertTaskApiRequest, ChannelCreateFlowByFilesRequest, UploadFilesResponse, ChannelCreatePreparedPersonalEsignResponse, DescribeResourceUrlsByFlowsResponse, ChannelCreateFlowGroupByFilesRequest, ChannelCreateOrganizationModifyQrCodeRequest, ChannelRenewAutoSignLicenseResponse, ChannelCreateFlowByFilesResponse, DescribeFlowDetailInfoResponse, ChannelDescribeRolesRequest, DescribeBatchOrganizationRegistrationUrlsRequest, PrepareFlowsResponse, ChannelCancelFlowRequest, ChannelCreateOrganizationBatchSignUrlRequest, GetDownloadFlowUrlResponse, DescribeTemplatesResponse, CreateBatchOrganizationRegistrationTasksResponse, ChannelVerifyPdfRequest, CreateChannelFlowEvidenceReportRequest, ChannelDescribeBillUsageDetailRequest, ChannelCancelUserAutoSignEnableUrlRequest, DescribeExtendedServiceAuthDetailRequest, ChannelVerifyPdfResponse, CreateConsoleLoginUrlRequest, CreateLegalSealQrCodeRequest, CreateEmployeeQualificationSealQrCodeRequest, ChannelCreateUserAutoSignSealUrlRequest, ChannelCreateUserAutoSignEnableUrlRequest, ChannelCancelMultiFlowSignQRCodeRequest, ChannelDescribeOrganizationSealsRequest, DescribeUsageRequest, DescribeExtendedServiceAuthInfoRequest, DescribeChannelSealPolicyWorkflowUrlRequest, CreatePartnerAutoSignAuthUrlResponse, ModifyFlowDeadlineResponse, ChannelCreateBoundFlowsResponse, ChannelCreateUserAutoSignSealUrlResponse, ChannelCreateBatchQuickSignUrlRequest, ChannelCreateBoundFlowsRequest, ChannelDescribeEmployeesRequest, CreateFlowBlockchainEvidenceUrlResponse, ChannelDeleteRoleUsersResponse, SyncProxyOrganizationOperatorsRequest, ChannelCreateFlowApproversResponse, DescribeUsageResponse, CreateSignUrlsRequest, ChannelCreateMultiFlowSignQRCodeRequest, ChannelCreateUserAutoSignEnableUrlResponse, ChannelGetTaskResultApiRequest, DescribeChannelOrganizationsRequest, ChannelCreatePreparedPersonalEsignRequest, ChannelRenewAutoSignLicenseRequest, ChannelDescribeBillUsageDetailResponse, CreateFlowsByTemplatesResponse, DescribeChannelFlowEvidenceReportRequest, ChannelCreateRoleResponse, ChannelDescribeUserAutoSignStatusRequest, ChannelModifyRoleResponse, CreateSignUrlsResponse, ChannelDeleteRoleRequest, CreateBatchOrganizationRegistrationTasksRequest, ChannelCreateBatchQuickSignUrlResponse, CreatePartnerAutoSignAuthUrlRequest, ChannelCreateBatchCancelFlowUrlRequest, ChannelCreateFlowSignReviewResponse, ChannelDisableUserAutoSignRequest, ChannelDescribeOrganizationSealsResponse, SyncProxyOrganizationOperatorsResponse, CreateSealByImageResponse, ChannelCancelMultiFlowSignQRCodeResponse, ChannelDescribeRolesResponse, ChannelCreateReleaseFlowRequest, ChannelDescribeFlowComponentsResponse, ChannelCreateFlowGroupByFilesResponse, ChannelCreateMultiFlowSignQRCodeResponse, DescribeCancelFlowsTaskRequest, ChannelDescribeUserAutoSignStatusResponse, ModifyExtendedServiceResponse, ChannelCreateUserRolesRequest, ChannelGetTaskResultApiResponse, ChannelCreateBatchSignUrlRequest, ChannelCreateOrganizationModifyQrCodeResponse, ChannelDeleteSealPoliciesResponse, ChannelCreateWebThemeConfigResponse, GetDownloadFlowUrlRequest, ChannelCreateEmbedWebUrlResponse, ChannelBatchCancelFlowsRequest, CreateChannelOrganizationInfoChangeUrlRequest, ChannelModifyRoleRequest, ModifyFlowDeadlineRequest, ChannelUpdateSealStatusRequest, ChannelCreateFlowGroupByTemplatesRequest, CreateFlowGroupSignReviewRequest, DescribeTemplatesRequest, ChannelCreateSealPolicyRequest, CreateFlowsByTemplatesRequest, DescribeBatchOrganizationRegistrationUrlsResponse, UploadFilesRequest, CreateSealByImageRequest, DescribeChannelOrganizationsResponse, ChannelCreateOrganizationBatchSignUrlResponse, ChannelCreateBatchCancelFlowUrlResponse, OperateChannelTemplateRequest, DescribeChannelSealPolicyWorkflowUrlResponse, CreateChannelFlowEvidenceReportResponse, ChannelDescribeEmployeesResponse, ChannelDeleteRoleResponse, ChannelCreateReleaseFlowResponse, DescribeChannelFlowEvidenceReportResponse, CreateFlowBlockchainEvidenceUrlRequest, ChannelCreateFlowApproversRequest, ChannelUpdateSealStatusResponse, ChannelCreateFlowSignUrlRequest, DescribeExtendedServiceAuthInfoResponse, ChannelCreateEmbedWebUrlRequest, ChannelDescribeFlowComponentsRequest, PrepareFlowsRequest } from "./essbasic_models";
+import { SyncProxyOrganizationResponse, ChannelCreateConvertTaskApiResponse, ChannelCreateFlowRemindsResponse, ChannelDeleteSealPoliciesRequest, ChannelBatchCancelFlowsResponse, ChannelDescribeSignFaceVideoRequest, ChannelDisableUserAutoSignResponse, DescribeExtendedServiceAuthDetailResponse, CreateLegalSealQrCodeResponse, DescribeCancelFlowsTaskResponse, CreateEmployeeQualificationSealQrCodeResponse, ChannelCreateFlowGroupByTemplatesResponse, ChannelCreateFlowSignReviewRequest, DescribeFlowDetailInfoRequest, ChannelCancelUserAutoSignEnableUrlResponse, ModifyExtendedServiceRequest, DescribeResourceUrlsByFlowsRequest, CreateChannelOrganizationInfoChangeUrlResponse, ChannelCreateFlowSignUrlResponse, ChannelCreateBatchSignUrlResponse, ChannelCreatePrepareFlowResponse, CreateBatchInitOrganizationUrlResponse, OperateChannelTemplateResponse, ChannelCreateRoleRequest, CreateConsoleLoginUrlResponse, ChannelDeleteRoleUsersRequest, ChannelCreateUserRolesResponse, SyncProxyOrganizationRequest, ChannelCreatePrepareFlowRequest, ChannelCreateFlowRemindsRequest, ChannelCreateSealPolicyResponse, ChannelDescribeSignFaceVideoResponse, ChannelCancelFlowResponse, ChannelCreateWebThemeConfigRequest, CreateFlowGroupSignReviewResponse, ChannelCreateConvertTaskApiRequest, ChannelCreateFlowByFilesRequest, UploadFilesResponse, ChannelCreatePreparedPersonalEsignResponse, DescribeResourceUrlsByFlowsResponse, ChannelCreateFlowGroupByFilesRequest, ChannelCreateOrganizationModifyQrCodeRequest, ChannelRenewAutoSignLicenseResponse, ChannelCreateFlowByFilesResponse, DescribeFlowDetailInfoResponse, ChannelDescribeRolesRequest, DescribeBatchOrganizationRegistrationUrlsRequest, PrepareFlowsResponse, ChannelCancelFlowRequest, ChannelCreateOrganizationBatchSignUrlRequest, GetDownloadFlowUrlResponse, DescribeTemplatesResponse, CreateBatchOrganizationRegistrationTasksResponse, ChannelVerifyPdfRequest, CreateChannelFlowEvidenceReportRequest, ChannelDescribeBillUsageDetailRequest, ChannelCancelUserAutoSignEnableUrlRequest, DescribeExtendedServiceAuthDetailRequest, ChannelVerifyPdfResponse, CreateConsoleLoginUrlRequest, CreateLegalSealQrCodeRequest, CreatePersonAuthCertificateImageResponse, CreateEmployeeQualificationSealQrCodeRequest, ChannelCreateUserAutoSignSealUrlRequest, ChannelCreateUserAutoSignEnableUrlRequest, ChannelCancelMultiFlowSignQRCodeRequest, ChannelDescribeOrganizationSealsRequest, DescribeUsageRequest, DescribeExtendedServiceAuthInfoRequest, DescribeChannelSealPolicyWorkflowUrlRequest, CreatePartnerAutoSignAuthUrlResponse, ModifyFlowDeadlineResponse, ChannelCreateBoundFlowsResponse, ChannelCreateUserAutoSignSealUrlResponse, ChannelCreateBatchQuickSignUrlRequest, ChannelCreateBoundFlowsRequest, ChannelDescribeEmployeesRequest, CreateFlowBlockchainEvidenceUrlResponse, ChannelDeleteRoleUsersResponse, SyncProxyOrganizationOperatorsRequest, ChannelCreateFlowApproversResponse, DescribeUsageResponse, CreateSignUrlsRequest, ChannelCreateMultiFlowSignQRCodeRequest, ChannelCreateUserAutoSignEnableUrlResponse, ChannelGetTaskResultApiRequest, DescribeChannelOrganizationsRequest, ChannelCreatePreparedPersonalEsignRequest, ChannelRenewAutoSignLicenseRequest, ChannelDescribeBillUsageDetailResponse, CreatePersonAuthCertificateImageRequest, CreateFlowsByTemplatesResponse, DescribeChannelFlowEvidenceReportRequest, ChannelCreateRoleResponse, ChannelDescribeUserAutoSignStatusRequest, ChannelModifyRoleResponse, CreateSignUrlsResponse, ChannelDeleteRoleRequest, CreateBatchOrganizationRegistrationTasksRequest, ChannelCreateBatchQuickSignUrlResponse, CreatePartnerAutoSignAuthUrlRequest, ChannelCreateBatchCancelFlowUrlRequest, ChannelCreateFlowSignReviewResponse, ChannelDisableUserAutoSignRequest, ChannelDescribeOrganizationSealsResponse, SyncProxyOrganizationOperatorsResponse, CreateSealByImageResponse, ChannelCancelMultiFlowSignQRCodeResponse, ChannelDescribeRolesResponse, ChannelCreateReleaseFlowRequest, ChannelDescribeFlowComponentsResponse, ChannelCreateFlowGroupByFilesResponse, ChannelCreateMultiFlowSignQRCodeResponse, DescribeCancelFlowsTaskRequest, ChannelDescribeUserAutoSignStatusResponse, ModifyExtendedServiceResponse, ChannelCreateUserRolesRequest, ChannelGetTaskResultApiResponse, ChannelCreateBatchSignUrlRequest, ChannelCreateOrganizationModifyQrCodeResponse, ChannelDeleteSealPoliciesResponse, ChannelCreateWebThemeConfigResponse, GetDownloadFlowUrlRequest, ChannelCreateEmbedWebUrlResponse, ChannelBatchCancelFlowsRequest, CreateChannelOrganizationInfoChangeUrlRequest, ChannelModifyRoleRequest, ModifyFlowDeadlineRequest, ChannelUpdateSealStatusRequest, ChannelCreateFlowGroupByTemplatesRequest, CreateBatchInitOrganizationUrlRequest, CreateFlowGroupSignReviewRequest, DescribeTemplatesRequest, ChannelCreateSealPolicyRequest, CreateFlowsByTemplatesRequest, DescribeBatchOrganizationRegistrationUrlsResponse, UploadFilesRequest, CreateSealByImageRequest, DescribeChannelOrganizationsResponse, ChannelCreateOrganizationBatchSignUrlResponse, ChannelCreateBatchCancelFlowUrlResponse, OperateChannelTemplateRequest, DescribeChannelSealPolicyWorkflowUrlResponse, CreateChannelFlowEvidenceReportResponse, ChannelDescribeEmployeesResponse, ChannelDeleteRoleResponse, ChannelCreateReleaseFlowResponse, DescribeChannelFlowEvidenceReportResponse, CreateFlowBlockchainEvidenceUrlRequest, ChannelCreateFlowApproversRequest, ChannelUpdateSealStatusResponse, ChannelCreateFlowSignUrlRequest, DescribeExtendedServiceAuthInfoResponse, ChannelCreateEmbedWebUrlRequest, ChannelDescribeFlowComponentsRequest, PrepareFlowsRequest } from "./essbasic_models";
 /**
  * essbasic client
  * @class
@@ -457,10 +457,19 @@ httpProfile.setEndpoint("file.test.ess.tencent.cn");
      */
     UploadFiles(req: UploadFilesRequest, cb?: (error: string, rep: UploadFilesResponse) => void): Promise<UploadFilesResponse>;
     /**
-     * 该接口用于获取个人授权执业章给企业的二维码，需要个人用户通过微信扫码。扫描后将跳转到腾讯电子签小程序，进入到授权执业章的流程。个人用户授权成功后，企业印章管理员需对印章进行审核，审核通过后，即可使用个人授权的执业章进行盖章操作。
+     * 该接口用于获取个人授权执业章给企业的二维码，需要个人用户通过微信扫码。
+
+扫描后将跳转到腾讯电子签小程序，进入到授权执业章的流程。
+
+个人用户授权成功后，企业印章管理员需对印章进行审核，审核通过后，即可使用个人授权的执业章进行盖章操作。
 
 **注意**
 1. 该二维码**有效期为7天**，过期后将失效，可重新创建。
+ 
+
+整体流程入下图
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/21b6b56dbc796c9d6f402d6ce6febb07.png)
      */
     CreateEmployeeQualificationSealQrCode(req: CreateEmployeeQualificationSealQrCodeRequest, cb?: (error: string, rep: CreateEmployeeQualificationSealQrCodeResponse) => void): Promise<CreateEmployeeQualificationSealQrCodeResponse>;
     /**
@@ -603,8 +612,8 @@ Web链接访问后，会根据子客企业(**Agent中ProxyOrganizationOpenId表�
 请确保生成链接时候的身份信息和签署合同参与方的信息保持一致。
 
 注：
-- 使用此接口生成链接，需要提前开通 `使用手机号验证签署方身份` 功能，在 `腾讯电子签网页端-企业设置-拓展服务` 中可以找到。
-- 参与人点击链接后需短信验证码才能查看合同内容。
+- 使用此接口生成链接，需要提前开通 `个人签署方仅校验手机号` 功能，在 `腾讯电子签网页端-企业设置-拓展服务` 中可以找到。
+- 个人参与方点击链接后需短信验证码才能查看合同内容。
 - 个人用户批量签署，需要传Name，Mobile，IdCardNumber(IdCardType) 参数。
 - saas企业员工用户批量签署，在传递了姓名等基本信息参数的情况下，还需要传OrganizationName（参与方所在企业名称）参数生成签署链接，<font color="red">请确保此企业已完成腾讯电子签企业认证</font>。
 - 子客企业员工用户批量签署，需要传递员工OpenId和子客企业的OrganizationOpenId。<font color="red">请确保此OrganizationOpenId对应子客已经认证，且OpenId对应员工此子客下已经实名</font>。Name，Mobile, IdCard等信息此时可以不传，系统会查询此OpenId实名信息自动补充。
@@ -667,6 +676,9 @@ Web链接访问后，会根据子客企业(**Agent中ProxyOrganizationOpenId表�
     CreateLegalSealQrCode(req: CreateLegalSealQrCodeRequest, cb?: (error: string, rep: CreateLegalSealQrCodeResponse) => void): Promise<CreateLegalSealQrCodeResponse>;
     /**
      * 对合同流程文件进行数字签名验证，判断数字签名是否有效，合同文件内容是否被篡改。
+
+**补充**： 可以到控制台[合同验签](https://qian.tencent.com/verifySign)体验验签功能，界面如下
+![image](https://qcloudimg.tencent-cloud.cn/raw/81c333ccb07f0c5fbaf840d9cee61333.png)
      */
     ChannelVerifyPdf(req: ChannelVerifyPdfRequest, cb?: (error: string, rep: ChannelVerifyPdfResponse) => void): Promise<ChannelVerifyPdfResponse>;
     /**
@@ -769,6 +781,20 @@ Web链接访问后，会根据子客企业(**Agent中ProxyOrganizationOpenId表�
 2. 个人签署人支持通过姓名+手机号进行补充，补充动态签署人时：若个人用户已完成实名，则可通过姓名+证件号码进行补充。
      */
     ChannelCreateFlowApprovers(req: ChannelCreateFlowApproversRequest, cb?: (error: string, rep: ChannelCreateFlowApproversResponse) => void): Promise<ChannelCreateFlowApproversResponse>;
+    /**
+     * 获取个人用户认证证书图片下载URL
+
+个人用户认证证书图片样式如下图
+
+![image](https://dyn.ess.tencent.cn/guide/capi/CreatePersonAuthCertificateImage.png)
+
+注:
+<ul>
+<li>只能获取个人用户证明图片, 企业员工的暂不支持</li>
+<li>处方单等特殊场景专用，此接口为白名单功能，使用前请联系对接的客户经理沟通。  </li>
+</ul>
+     */
+    CreatePersonAuthCertificateImage(req: CreatePersonAuthCertificateImageRequest, cb?: (error: string, rep: CreatePersonAuthCertificateImageResponse) => void): Promise<CreatePersonAuthCertificateImageResponse>;
     /**
      * 创建他方自动签授权链接，通过该链接可进入小程序进行合作方企业的自动签授权，若当前企业未开通企业自动签，通过该链接会先引导开通本企业自动签。
 该接口效果同控制台： 企业设置-> 扩展服务 -> 企业自动签署 -> 合作企业方授权
@@ -935,6 +961,16 @@ Agent参数中的OpenId 必须为审批者的openId，且链接必须由审批�
 `4. 静默（自动）签署不支持合同签署方存在填写功能`
      */
     ChannelCreateFlowGroupByTemplates(req: ChannelCreateFlowGroupByTemplatesRequest, cb?: (error: string, rep: ChannelCreateFlowGroupByTemplatesResponse) => void): Promise<ChannelCreateFlowGroupByTemplatesResponse>;
+    /**
+     * 支持企业进行批量初始化操作：
+
+此接口存在以下限制：
+1. 批量操作的企业需要已经完成电子签的认证流程。
+2. 通过此接口生成的链接在小程序端进行操作时，操作人需要是<font  color="red">所有企业的超管或法人</font>。
+3. 批量操作的企业，需要是本方第三方应用下的企业。
+4. <font  color="red">操作链接过期时间默认为生成链接后7天。</font>
+     */
+    CreateBatchInitOrganizationUrl(req: CreateBatchInitOrganizationUrlRequest, cb?: (error: string, rep: CreateBatchInitOrganizationUrlResponse) => void): Promise<CreateBatchInitOrganizationUrlResponse>;
     /**
      * 此接口（CreateChannelOrganizationInfoChangeUrl）用于创建子客企业信息变更链接。
 

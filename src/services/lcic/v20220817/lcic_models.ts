@@ -331,6 +331,16 @@ export interface ModifyAppResponse {
 }
 
 /**
+ * UnblockKickedUser返回参数结构体
+ */
+export interface UnblockKickedUserResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * BatchRegister请求参数结构体
  */
 export interface BatchRegisterRequest {
@@ -996,6 +1006,24 @@ export interface SetAppCustomContentResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * UnblockKickedUser请求参数结构体
+ */
+export interface UnblockKickedUserRequest {
+  /**
+   * 低代码平台的SdkAppId。
+   */
+  SdkAppId: number
+  /**
+   * 房间Id。
+   */
+  RoomId: number
+  /**
+   * 需要解禁踢出的成员Id。
+   */
+  UserId: string
 }
 
 /**
@@ -1684,6 +1712,20 @@ export interface DescribeScoreListRequest {
 }
 
 /**
+ * DescribeRecordStream请求参数结构体
+ */
+export interface DescribeRecordStreamRequest {
+  /**
+   * 学校ID
+   */
+  SdkAppId: number
+  /**
+   * 房间ID
+   */
+  RoomId: number
+}
+
+/**
  * 应用配置信息
  */
 export interface AppConfig {
@@ -2256,6 +2298,40 @@ video 纯视频
    */
   RecordLang?: string
   /**
+   * 录制类型 0 仅录制混流（默认） ;1 录制混流+单流，该模式下除混流录制基础上，分别录制老师、台上学生的音视频流，每路录制都会产生相应的录制费用 。示例：0
+   */
+  RecordStream?: number
+  /**
+   * 录制模板。房间子类型为视频+白板（SubType=videodoc）时默认为3，房间子类型为纯视频（SubType=video）时默认为0。录制模板枚举值参考：https://cloud.tencent.com/document/product/1639/89744
+   */
+  RecordLayout?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * DescribeRecordStream返回参数结构体
+ */
+export interface DescribeRecordStreamResponse {
+  /**
+   * 学校ID
+   */
+  SchoolId?: number
+  /**
+   * 课堂ID
+   */
+  ClassId?: number
+  /**
+   * 课堂类型
+   */
+  ClassType?: number
+  /**
+   * 用户流信息
+   */
+  StreamInfo?: Array<SingleStreamInfo>
+  /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
@@ -2656,6 +2732,57 @@ export interface LoginUserRequest {
    * 注册获取的用户id。
    */
   UserId: string
+}
+
+/**
+ * 录制流信息
+ */
+export interface SingleStreamInfo {
+  /**
+   * 用户ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UserId?: string
+  /**
+   * 开始时间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  StartTime?: number
+  /**
+   * 结束时间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  StopTime?: number
+  /**
+   * 总时长
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Duration?: number
+  /**
+   * 文件格式
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FileFormat?: string
+  /**
+   * 流url
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RecordUrl?: string
+  /**
+   * 流大小
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RecordSize?: number
+  /**
+   * 流ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  VideoId?: string
+  /**
+   * 流类型
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Role?: string
 }
 
 /**

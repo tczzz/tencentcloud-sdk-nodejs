@@ -366,13 +366,25 @@ export interface StaticInfo {
 }
 
 /**
- * SyncFwOperate返回参数结构体
+ * ModifySequenceRules请求参数结构体
  */
-export interface SyncFwOperateResponse {
+export interface ModifySequenceRulesRequest {
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 边Id值
    */
-  RequestId?: string
+  EdgeId?: string
+  /**
+   * 修改数据
+   */
+  Data?: Array<SequenceData>
+  /**
+   * NAT地域
+   */
+  Area?: string
+  /**
+   * 方向，0：出向，1：入向
+   */
+  Direction?: number
 }
 
 /**
@@ -865,6 +877,11 @@ export interface BlockIgnoreRule {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   CustomRule?: CustomWhiteRule
+  /**
+   * 1 border 2 nat 4 vpc 8 border-serial
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FwType?: number
 }
 
 /**
@@ -916,29 +933,30 @@ export interface DeleteAllAccessControlRuleRequest {
 }
 
 /**
- * ModifyBlockIgnoreList请求参数结构体
+ * ModifyEdgeIpSwitch请求参数结构体
  */
-export interface ModifyBlockIgnoreListRequest {
+export interface ModifyEdgeIpSwitchRequest {
   /**
-   * 1封禁列表 2 放通列表
+   * 0 关闭开关
+1 打开开关
+2 不操作开关，此次切换模式
    */
-  RuleType: number
+  Enable?: number
   /**
-   * IP、Domain二选一（注：封禁列表，只能填写IP），不能同时为空
+   * 操作开关详情
    */
-  IOC: Array<IocListData>
+  EdgeIpSwitchLst?: Array<EdgeIpSwitch>
   /**
-   * 可选值：delete（删除）、edit（编辑）、add（添加）  其他值无效
+   * 0 不自动选择子网
+1 自动选择子网创建私有连接
    */
-  IocAction: string
+  AutoChooseSubnet?: number
   /**
-   * 时间格式：yyyy-MM-dd HH:mm:ss，IocAction 为edit或add时必填
+   * 0 切换为旁路
+1 切换为串行
+2 不切换模式，此次操作开关
    */
-  StartTime?: string
-  /**
-   * 时间格式：yyyy-MM-dd HH:mm:ss，IocAction 为edit或add时必填，必须大于当前时间且大于StartTime
-   */
-  EndTime?: string
+  SwitchMode?: number
 }
 
 /**
@@ -1112,6 +1130,44 @@ export interface ModifyNatInstanceRequest {
    * NAT防火墙实例ID
    */
   NatInstanceId?: string
+}
+
+/**
+ * DescribeNatFwDnatRule请求参数结构体
+ */
+export interface DescribeNatFwDnatRuleRequest {
+  /**
+   * 需要查询的索引，特定场景使用，可不填
+   */
+  Index?: string
+  /**
+   * 过滤条件组合
+   */
+  Filters?: Array<CommonFilter>
+  /**
+   * 每页条数
+   */
+  Limit?: number
+  /**
+   * 偏移值
+   */
+  Offset?: number
+  /**
+   * 检索的起始时间，可不传
+   */
+  StartTime?: string
+  /**
+   * 检索的截止时间，可不传
+   */
+  EndTime?: string
+  /**
+   * desc：降序；asc：升序。根据By字段的值进行排序，这里传参的话则By也必须有值
+   */
+  Order?: string
+  /**
+   * 排序所用到的字段
+   */
+  By?: string
 }
 
 /**
@@ -1319,6 +1375,153 @@ export interface DescribeAclRuleRequest {
 }
 
 /**
+ * Nat实例卡片详细信息
+ */
+export interface NatInstanceInfo {
+  /**
+   * nat实例id
+   */
+  NatinsId?: string
+  /**
+   * nat实例名称
+   */
+  NatinsName?: string
+  /**
+   * 实例所在地域
+   */
+  Region?: string
+  /**
+   * 0: 新增模式，1:接入模式
+   */
+  FwMode?: number
+  /**
+   * 实例带宽大小 Mbps
+   */
+  BandWidth?: number
+  /**
+   * 入向带宽峰值 bps
+   */
+  InFlowMax?: number
+  /**
+   * 出向带宽峰值 bps
+   */
+  OutFlowMax?: number
+  /**
+   * 地域中文信息
+   */
+  RegionZh?: string
+  /**
+   * 公网ip数组
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  EipAddress?: Array<string>
+  /**
+   * 内外使用ip数组
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  VpcIp?: Array<string>
+  /**
+   * 实例关联子网数组
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Subnets?: Array<string>
+  /**
+   * 0 :正常 1：正在初始化
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Status?: number
+  /**
+   * 地域区域信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RegionDetail?: string
+  /**
+   * 实例所在可用区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ZoneZh?: string
+  /**
+   * 实例所在可用区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ZoneZhBak?: string
+  /**
+   * 已使用规则数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RuleUsed?: number
+  /**
+   * 实例的规则限制最大规格数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RuleMax?: number
+  /**
+   * 实例引擎版本
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  EngineVersion?: string
+  /**
+   * 引擎是否可升级：0，不可升级；1，可升级
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UpdateEnable?: number
+  /**
+   * 是的需要升级引擎 支持 nat拨测 1需要 0不需要
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NeedProbeEngineUpdate?: number
+  /**
+   * 引擎运行模式，Normal:正常, OnlyRoute:透明模式
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TrafficMode?: string
+  /**
+   * 实例主所在可用区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Zone?: string
+  /**
+   * 实例备所在可用区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ZoneBak?: string
+  /**
+   * 引擎预约升级时间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ReserveTime?: string
+  /**
+   * 引擎预约升级版本
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ReserveVersion?: string
+  /**
+   * 引擎预约升级版本状态
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ReserveVersionState?: string
+  /**
+   * 弹性开关
+1 打开
+0 关闭
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ElasticSwitch?: number
+  /**
+   * 弹性带宽，单位Mbps
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ElasticBandwidth?: number
+  /**
+   * 是否首次开通按量付费
+1 是
+0 不是
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IsFirstAfterPay?: number
+}
+
+/**
  * CreateSecurityGroupRules返回参数结构体
  */
 export interface CreateSecurityGroupRulesResponse {
@@ -1383,13 +1586,17 @@ export interface ModifyAllPublicIPSwitchStatusResponse {
 }
 
 /**
- * DeleteVpcInstance返回参数结构体
+ * SyncFwOperate请求参数结构体
  */
-export interface DeleteVpcInstanceResponse {
+export interface SyncFwOperateRequest {
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 同步操作类型：Route，同步防火墙路由
    */
-  RequestId?: string
+  SyncType: string
+  /**
+   * 防火墙类型；nat,nat防火墙;ew,vpc间防火墙
+   */
+  FwType?: string
 }
 
 /**
@@ -1423,17 +1630,29 @@ export interface ModifyAssetScanRequest {
 }
 
 /**
- * 设置nat防火墙的vpc dns 接入开关
+ * ModifyBlockIgnoreList请求参数结构体
  */
-export interface DnsVpcSwitch {
+export interface ModifyBlockIgnoreListRequest {
   /**
-   * vpc id
+   * 1封禁列表 2 放通列表
    */
-  VpcId: string
+  RuleType: number
   /**
-   * 0：设置为关闭 1:设置为打开
+   * IP、Domain二选一（注：封禁列表，只能填写IP），不能同时为空
    */
-  Status: number
+  IOC: Array<IocListData>
+  /**
+   * 可选值：delete（删除）、edit（编辑）、add（添加）  其他值无效
+   */
+  IocAction: string
+  /**
+   * 时间格式：yyyy-MM-dd HH:mm:ss，IocAction 为edit或add时必填
+   */
+  StartTime?: string
+  /**
+   * 时间格式：yyyy-MM-dd HH:mm:ss，IocAction 为edit或add时必填，必须大于当前时间且大于StartTime
+   */
+  EndTime?: string
 }
 
 /**
@@ -1446,7 +1665,7 @@ export interface BanAndAllowRuleDel {
    */
   Ioc?: string
   /**
-   * 0互联网出站 1互联网入站 5内网访问源 6内网访问目的
+   * 0互联网出站 1互联网入站 5内网访问源 6内网访问目的 （DeleteBlockIgnoreRuleNew接口，该字段无效）
 注意：此字段可能返回 null，表示取不到有效值。
    */
   DirectionList?: string
@@ -1611,25 +1830,13 @@ export interface DeleteIdsWhiteRuleRequest {
 }
 
 /**
- * ModifySequenceRules请求参数结构体
+ * ModifyNatFwSwitch返回参数结构体
  */
-export interface ModifySequenceRulesRequest {
+export interface ModifyNatFwSwitchResponse {
   /**
-   * 边Id值
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  EdgeId?: string
-  /**
-   * 修改数据
-   */
-  Data?: Array<SequenceData>
-  /**
-   * NAT地域
-   */
-  Area?: string
-  /**
-   * 方向，0：出向，1：入向
-   */
-  Direction?: number
+  RequestId?: string
 }
 
 /**
@@ -1810,6 +2017,16 @@ export interface VpcFwGroupInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   CrossUserMode?: string
+  /**
+   * 云联网模式下，当前实例是否需要开启重叠路由开关，1：需要开启，0：不需要开启
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NeedSwitchCcnOverlap?: number
+  /**
+   * 云联网模式下，实例关联的云联网id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  CcnId?: string
 }
 
 /**
@@ -2087,6 +2304,20 @@ export interface DescribeVpcAcRuleRequest {
 }
 
 /**
+ * DeleteRemoteAccessDomain返回参数结构体
+ */
+export interface DeleteRemoteAccessDomainResponse {
+  /**
+   * 状态值 0：删除成功，非 0：删除失败
+   */
+  Status: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * VPC防火墙实例卡片信息
  */
 export interface VpcFwInstanceInfo {
@@ -2306,150 +2537,13 @@ export interface AddAclRuleResponse {
 }
 
 /**
- * Nat实例卡片详细信息
+ * DeleteRemoteAccessDomain请求参数结构体
  */
-export interface NatInstanceInfo {
+export interface DeleteRemoteAccessDomainRequest {
   /**
-   * nat实例id
+   * 域名列表
    */
-  NatinsId?: string
-  /**
-   * nat实例名称
-   */
-  NatinsName?: string
-  /**
-   * 实例所在地域
-   */
-  Region?: string
-  /**
-   * 0: 新增模式，1:接入模式
-   */
-  FwMode?: number
-  /**
-   * 实例带宽大小 Mbps
-   */
-  BandWidth?: number
-  /**
-   * 入向带宽峰值 bps
-   */
-  InFlowMax?: number
-  /**
-   * 出向带宽峰值 bps
-   */
-  OutFlowMax?: number
-  /**
-   * 地域中文信息
-   */
-  RegionZh?: string
-  /**
-   * 公网ip数组
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  EipAddress?: Array<string>
-  /**
-   * 内外使用ip数组
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  VpcIp?: Array<string>
-  /**
-   * 实例关联子网数组
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Subnets?: Array<string>
-  /**
-   * 0 :正常 1：正在初始化
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Status?: number
-  /**
-   * 地域区域信息
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  RegionDetail?: string
-  /**
-   * 实例所在可用区
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ZoneZh?: string
-  /**
-   * 实例所在可用区
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ZoneZhBak?: string
-  /**
-   * 已使用规则数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  RuleUsed?: number
-  /**
-   * 实例的规则限制最大规格数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  RuleMax?: number
-  /**
-   * 实例引擎版本
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  EngineVersion?: string
-  /**
-   * 引擎是否可升级：0，不可升级；1，可升级
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  UpdateEnable?: number
-  /**
-   * 是的需要升级引擎 支持 nat拨测 1需要 0不需要
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  NeedProbeEngineUpdate?: number
-  /**
-   * 引擎运行模式，Normal:正常, OnlyRoute:透明模式
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  TrafficMode?: string
-  /**
-   * 实例主所在可用区
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Zone?: string
-  /**
-   * 实例备所在可用区
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ZoneBak?: string
-  /**
-   * 引擎预约升级时间
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ReserveTime?: string
-  /**
-   * 引擎预约升级版本
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ReserveVersion?: string
-  /**
-   * 引擎预约升级版本状态
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ReserveVersionState?: string
-  /**
-   * 弹性开关
-1 打开
-0 关闭
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ElasticSwitch?: number
-  /**
-   * 弹性带宽，单位Mbps
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  ElasticBandwidth?: number
-  /**
-   * 是否首次开通按量付费
-1 是
-0 不是
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  IsFirstAfterPay?: number
+  AccessDomainList: Array<string>
 }
 
 /**
@@ -2541,6 +2635,10 @@ export interface CreateNatRuleItem {
    * 内部id
    */
   InternalUuid?: number
+  /**
+   * 规则生效的范围：ALL，全局生效；ap-guangzhou，生效的地域；cfwnat-xxx，生效基于实例维度
+   */
+  Scope?: string
 }
 
 /**
@@ -2900,6 +2998,11 @@ export interface EdgeIpInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Domain?: string
+  /**
+   * IP超量状态
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OverUsedStatus?: number
 }
 
 /**
@@ -3222,6 +3325,16 @@ export interface DescribeNatFwInfoCountResponse {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   OpenSwitchCount?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * SyncFwOperate返回参数结构体
+ */
+export interface SyncFwOperateResponse {
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3577,21 +3690,6 @@ export interface RemoveNatAcRuleRequest {
    * 规则方向：1，入站；0，出站
    */
   Direction?: number
-}
-
-/**
- * ModifySequenceRules返回参数结构体
- */
-export interface ModifySequenceRulesResponse {
-  /**
-   * 0: 修改成功, 非0: 修改失败
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Status: number
-  /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-   */
-  RequestId?: string
 }
 
 /**
@@ -4439,30 +4537,18 @@ export interface DescribeTableStatusResponse {
 }
 
 /**
- * ModifyEdgeIpSwitch请求参数结构体
+ * ModifySequenceRules返回参数结构体
  */
-export interface ModifyEdgeIpSwitchRequest {
+export interface ModifySequenceRulesResponse {
   /**
-   * 0 关闭开关
-1 打开开关
-2 不操作开关，此次切换模式
+   * 0: 修改成功, 非0: 修改失败
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Enable?: number
+  Status: number
   /**
-   * 操作开关详情
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  EdgeIpSwitchLst?: Array<EdgeIpSwitch>
-  /**
-   * 0 不自动选择子网
-1 自动选择子网创建私有连接
-   */
-  AutoChooseSubnet?: number
-  /**
-   * 0 切换为旁路
-1 切换为串行
-2 不切换模式，此次操作开关
-   */
-  SwitchMode?: number
+  RequestId?: string
 }
 
 /**
@@ -4825,9 +4911,18 @@ export interface DescribeIPStatusListRequest {
 }
 
 /**
- * ModifyNatFwSwitch返回参数结构体
+ * DescribeNatFwDnatRule返回参数结构体
  */
-export interface ModifyNatFwSwitchResponse {
+export interface DescribeNatFwDnatRuleResponse {
+  /**
+   * Dnat规则列表
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Data?: Array<DescNatDnatRule>
+  /**
+   * 列表总数
+   */
+  Total?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5058,20 +5153,6 @@ export interface IdsWhiteInfo {
  * DescribeGuideScanInfo请求参数结构体
  */
 export type DescribeGuideScanInfoRequest = null
-
-/**
- * SyncFwOperate请求参数结构体
- */
-export interface SyncFwOperateRequest {
-  /**
-   * 同步操作类型：Route，同步防火墙路由
-   */
-  SyncType: string
-  /**
-   * 防火墙类型；nat,nat防火墙;ew,vpc间防火墙
-   */
-  FwType?: string
-}
 
 /**
  * 未处置事件详情
@@ -5606,6 +5687,11 @@ export interface BanAndAllowRule {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   CustomRule?: CustomWhiteRule
+  /**
+   * 放通的引擎: 1针对互联网边界 2针对nat防火墙 4针对vpc防火墙
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FwType?: number
 }
 
 /**
@@ -6249,10 +6335,16 @@ export interface DescAcItem {
    */
   BetaList?: Array<BetaInfoByACL>
   /**
-   * 生效范围：serial，串行；side，旁路；all，全局
+   * （1）互联网边界防火墙，生效范围：serial，串行；side，旁路；all，全局；
+（2）NAT边界防火墙：ALL，全局生效；ap-guangzhou，生效的地域；cfwnat-xxx，生效基于实例维度
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Scope?: string
+  /**
+   * 生效范围描述
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ScopeDesc?: string
   /**
    * 互联网边界防火墙使用的内部规则id
 注意：此字段可能返回 null，表示取不到有效值。
@@ -6278,6 +6370,11 @@ export interface DescAcItem {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   TargetName?: string
+  /**
+   * 规则最近命中时间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  LastHitTime?: string
 }
 
 /**
@@ -6382,6 +6479,11 @@ export interface DescribeLogsResponse {
    */
   ReturnMsg?: string
   /**
+   * 七层协议，NTA日志有效
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  AppProtocolList?: Array<string>
+  /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
@@ -6410,9 +6512,18 @@ export interface CreateSecurityGroupRulesRequest {
 }
 
 /**
- * DeleteVpcInstance请求参数结构体
+ * 设置nat防火墙的vpc dns 接入开关
  */
-export type DeleteVpcInstanceRequest = null
+export interface DnsVpcSwitch {
+  /**
+   * vpc id
+   */
+  VpcId: string
+  /**
+   * 0：设置为关闭 1:设置为打开
+   */
+  Status: number
+}
 
 /**
  * 防火墙开关列表对象
@@ -6932,6 +7043,21 @@ export interface NatSwitchListData {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Abnormal?: number
+  /**
+   * nat防火墙出口路由表id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ORTableId?: string
+  /**
+   * nat防火墙出口路由表名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ORTableName?: string
+  /**
+   * 出口Snat Ip列表
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Ohavips?: Array<string>
 }
 
 /**
@@ -7261,6 +7387,62 @@ export interface ModifyEnterpriseSecurityDispatchStatusRequest {
 }
 
 /**
+ * NAT防火墙Dnat规则列表
+ */
+export interface DescNatDnatRule {
+  /**
+   * id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Id?: number
+  /**
+   * 网络协议，可选值：TCP、UDP。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IpProtocol?: string
+  /**
+   * 弹性IP。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  PublicIpAddress?: string
+  /**
+   * 公网端口。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  PublicPort?: number
+  /**
+   * 内网地址。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  PrivateIpAddress?: string
+  /**
+   * 内网端口。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  PrivatePort?: number
+  /**
+   * NAT防火墙转发规则描述。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Description?: string
+  /**
+   * 是否被关联引用，如被远程运维使用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IsReferenced?: number
+  /**
+   * 所属防火墙实例id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FwInsId?: string
+  /**
+   * 关联的nat网关Id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NatGwId?: string
+}
+
+/**
  * DescribeBlockIgnoreList返回参数结构体
  */
 export interface DescribeBlockIgnoreListResponse {
@@ -7458,6 +7640,14 @@ export interface DescribeAddressTemplateListResponse {
    * 协议端口模板数量
    */
   PortTemplateCount?: number
+  /**
+   * 已使用的地址模板数
+   */
+  UsedTemplateCount?: number
+  /**
+   * 地址模板配额数量
+   */
+  TemplateQuotaCount?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */

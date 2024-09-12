@@ -217,6 +217,10 @@ export interface ModifyWebHookPolicyRequest {
      * 主机列表
      */
     Quuids?: Array<string>;
+    /**
+     * 需排除的机器列表
+     */
+    ExcludedQuuids?: Array<string>;
 }
 /**
  * DescribeBashPolicies请求参数结构体
@@ -3364,7 +3368,7 @@ export interface ModifyEventAttackStatusRequest {
      */
     All?: boolean;
     /**
-     * 0：待处理 1：已处理 2： 已加白 3： 已忽略 4：已删除
+     * 0：待处理 1：已处理 3： 已忽略 4：已删除
      */
     Status?: number;
     /**
@@ -5978,6 +5982,10 @@ export interface ModifyWarningHostConfigRequest {
      * 项目或标签的id列表，自选主机时为空
      */
     ItemLabelIds?: Array<string>;
+    /**
+     * 需排除的机器列表
+     */
+    ExcludedQuuids?: Array<string>;
 }
 /**
  * ExportMalwares返回参数结构体
@@ -7364,7 +7372,7 @@ export interface ExportAssetRecentMachineInfoResponse {
     /**
      * 下载地址
      */
-    DownloadUrl: string;
+    DownloadUrl?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -8583,22 +8591,27 @@ export interface CanFixVulInfo {
      * 漏洞id
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    VulId: number;
+    VulId?: number;
     /**
      * 漏洞名称
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    VulName: string;
+    VulName?: string;
     /**
      * 该漏洞可修复的主机信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    HostList: Array<VulInfoHostInfo>;
+    HostList?: Array<VulInfoHostInfo>;
     /**
      * 修复提示tag
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    FixTag: Array<string>;
+    FixTag?: Array<string>;
+    /**
+     * 漏洞分类1 web cms漏洞,2应用漏洞,4linux软件漏洞,5windows系统漏洞
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    VulCategory?: number;
 }
 /**
  * DescribeWebHookPolicy请求参数结构体
@@ -11081,6 +11094,10 @@ export interface CreateVulFixTaskQuuids {
      * 需要修复漏洞的主机，所有主机必须有VulId的这个漏洞且是待修复状态。
      */
     Quuids: Array<string>;
+    /**
+     * 修复方式 0组件更新或者安装补丁,1禁用服务
+     */
+    FixMethod?: number;
 }
 /**
  * DescribeMachineOsList返回参数结构体
@@ -12511,6 +12528,10 @@ export interface CreateMalwareWhiteListRequest {
      * 木马事件ID
      */
     EventId?: number;
+    /**
+     * 对历史待处理执行加白操作；0是不处理，1是处理
+     */
+    IsHandleHistoryEvents?: number;
 }
 /**
  * ModifyLicenseUnBinds请求参数结构体
@@ -13104,6 +13125,15 @@ export interface ModifyWebPageProtectDirRequest {
      * 防护机器列表信息
      */
     HostConfig: Array<ProtectHostConfig>;
+}
+/**
+ * ModifyReverseShellRulesAggregation返回参数结构体
+ */
+export interface ModifyReverseShellRulesAggregationResponse {
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
 }
 /**
  * 资源管理Web应用列表信息
@@ -13846,85 +13876,90 @@ export interface BashEvent {
     /**
      * 数据ID
      */
-    Id: number;
+    Id?: number;
     /**
      * 主机安全ID
      */
-    Uuid: string;
+    Uuid?: string;
     /**
      * 主机ID
      */
-    Quuid: string;
+    Quuid?: string;
     /**
      * 主机内网IP
      */
-    Hostip: string;
+    Hostip?: string;
     /**
      * 执行用户名
      */
-    User: string;
+    User?: string;
     /**
      * 平台类型
      */
-    Platform: number;
+    Platform?: number;
     /**
      * 执行命令
      */
-    BashCmd: string;
+    BashCmd?: string;
     /**
      * 规则ID
      */
-    RuleId: number;
+    RuleId?: number;
     /**
      * 规则名称
      */
-    RuleName: string;
+    RuleName?: string;
     /**
      * 规则等级：1-高 2-中 3-低
      */
-    RuleLevel: number;
+    RuleLevel?: number;
     /**
      * 处理状态： 0 = 待处理 1= 已处理, 2 = 已加白， 3 = 已忽略
      */
-    Status: number;
+    Status?: number;
     /**
      * 发生时间
      */
-    CreateTime: string;
+    CreateTime?: string;
     /**
      * 主机名
      */
-    MachineName: string;
+    MachineName?: string;
     /**
      * 0: bash日志 1: 实时监控(雷霆版)
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    DetectBy: number;
+    DetectBy?: number;
     /**
      * 进程id
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Pid: string;
+    Pid?: string;
     /**
      * 进程名称
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Exe: string;
+    Exe?: string;
     /**
      * 处理时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    ModifyTime: string;
+    ModifyTime?: string;
     /**
      * 规则类别  0=系统规则，1=用户规则
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    RuleCategory: number;
+    RuleCategory?: number;
     /**
      * 自动生成的正则表达式
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    RegexBashCmd: string;
+    RegexBashCmd?: string;
+    /**
+     * 主机HostName
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    HostName?: string;
 }
 /**
  * DeleteMalwares请求参数结构体
@@ -14147,6 +14182,10 @@ export interface DescribeScanVulSettingResponse {
      * 为空默认扫描全部专业版、旗舰版、普惠版主机，不为空只扫描选中主机
      */
     Uuids?: Array<string>;
+    /**
+     * 0版本比对,2版本比对+poc
+     */
+    ScanMethod?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -16151,31 +16190,36 @@ export interface VulFixStatusInfo {
      * 漏洞id
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    VulId: number;
+    VulId?: number;
     /**
      * 漏洞名称
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    VulName: string;
+    VulName?: string;
     /**
      * 漏洞修复进度 1-100；
      */
-    Progress: number;
+    Progress?: number;
     /**
      * 漏洞对应主机修复状态
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    HostList: Array<VulFixStatusHostInfo>;
+    HostList?: Array<VulFixStatusHostInfo>;
     /**
      * 漏洞修复失败主机数量
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    FailCnt: number;
+    FailCnt?: number;
     /**
      * 修复成功的数量
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    FixSuccessCnt: number;
+    FixSuccessCnt?: number;
+    /**
+     * 修复方式 0组件更新或者安装补丁,1禁用服务
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    FixMethod?: number;
 }
 /**
  * DeleteWebHookReceiver返回参数结构体
@@ -17253,7 +17297,7 @@ export interface ExportSecurityTrendsResponse {
     /**
      * 导出文件下载链接地址。
      */
-    DownloadUrl: string;
+    DownloadUrl?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -18505,116 +18549,121 @@ export interface BashEventsInfo {
     /**
      * 数据ID
      */
-    Id: number;
+    Id?: number;
     /**
      * 云镜ID
      */
-    Uuid: string;
+    Uuid?: string;
     /**
      * 主机ID
      */
-    Quuid: string;
+    Quuid?: string;
     /**
      * 主机内网IP
      */
-    HostIp: string;
+    HostIp?: string;
     /**
      * 平台类型
      */
-    Platform: number;
+    Platform?: number;
     /**
      * 执行命令
      */
-    BashCmd: string;
+    BashCmd?: string;
     /**
      * 规则ID,等于0表示已规则已被删除或生效范围已修改
      */
-    RuleId: number;
+    RuleId?: number;
     /**
      * 规则名称
      */
-    RuleName: string;
+    RuleName?: string;
     /**
      * 规则等级：1-高 2-中 3-低
      */
-    RuleLevel: number;
+    RuleLevel?: number;
     /**
      * 处理状态： 0 = 待处理 1= 已处理, 2 = 已加白， 3= 已忽略
      */
-    Status: number;
+    Status?: number;
     /**
      * 发生时间
      */
-    CreateTime: string;
+    CreateTime?: string;
     /**
      * 主机名
      */
-    MachineName: string;
+    MachineName?: string;
     /**
      * 进程名称
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Exe: string;
+    Exe?: string;
     /**
      * 处理时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    ModifyTime: string;
+    ModifyTime?: string;
     /**
      * 规则类别  0=系统规则，1=用户规则
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    RuleCategory: number;
+    RuleCategory?: number;
     /**
      * 自动生成的正则表达式
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    RegexBashCmd: string;
+    RegexBashCmd?: string;
     /**
      * 进程树 json  pid:进程id，exe:文件路径 ，account:进程所属用组和用户 ,cmdline:执行命令，ssh_service: SSH服务ip, ssh_soure:登录源
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    PsTree: string;
+    PsTree?: string;
     /**
      * 建议方案
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    SuggestScheme: string;
+    SuggestScheme?: string;
     /**
      * 描述
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    HarmDescribe: string;
+    HarmDescribe?: string;
     /**
      * 标签
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Tags: Array<string>;
+    Tags?: Array<string>;
     /**
      * 参考链接
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    References: Array<string>;
+    References?: Array<string>;
     /**
      * 主机外网ip
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    MachineWanIp: string;
+    MachineWanIp?: string;
     /**
      * 主机在线状态 OFFLINE  ONLINE
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    MachineStatus: string;
+    MachineStatus?: string;
     /**
      * 登录用户
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    User: string;
+    User?: string;
     /**
      * 进程号
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Pid: string;
+    Pid?: string;
+    /**
+     * 数据来源
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DetectBy?: string;
 }
 /**
  * StopNoticeBanTips返回参数结构体
@@ -20539,27 +20588,31 @@ export interface DescribeWarningHostConfigResponse {
     /**
      * 告警主机范围类型，0:全部主机，1:按所属项目选，2:按腾讯云标签选，3:按主机安全标签选，4:自选主机
      */
-    HostRange: number;
+    HostRange?: number;
     /**
      * 项目或标签的名称列表，自选主机时为空
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    ItemLabels: Array<string>;
+    ItemLabels?: Array<string>;
     /**
      * 机器列表
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Quuids: Array<string>;
+    Quuids?: Array<string>;
     /**
      * 机器列表总数量
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 项目或标签的id列表，自选主机时为空
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    ItemLabelIds: Array<string>;
+    ItemLabelIds?: Array<string>;
+    /**
+     * 需排除的机器列表
+     */
+    ExcludedQuuids?: Array<string>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -20915,18 +20968,7 @@ export interface DescribeHostLoginListRequest {
      */
     Offset?: number;
     /**
-     * 过滤条件。
-  <li>Quuid - String - 是否必填：否 - 云服务器uuid</li>
-  <li>Uuid - String - 是否必填：否 - 主机安全唯一Uuid</li>
-  <li>MachineName - String - 是否必填：否 - 主机别名</li>
-  <li>Ip - String - 是否必填：否 - 主机ip</li>
-  <li>InstanceID - String - 是否必填：否 - 主机实例ID</li>
-  <li>SrcIp - String - 是否必填：否 - 来源ip筛选</li>
-  <li>UserName - String - 是否必填：否 - 用户名筛选</li>
-  <li>Status - int - 是否必填：否 - 状态筛选1:正常登录；5：已加白,14:已处理，15：已忽略</li>
-  <li>LoginTimeBegin - String - 是否必填：否 - 按照修改时间段筛选，开始时间</li>
-  <li>LoginTimeEnd - String - 是否必填：否 - 按照修改时间段筛选，结束时间</li>
-  <li>RiskLevel - int - 是否必填：否 - 状态筛选0:高危；1：可疑</li>
+     * 过滤条件。<li>Quuid - String - 是否必填：否 - 云服务器uuid</li><li>Uuid - String - 是否必填：否 - 主机安全唯一Uuid</li><li>MachineName - String - 是否必填：否 - 主机别名</li><li>Ip - String - 是否必填：否 - 主机ip</li><li>InstanceID - String - 是否必填：否 - 主机实例ID</li><li>SrcIp - String - 是否必填：否 - 来源ip筛选</li><li>UserName - String - 是否必填：否 - 用户名筛选</li><li>Status - string - 是否必填：否 - 状态筛选1:正常登录；5：已加白,14:已处理，15：已忽略</li><li>LoginTimeBegin - String - 是否必填：否 - 按照修改时间段筛选，开始时间</li><li>LoginTimeEnd - String - 是否必填：否 - 按照修改时间段筛选，结束时间</li><li>RiskLevel - string - 是否必填：否 - 状态筛选0:高危；1：可疑</li>
      */
     Filters?: Array<Filter>;
     /**
@@ -21359,6 +21401,10 @@ export interface ScanVulSettingRequest {
      * 为空默认扫描全部专业版、旗舰版、普惠版主机，不为空只扫描选中主机
      */
     Uuids?: Array<string>;
+    /**
+     * 0版本比对，2版本比对+poc
+     */
+    ScanMethod?: number;
 }
 /**
  * 项
@@ -23870,11 +23916,11 @@ export interface ExportVulDetectionReportResponse {
     /**
      * 导出文件下载链接地址
      */
-    DownloadUrl: string;
+    DownloadUrl?: string;
     /**
      * 导出检测报告的任务Id（不同于入参的漏洞扫描任务id）
      */
-    TaskId: string;
+    TaskId?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -25936,6 +25982,52 @@ export interface DescribeBaselineRuleDetectListResponse {
     RequestId?: string;
 }
 /**
+ * UpdateBaselineStrategy请求参数结构体
+ */
+export interface UpdateBaselineStrategyRequest {
+    /**
+     * 策略id
+     */
+    StrategyId: number;
+    /**
+     * 策略名称
+     */
+    StrategyName: string;
+    /**
+     * 检测周期
+     */
+    ScanCycle: number;
+    /**
+     * 定期检测时间，该时间下发扫描
+     */
+    ScanAt: string;
+    /**
+     * 该策略下选择的基线id数组
+     */
+    CategoryIds: Array<string>;
+    /**
+     * 扫描范围是否全部服务器, 1:是  0:否, 为1则为全部专业版主机
+     */
+    IsGlobal: number;
+    /**
+     * 云主机类型：
+  cvm：腾讯云服务器
+  bm：裸金属
+  ecm：边缘计算主机
+  lh:轻量应用服务器
+  other:混合云机器
+     */
+    MachineType: string;
+    /**
+     * 主机地域 ap-guangzhou
+     */
+    RegionCode: string;
+    /**
+     * 主机id数组
+     */
+    Quuids: Array<string>;
+}
+/**
  * 资产管理内核模块参数
  */
 export interface AssetCoreModuleParam {
@@ -27821,6 +27913,10 @@ export interface ScanVulRequest {
      * 需要扫描的漏洞id
      */
     VulIds?: Array<number | bigint>;
+    /**
+     * 0版本比对，2版本比对+poc
+     */
+    ScanMethod?: number;
 }
 /**
  * DeleteBaselineWeakPassword返回参数结构体
@@ -28725,50 +28821,57 @@ export interface DescribeScanTaskDetailsResponse {
     RequestId?: string;
 }
 /**
- * UpdateBaselineStrategy请求参数结构体
+ * ModifyReverseShellRulesAggregation请求参数结构体
  */
-export interface UpdateBaselineStrategyRequest {
+export interface ModifyReverseShellRulesAggregationRequest {
     /**
-     * 策略id
+     * 规则ID(新增时请留空)
      */
-    StrategyId: number;
+    Id?: number;
     /**
-     * 策略名称
+     * 客户端ID数组
      */
-    StrategyName: string;
+    Uuids?: Array<string>;
     /**
-     * 检测周期
+     * 主机IP
      */
-    ScanCycle: number;
+    HostIp?: string;
     /**
-     * 定期检测时间，该时间下发扫描
+     * 目标IP
      */
-    ScanAt: string;
+    DestIp?: string;
     /**
-     * 该策略下选择的基线id数组
+     * 目标端口
      */
-    CategoryIds: Array<string>;
+    DestPort?: string;
     /**
-     * 扫描范围是否全部服务器, 1:是  0:否, 为1则为全部专业版主机
+     * 进程名
      */
-    IsGlobal: number;
+    ProcessName?: string;
     /**
-     * 云主机类型：
-  cvm：腾讯云服务器
-  bm：裸金属
-  ecm：边缘计算主机
-  lh:轻量应用服务器
-  other:混合云机器
+     * 是否全局规则(默认否)
      */
-    MachineType: string;
+    IsGlobal?: number;
     /**
-     * 主机地域 ap-guangzhou
+     * 事件列表和详情点击加白时关联的事件id (新增规则时请留空)
      */
-    RegionCode: string;
+    EventId?: number;
     /**
-     * 主机id数组
+     * 加白方式， 0:常规加白 1:正则加白
      */
-    Quuids: Array<string>;
+    WhiteType?: number;
+    /**
+     * 正则表达式
+     */
+    RuleRegexp?: string;
+    /**
+     * 处理历史事件， 0:不处理 1:处理
+     */
+    HandleHistory?: number;
+    /**
+     * 批次id
+     */
+    GroupID?: string;
 }
 /**
  * DescribeHostLoginList返回参数结构体

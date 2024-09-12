@@ -16,6 +16,17 @@
  */
 
 /**
+ * 智能横转竖任务输入类型
+ */
+export interface AiAnalysisTaskHorizontalToVerticalInput {
+  /**
+   * 视频智能横转竖模板 ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Definition?: number
+}
+
+/**
  * ModifySnapshotByTimeOffsetTemplate返回参数结构体
  */
 export interface ModifySnapshotByTimeOffsetTemplateResponse {
@@ -1248,12 +1259,67 @@ export interface MediaTranscodeItem {
  */
 export interface DiagnoseResult {
   /**
-   * 诊断出的异常类别。
+   * 诊断出的异常类别，取值范围：
+DecodeParamException：解码参数异常
+TimeStampException：时间戳异常
+FrameException： 帧率异常
+StreamStatusException：流状态异常
+StreamInfo：流信息异常
+StreamAbnormalCharacteristics：流特征异常
+DecodeException：解码异常
+HLSRequirements：HLS 格式异常
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Category?: string
   /**
-   * 诊断出的具体异常类型。
+   * 诊断出的具体异常类型，取值如下：
+
+VideoResolutionChanged：视频分辨率变化
+AudioSampleRateChanged：音频采样率变化
+AudioChannelsChanged：音频通道数变化
+ParameterSetsChanged：流参数集信息发生变化
+DarOrSarInvalid：视频的宽高比异常
+TimestampFallback：DTS时间戳回退
+DtsJitter：DTS抖动过大
+PtsJitter：PTS抖动过大
+AACDurationDeviation：AAC帧时间戳间隔不合理
+AudioDroppingFrames：音频丢帧
+VideoDroppingFrames：视频丢帧
+AVTimestampInterleave：音视频交织不合理
+PtsLessThanDts：媒体流的 pts 小于 dts
+ReceiveFpsJitter：网络接收帧率抖动过大
+ReceiveFpsTooSmall：网络接收视频帧率过小
+FpsJitter：通过PTS计算得到的流帧率抖动过大
+StreamOpenFailed：流打开失败
+StreamEnd：流结束
+StreamParseFailed：流解析失败
+VideoFirstFrameNotIdr：首帧不是IDR帧
+StreamNALUError：NALU起始码错误
+TsStreamNoAud：mpegts的H26x流缺失 AUD NALU
+AudioStreamLack：无音频流
+VideoStreamLack：无视频流
+LackAudioRecover：缺失音频流恢复
+LackVideoRecover：缺失视频流恢复
+VideoBitrateOutofRange：视频流码率(kbps)超出范围
+AudioBitrateOutofRange：音频流码率(kbps)超出范围
+VideoDecodeFailed：视频解码错误
+AudioDecodeFailed：音频解码错误
+AudioOutOfPhase：双通道音频相位相反
+VideoDuplicatedFrame：视频流中存在重复帧
+AudioDuplicatedFrame：音频流中存在重复帧
+VideoRotation：视频画面旋转
+TsMultiPrograms：MPEG2-TS流有多个program
+Mp4InvalidCodecFourcc：MP4中codec fourcc不符合Apple HLS要求
+HLSBadM3u8Format：无效的m3u8文件
+HLSInvalidMasterM3u8：无效的main m3u8文件
+HLSInvalidMediaM3u8：无效的media m3u8文件
+HLSMasterM3u8Recommended：main m3u8缺少标准推荐的参数
+HLSMediaM3u8Recommended：media m3u8缺少标准推荐的参数
+HLSMediaM3u8DiscontinuityExist：media m3u8存在EXT-X-DISCONTINUITY
+HLSMediaSegmentsStreamNumChange：切片的流数目发生变化
+HLSMediaSegmentsPTSJitterDeviation：切片间PTS跳变且没有EXT-X-DISCONTINUITY
+HLSMediaSegmentsDTSJitterDeviation：切片间DTS跳变且没有EXT-X-DISCONTINUITY
+TimecodeTrackExist：MP4存在tmcd轨道
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Type?: string
@@ -1273,7 +1339,12 @@ export interface DiagnoseResult {
    */
   DateTime?: string
   /**
-   * 诊断出的异常级别。
+   * 诊断出的异常级别，取值范围：
+Fatal：影响后续播放和解析，
+Error： 可能会影响播放，
+Warning： 可能会有潜在风险，但不一定会影响播放，
+Notice：比较重要的流信息，
+Info：一般性的流信息。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   SeverityLevel?: string
@@ -3879,6 +3950,37 @@ export interface DisableScheduleRequest {
 }
 
 /**
+ * 智能横转竖结果类型
+ */
+export interface AiAnalysisTaskHorizontalToVerticalResult {
+  /**
+   * 任务状态，有 PROCESSING，SUCCESS 和 FAIL 三种
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Status?: string
+  /**
+   * 错误码，0：成功，其他值：失败
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ErrCode?: number
+  /**
+   * 错误信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Message?: string
+  /**
+   * 智能横转竖任务输入
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Input?: AiAnalysisTaskHorizontalToVerticalInput
+  /**
+   * 智能横转竖任务输出
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Output?: AiAnalysisTaskHorizontalToVerticalOutput
+}
+
+/**
  * 创建的输入RTMP拉流源站配置信息。
  */
 export interface RTMPPullSourceAddress {
@@ -3994,54 +4096,24 @@ export interface DeleteAdaptiveDynamicStreamingTemplateResponse {
 }
 
 /**
- * CreateAnimatedGraphicsTemplate请求参数结构体
+ * 查询输出的RTMP配置信息。
  */
-export interface CreateAnimatedGraphicsTemplateRequest {
+export interface DescribeOutputRTMPSettings {
   /**
-   * 帧率，取值范围：[1, 30]，单位：Hz。
+   * 空闲超时时间。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Fps: number
+  IdleTimeout: number
   /**
-   * 动图宽度（或长边）的最大值，取值范围：0 和 [128, 4096]，单位：px。
-<li>当 Width、Height 均为 0，则分辨率同源；</li>
-<li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
-<li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
-<li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
-默认值：0。
+   * Chunk大小。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Width?: number
+  ChunkSize: number
   /**
-   * 动图高度（或短边）的最大值，取值范围：0 和 [128, 4096]，单位：px。
-<li>当 Width、Height 均为 0，则分辨率同源；</li>
-<li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
-<li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
-<li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
-默认值：0。
+   * 转推RTMP的目标地址信息列表。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Height?: number
-  /**
-   * 分辨率自适应，可选值：
-<li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li>
-<li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>
-默认值：open。
-   */
-  ResolutionAdaptive?: string
-  /**
-   * 动图格式，取值为 gif 和 webp。默认为 gif。
-   */
-  Format?: string
-  /**
-   * 图片质量，取值范围：[1, 100]，默认值为 75。
-   */
-  Quality?: number
-  /**
-   * 转动图模板名称，长度限制：64 个字符。
-   */
-  Name?: string
-  /**
-   * 模板描述信息，长度限制：256 个字符。
-   */
-  Comment?: string
+  Destinations: Array<RTMPAddressDestination>
 }
 
 /**
@@ -4453,11 +4525,16 @@ export interface EditMediaOutputConfig {
 }
 
 /**
- * 视频质检输入参数类型
+ * 媒体质检输入参数类型
  */
 export interface AiQualityControlTaskInput {
   /**
-   * 媒体质检模板 ID 。暂时可以直接使用 预设模板ID 10，后面控制台支持用户配置自定义模板。
+   * 媒体质检模板 ID 。
+可以直接使用预设模板，也可以在控制台自定义模板。预设模板如下：
+- 10：开启所有质检项；
+- 20：仅开启格式诊断对应质检项；
+- 30：仅开启无参考打分对应质检项；
+- 40：仅开启画面质量对应质检项。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Definition?: number
@@ -4603,7 +4680,7 @@ export interface CreateStreamLinkOutputInfoResponse {
   /**
    * 创建后的Output信息。
    */
-  Info: DescribeOutput
+  Info?: DescribeOutput
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5044,19 +5121,31 @@ export interface SRTSourceAddressReq {
 }
 
 /**
- * 直播流质检结果
+ * 直播流媒体质检结果
  */
 export interface LiveStreamAiQualityControlResultInfo {
   /**
-   * 质检结果列表。
+   * 内容质检结果列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   * @deprecated
+   */
+  QualityControlResults?: Array<QualityControlResult>
+  /**
+   * 格式诊断结果列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   * @deprecated
+   */
+  DiagnoseResults?: Array<DiagnoseResult>
+  /**
+   * 内容质检结果列表。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  QualityControlResults: Array<QualityControlResult>
+  QualityControlResultSet?: Array<QualityControlResult>
   /**
    * 格式诊断结果列表。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  DiagnoseResults?: Array<DiagnoseResult>
+  DiagnoseResultSet?: Array<DiagnoseResult>
 }
 
 /**
@@ -5165,12 +5254,14 @@ export interface VideoTemplateInfo {
    */
   Codec: string
   /**
-   * 视频帧率，取值范围：[0, 120]，单位：Hz。 当取值为 0，表示帧率和原始视频保持一致。
-注意：自适应码率时取值范围是 [0, 60]
+   * 视频帧率，取值范围：
+当FpsDenominator的值为空时，范围：[0, 120]，单位：Hz；
+当FpsDenominator的值不为空时，Fps/FpsDenominator的范围：[0,120]
+当取值为 0，表示帧率和原始视频保持一致。
    */
   Fps: number
   /**
-   * 视频流的码率，取值范围：0 和 [128, 35000]，单位：kbps。
+   * 视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。
 当取值为 0，表示视频码率和原始视频保持一致。
    */
   Bitrate: number
@@ -5231,6 +5322,12 @@ export interface VideoTemplateInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   SegmentType?: number
+  /**
+   * 帧率分母部分
+注意：值必须大于0
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FpsDenominator?: number
 }
 
 /**
@@ -6020,7 +6117,70 @@ export interface AiAnalysisTaskHighlightOutput {
  */
 export interface QualityControlItemConfig {
   /**
-   * 质检项名称。
+   * 质检项名称。质检项取值如下：
+<li>LowEvaluation：无参考打分</li>
+<li>Mosaic：马赛克检测</li>
+<li>CrashScreen：花屏检测</li>
+<li>VideoFreezedFrame：视频冻结</li>
+<li>Blur：模糊检测</li>
+<li>BlackWhiteEdge：黑白边检测</li>
+<li>SolidColorScreen：纯色屏检测</li>
+<li>LowLighting：低光照</li>
+<li>HighLighting：过曝</li>
+<li>NoVoice：静音检测</li>
+<li>LowVoice：低音检测</li>
+<li>HighVoice：爆音检测</li>
+<li>Jitter：抖动检测</li>
+<li>Noise：噪点检测</li>
+<li>QRCode：二维码检测</li>
+<li>BarCode：条形码检测</li>
+<li>AppletCode：小程序码检测</li>
+<li>VideoResolutionChanged：视频分辨率变化</li>
+<li>AudioSampleRateChanged：音频采样率变化</li>
+<li>AudioChannelsChanged：音频通道数变化</li>
+<li>ParameterSetsChanged：流参数集信息发生变化</li>
+<li>DarOrSarInvalid：视频的宽高比异常</li>
+<li>TimestampFallback：DTS时间戳回退</li>
+<li>DtsJitter：DTS抖动过大</li>
+<li>PtsJitter：PTS抖动过大</li>
+<li>AACDurationDeviation：AAC帧时间戳间隔不合理</li>
+<li>AudioDroppingFrames：音频丢帧</li>
+<li>VideoDroppingFrames：视频丢帧</li>
+<li>AVTimestampInterleave：音视频交织不合理</li>
+<li>PtsLessThanDts：媒体流的 pts 小于 dts</li>
+<li>ReceiveFpsJitter：网络接收帧率抖动过大</li>
+<li>ReceiveFpsTooSmall：网络接收视频帧率过小</li>
+<li>FpsJitter：通过PTS计算得到的流帧率抖动过大</li>
+<li>StreamOpenFailed：流打开失败</li>
+<li>StreamEnd：流结束</li>
+<li>StreamParseFailed：流解析失败</li>
+<li>VideoFirstFrameNotIdr：首帧不是IDR帧</li>
+<li>StreamNALUError：NALU起始码错误</li>
+<li>TsStreamNoAud：mpegts的H26x流缺失 AUD NALU</li>
+<li>AudioStreamLack：无音频流</li>
+<li>VideoStreamLack：无视频流</li>
+<li>LackAudioRecover：缺失音频流恢复</li>
+<li>LackVideoRecover：缺失视频流恢复</li>
+<li>VideoBitrateOutofRange：视频流码率(kbps)超出范围</li>
+<li>AudioBitrateOutofRange：音频流码率(kbps)超出范围</li>
+<li>VideoDecodeFailed：视频解码错误</li>
+<li>AudioDecodeFailed：音频解码错误</li>
+<li>AudioOutOfPhase：双通道音频相位相反</li>
+<li>VideoDuplicatedFrame：视频流中存在重复帧</li>
+<li>AudioDuplicatedFrame：音频流中存在重复帧</li>
+<li>VideoRotation：视频画面旋转</li>
+<li>TsMultiPrograms：MPEG2-TS流有多个program</li>
+<li>Mp4InvalidCodecFourcc：MP4中codec fourcc不符合Apple HLS要求</li>
+<li>HLSBadM3u8Format：无效的m3u8文件</li>
+<li>HLSInvalidMasterM3u8：无效的main m3u8文件</li>
+<li>HLSInvalidMediaM3u8：无效的media m3u8文件</li>
+<li>HLSMasterM3u8Recommended：main m3u8缺少标准推荐的参数</li>
+<li>HLSMediaM3u8Recommended：media m3u8缺少标准推荐的参数</li>
+<li>HLSMediaM3u8DiscontinuityExist：media m3u8存在EXT-X-DISCONTINUITY</li>
+<li>HLSMediaSegmentsStreamNumChange：切片的流数目发生变化</li>
+<li>HLSMediaSegmentsPTSJitterDeviation：切片间PTS跳变且没有EXT-X-DISCONTINUITY</li>
+<li>HLSMediaSegmentsDTSJitterDeviation：切片间DTS跳变且没有EXT-X-DISCONTINUITY</li>
+<li>TimecodeTrackExist：MP4存在tmcd轨道</li>
    */
   Type: string
   /**
@@ -6038,19 +6198,17 @@ export interface QualityControlItemConfig {
    */
   Sampling?: string
   /**
-   * 采样间隔时间，取值范围：[0, 60000]，单位：ms。
-默认值 0。
+   * 采样间隔时间，单位：ms。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   IntervalTime?: number
   /**
-   * 异常持续时间，取值范围：[0, 60000]，单位：ms。
-默认值 0。
+   * 异常持续时间，单位：ms。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Duration?: number
   /**
-   * 检测分值的阈值，使用数学区间格式，当检测值超出区间范围会触发回调。
+   * 检测项对应的阈值，不同检测项对应阈值不同。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Threshold?: string
@@ -6392,7 +6550,7 @@ export interface DescribeStreamLinkRegionsResponse {
   /**
    * 媒体传输地区信息。
    */
-  Info: StreamLinkRegionInfo
+  Info?: StreamLinkRegionInfo
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -8234,6 +8392,11 @@ export interface AiAnalysisResult {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   DescriptionTask?: AiAnalysisTaskDescriptionResult
+  /**
+   * 视频内容分析横转竖任务的查询结果，当任务类型为 HorizontalToVertical 时有效。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  HorizontalToVerticalTask?: AiAnalysisTaskHorizontalToVerticalResult
 }
 
 /**
@@ -11084,12 +11247,15 @@ export interface VideoTemplateInfoForUpdate {
    */
   Codec?: string
   /**
-   * 视频帧率，取值范围：[0, 120]，单位：Hz。 当取值为 0，表示帧率和原始视频保持一致。
+   * 视频帧率，取值范围：
+当FpsDenominator的值为空时，范围：[0, 120]，单位：Hz；
+当FpsDenominator的值不为空时，Fps/FpsDenominator的范围：[0,120]
+当取值为 0，表示帧率和原始视频保持一致。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Fps?: number
   /**
-   * 视频流的码率，取值范围：0 和 [128, 35000]，单位：kbps。
+   * 视频流的码率，取值范围：0 和 [128, 100000]，单位：kbps。
 当取值为 0，表示视频码率和原始视频保持一致。
 注意：此字段可能返回 null，表示取不到有效值。
    */
@@ -11154,6 +11320,12 @@ export interface VideoTemplateInfoForUpdate {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   SegmentType?: number
+  /**
+   * 帧率分母部分
+注意：值必须大于0
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FpsDenominator?: number
 }
 
 /**
@@ -12299,6 +12471,16 @@ export interface MediaVideoStreamItem {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Codecs?: string
+  /**
+   * 帧率分子部分
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FpsNumerator?: number
+  /**
+   * 帧率分母部分
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FpsDenominator?: number
 }
 
 /**
@@ -12706,6 +12888,27 @@ export interface ProcessLiveStreamRequest {
 注意2：对于TaskNotifyConfig参数，若创建任务接口（ProcessLiveStream）有设置，将覆盖原有编排的默认回调。
    */
   ScheduleId?: number
+}
+
+/**
+ * 智能横转竖结果信息
+ */
+export interface AiAnalysisTaskHorizontalToVerticalOutput {
+  /**
+   * 视频智能横转竖列表
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Path?: string
+  /**
+   * 智能横转竖视频的存储位置
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OutputStorage?: TaskOutputStorage
+  /**
+   * 置信度。	
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Confidence?: number
 }
 
 /**
@@ -13169,6 +13372,12 @@ export interface TranslateConfigureInfo {
    * 翻译目标语言。
    */
   DestinationLanguage?: string
+  /**
+   * 生成的字幕文件格式，填空字符串表示不生成字幕文件，可选值：
+<li>vtt：生成 WebVTT 字幕文件。</li>
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SubtitleFormat?: string
 }
 
 /**
@@ -13426,24 +13635,54 @@ export interface DeleteQualityControlTemplateResponse {
 }
 
 /**
- * 查询输出的RTMP配置信息。
+ * CreateAnimatedGraphicsTemplate请求参数结构体
  */
-export interface DescribeOutputRTMPSettings {
+export interface CreateAnimatedGraphicsTemplateRequest {
   /**
-   * 空闲超时时间。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 帧率，取值范围：[1, 30]，单位：Hz。
    */
-  IdleTimeout: number
+  Fps: number
   /**
-   * Chunk大小。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 动图宽度（或长边）的最大值，取值范围：0 和 [128, 4096]，单位：px。
+<li>当 Width、Height 均为 0，则分辨率同源；</li>
+<li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
+<li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
+<li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
+默认值：0。
    */
-  ChunkSize: number
+  Width?: number
   /**
-   * 转推RTMP的目标地址信息列表。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 动图高度（或短边）的最大值，取值范围：0 和 [128, 4096]，单位：px。
+<li>当 Width、Height 均为 0，则分辨率同源；</li>
+<li>当 Width 为 0，Height 非 0，则 Width 按比例缩放；</li>
+<li>当 Width 非 0，Height 为 0，则 Height 按比例缩放；</li>
+<li>当 Width、Height 均非 0，则分辨率按用户指定。</li>
+默认值：0。
    */
-  Destinations: Array<RTMPAddressDestination>
+  Height?: number
+  /**
+   * 分辨率自适应，可选值：
+<li>open：开启，此时，Width 代表视频的长边，Height 表示视频的短边；</li>
+<li>close：关闭，此时，Width 代表视频的宽度，Height 表示视频的高度。</li>
+默认值：open。
+   */
+  ResolutionAdaptive?: string
+  /**
+   * 动图格式，取值为 gif 和 webp。默认为 gif。
+   */
+  Format?: string
+  /**
+   * 图片质量，取值范围：[1, 100]，默认值为 75。
+   */
+  Quality?: number
+  /**
+   * 转动图模板名称，长度限制：64 个字符。
+   */
+  Name?: string
+  /**
+   * 模板描述信息，长度限制：256 个字符。
+   */
+  Comment?: string
 }
 
 /**
@@ -14684,6 +14923,11 @@ export interface TranslateConfigureInfoForUpdate {
    * 翻译目标语言。
    */
   DestinationLanguage?: string
+  /**
+   * 生成的字幕文件格式，填空字符串表示不生成字幕文件，可选值：
+<li>vtt：生成 WebVTT 字幕文件。</li>
+   */
+  SubtitleFormat?: string
 }
 
 /**
@@ -15098,15 +15342,20 @@ export interface HighlightSegmentItem {
   /**
    * 置信度。
    */
-  Confidence: number
+  Confidence?: number
   /**
    * 片段起始时间偏移。
    */
-  StartTimeOffset: number
+  StartTimeOffset?: number
   /**
    * 片段结束时间偏移。
    */
-  EndTimeOffset: number
+  EndTimeOffset?: number
+  /**
+   * 片段标签
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SegmentTags?: Array<string>
 }
 
 /**

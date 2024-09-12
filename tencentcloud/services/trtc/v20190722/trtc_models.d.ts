@@ -18,10 +18,25 @@ export interface AgentConfig {
      */
     TargetUserId: string;
     /**
-     * 房间内推流用户全部退出后超过MaxIdleTime秒，后台自动关闭任务，默认值是60s。
+     * 房间内超过MaxIdleTime 没有推流，后台自动关闭任务，默认值是60s。
   注意：此字段可能返回 null，表示取不到有效值。
      */
     MaxIdleTime?: number;
+    /**
+     * 机器人的欢迎语
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    WelcomeMessage?: string;
+    /**
+     * 智能打断模式，默认为0，0表示服务端自动打断，1表示服务端不打断，由端上发送打断信令进行打断
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    InterruptMode?: number;
+    /**
+     * InterruptMode为0时使用，单位为毫秒，默认为500ms。表示服务端检测到持续InterruptSpeechDuration毫秒的人声则进行打断。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    InterruptSpeechDuration?: number;
 }
 /**
  * CreatePicture请求参数结构体
@@ -76,6 +91,23 @@ export interface AudioEncodeParams {
      * 音量，取值范围[0,300]。默认100，表示原始音量；0表示静音。
      */
     Volume?: number;
+}
+/**
+ * 服务端控制AI对话机器人播报指定文本
+ */
+export interface ServerPushText {
+    /**
+     * 服务端推送播报文本
+     */
+    Text?: string;
+    /**
+     * 是否允许该文本打断机器人说话
+     */
+    Interrupt?: boolean;
+    /**
+     * 播报完文本后，是否自动关闭对话任务
+     */
+    StopAfterPlay?: boolean;
 }
 /**
  * DescribeTRTCMarketQualityMetricData返回参数结构体
@@ -145,21 +177,41 @@ export interface MixLayout {
     SubBackgroundImage?: string;
 }
 /**
- * DescribeRecordingUsage返回参数结构体
+ * 混流转推的视频相关参数。
  */
-export interface DescribeRecordingUsageResponse {
+export interface McuVideoParams {
     /**
-     * 用量类型，与UsageValue中各个位置的值对应。
+     * 输出流视频编码参数。
      */
-    UsageKey?: Array<string>;
+    VideoEncode?: VideoEncode;
     /**
-     * 各个时间点用量明细。
+     * 混流布局参数。
      */
-    UsageList?: Array<TrtcUsage>;
+    LayoutParams?: McuLayoutParams;
     /**
-     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     * 整个画布背景颜色，常用的颜色有：
+  红色：0xcc0033。
+  黄色：0xcc9900。
+  绿色：0xcccc33。
+  蓝色：0x99CCFF。
+  黑色：0x000000。
+  白色：0xFFFFFF。
+  灰色：0x999999。
      */
-    RequestId?: string;
+    BackGroundColor?: string;
+    /**
+     * 整个画布的背景图url，优先级高于BackGroundColor。支持png、jpg、jpeg格式。图片大小限制不超过5MB。
+  注：您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，背景图将不会生效。
+     */
+    BackgroundImageUrl?: string;
+    /**
+     * 混流布局的水印参数。
+     */
+    WaterMarkList?: Array<McuWaterMarkParams>;
+    /**
+     * 背景图在输出时的显示模式：0为裁剪，1为缩放并显示黑底，2为变比例伸缩。后台默认为变比例伸缩。
+     */
+    BackgroundRenderMode?: number;
 }
 /**
  * DescribeTRTCRealTimeScaleData请求参数结构体
@@ -208,7 +260,7 @@ export interface STTConfig {
   4.     English = "en" # 英语
   5.     Vietnamese = "vi" # 越南语
   6.     Japanese = "ja" # 日语
-  7.     Korean = "ko" # 汉语
+  7.     Korean = "ko" # 韩语
   8.     Indonesia = "id" # 印度尼西亚语
   9.     Thai = "th" # 泰语
   10.     Portuguese = "pt" # 葡萄牙语
@@ -229,11 +281,17 @@ export interface STTConfig {
      */
     Language?: string;
     /**
-     * 额外识别可能替代语言,最多3个, 需高级版支持,Language指定方言时，不允许设置该字段
+     * 发起模糊识别额外可能替代语言类型,最多填写3种语言类型,
+  注：Language指定为"zh-dialect" # 中国方言 时，不支持模糊识别，该字段无效
   
   注意：此字段可能返回 null，表示取不到有效值。
      */
     AlternativeLanguage?: Array<string>;
+    /**
+     * 语音识别vad的时间，范围为240-2000，默认为1000，单位为ms。更小的值会让语音识别分句更快。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    VadSilenceTime?: number;
 }
 /**
  * DescribeTRTCMarketScaleData请求参数结构体
@@ -457,13 +515,13 @@ export interface DescribeTRTCRealTimeScaleMetricDataRequest {
     RoomId?: string;
 }
 /**
- * StopWebRecord请求参数结构体
+ * ControlAIConversation返回参数结构体
  */
-export interface StopWebRecordRequest {
+export interface ControlAIConversationResponse {
     /**
-     * 需要停止的任务Id
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
-    TaskId: string;
+    RequestId?: string;
 }
 /**
  * StopAITranscription请求参数结构体
@@ -498,6 +556,15 @@ export interface VideoEncodeParams {
      * gop。取值范围[1,2]，单位为秒。
      */
     Gop?: number;
+}
+/**
+ * UpdateAIConversation返回参数结构体
+ */
+export interface UpdateAIConversationResponse {
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
 }
 /**
  * DescribeUserEvent返回参数结构体
@@ -979,43 +1046,6 @@ export interface DescribeRecordStatisticRequest {
     SdkAppId?: number;
 }
 /**
- * 混流转推的视频相关参数。
- */
-export interface McuVideoParams {
-    /**
-     * 输出流视频编码参数。
-     */
-    VideoEncode?: VideoEncode;
-    /**
-     * 混流布局参数。
-     */
-    LayoutParams?: McuLayoutParams;
-    /**
-     * 整个画布背景颜色，常用的颜色有：
-  红色：0xcc0033。
-  黄色：0xcc9900。
-  绿色：0xcccc33。
-  蓝色：0x99CCFF。
-  黑色：0x000000。
-  白色：0xFFFFFF。
-  灰色：0x999999。
-     */
-    BackGroundColor?: string;
-    /**
-     * 整个画布的背景图url，优先级高于BackGroundColor。支持png、jpg、jpeg格式。图片大小限制不超过5MB。
-  注：您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，背景图将不会生效。
-     */
-    BackgroundImageUrl?: string;
-    /**
-     * 混流布局的水印参数。
-     */
-    WaterMarkList?: Array<McuWaterMarkParams>;
-    /**
-     * 背景图在输出时的显示模式：0为裁剪，1为缩放并显示黑底，2为变比例伸缩。后台默认为变比例伸缩。
-     */
-    BackgroundRenderMode?: number;
-}
-/**
  * DescribeRoomInfo请求参数结构体
  */
 export interface DescribeRoomInfoRequest {
@@ -1351,6 +1381,11 @@ export interface McuUserInfoParams {
      * 用户参数。
      */
     UserInfo: MixUserInfo;
+    /**
+     * 混音的音量调整：取值范围是0到100，100为原始上行音量，不填默认为100，值越小则音量越低。
+  注：该参数只在音量白名单下配置生效，其他场景配置无效。
+     */
+    SoundLevel?: number;
 }
 /**
  * 用户媒体流参数。
@@ -1414,17 +1449,29 @@ export interface DescribeRoomInfoResponse {
     RequestId?: string;
 }
 /**
- * DismissRoom请求参数结构体
+ * 混流布局参数。
  */
-export interface DismissRoomRequest {
+export interface McuLayoutParams {
     /**
-     * TRTC的SDKAppId。
+     * 布局模式：动态布局（1：悬浮布局（默认），2：屏幕分享布局，3：九宫格布局），静态布局（4：自定义布局）。
      */
-    SdkAppId: number;
+    MixLayoutMode?: number;
     /**
-     * 数字房间号。本接口仅支持解散数字类型房间号，如需解散字符串类型房间号，请使用DismissRoomByStrRoomId。
+     * 纯音频上行是否占布局位置，只在动态布局中有效。0表示纯音频不占布局位置，1表示纯音频占布局位置，不填默认为0。
      */
-    RoomId: number;
+    PureAudioHoldPlaceMode?: number;
+    /**
+     * 自定义模板中有效，指定用户视频在混合画面中的位置。
+     */
+    MixLayoutList?: Array<McuLayout>;
+    /**
+     * 指定动态布局中悬浮布局和屏幕分享布局的大画面信息，只在悬浮布局和屏幕分享布局有效。
+     */
+    MaxVideoUser?: MaxVideoUser;
+    /**
+     * 屏幕分享模板、悬浮模板、九宫格模版有效，画面在输出时的显示模式：0为裁剪，1为缩放，2为缩放并显示黑底
+     */
+    RenderMode?: number;
 }
 /**
  * DescribeTRTCRealTimeQualityMetricData请求参数结构体
@@ -1510,7 +1557,7 @@ export interface DescribeAIConversationResponse {
      */
     Status?: string;
     /**
-     * 唯一标识一次任务。
+     * 任务的唯一标识，在启动任务时生成
      */
     TaskId?: string;
     /**
@@ -1521,6 +1568,84 @@ export interface DescribeAIConversationResponse {
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
     RequestId?: string;
+}
+/**
+ * 混流布局参数。
+ */
+export interface McuLayout {
+    /**
+     * 用户媒体流参数。不填时腾讯云后台按照上行主播的进房顺序自动填充。
+     */
+    UserMediaStream?: UserMediaStream;
+    /**
+     * 子画面在输出时的宽度，单位为像素值，不填默认为0。
+     */
+    ImageWidth?: number;
+    /**
+     * 子画面在输出时的高度，单位为像素值，不填默认为0。
+     */
+    ImageHeight?: number;
+    /**
+     * 子画面在输出时的X偏移，单位为像素值，LocationX与ImageWidth之和不能超过混流输出的总宽度，不填默认为0。
+     */
+    LocationX?: number;
+    /**
+     * 子画面在输出时的Y偏移，单位为像素值，LocationY与ImageHeight之和不能超过混流输出的总高度，不填默认为0。
+     */
+    LocationY?: number;
+    /**
+     * 子画面在输出时的层级，不填默认为0。
+     */
+    ZOrder?: number;
+    /**
+     * 子画面在输出时的显示模式：0为裁剪，1为缩放并显示背景，2为缩放并显示黑底。不填默认为0。
+     */
+    RenderMode?: number;
+    /**
+     * 【此参数配置无效，暂不支持】子画面的背景颜色，常用的颜色有：
+  红色：0xcc0033。
+  黄色：0xcc9900。
+  绿色：0xcccc33。
+  蓝色：0x99CCFF。
+  黑色：0x000000。
+  白色：0xFFFFFF。
+  灰色：0x999999。
+     */
+    BackGroundColor?: string;
+    /**
+     * 子画面的背景图url，填写该参数，当用户关闭摄像头或未进入TRTC房间时，会在布局位置填充为指定图片。若指定图片与布局位置尺寸比例不一致，则会对图片进行拉伸处理，优先级高于BackGroundColor。支持png、jpg、jpeg、bmp、gif、webm格式。图片大小限制不超过5MB。
+  注：您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，子画面的背景图将不会生效。
+     */
+    BackgroundImageUrl?: string;
+    /**
+     * 客户自定义裁剪，针对原始输入流裁剪
+     */
+    CustomCrop?: McuCustomCrop;
+    /**
+     * 子背景图在输出时的显示模式：0为裁剪，1为缩放并显示背景，2为缩放并显示黑底，3为变比例伸缩，4为自定义渲染。不填默认为3。
+     */
+    BackgroundRenderMode?: number;
+    /**
+     * 子画面的透明模版url，指向一张包含透明通道的模板图片。填写该参数，后台混流时会提取该模板图片的透明通道，将其缩放作为目标画面的透明通道，再和其他画面进行混合。您可以通过透明模版实现目标画面的半透明效果和任意形状裁剪（如圆角、星形、心形等）。 支持png格式。图片大小限制不超过5MB。
+  注：1，模板图片宽高比应接近目标画面宽高比，以避免缩放适配目标画面时出现模板效果变形；2，透明模版只有RenderMode为0（裁剪）时才生效；3，您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，透明模版将不会生效。
+     */
+    TransparentUrl?: string;
+    /**
+     * 子背景图的自定义渲染参数，当BackgroundRenderMode为4时必须配置。
+     */
+    BackgroundCustomRender?: McuBackgroundCustomRender;
+    /**
+     * 子背景色生效模式，默认值为0表示均不生效。
+  bit0:占位图缩放是否生效。
+  bit1:上行流缩放是否生效。
+  您可以将相应bit位置1启动生效，例如：
+  0(00)表示子背景色不生效。
+  1(01)表示子背景色只在占位图缩放时生效。
+  2(10)表示子背景色只在上行流缩放时生效。
+  3(11)表示子背景色在占位图缩放和上行流缩放时均生效。
+  
+     */
+    BackGroundColorMode?: number;
 }
 /**
  * DescribeUserInfo返回参数结构体
@@ -1558,6 +1683,19 @@ export interface DescribeTRTCRealTimeScaleMetricDataResponse {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     Data?: TRTCDataResp;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
+ * UpdateStreamIngest返回参数结构体
+ */
+export interface UpdateStreamIngestResponse {
+    /**
+     * 任务的状态信息。InProgress：表示当前任务正在进行中。NotExist：表示当前任务不存在。示例值：InProgress
+     */
+    Status?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -1774,84 +1912,38 @@ export interface StartStreamIngestRequest {
      * 指定视频从某个秒时间戳播放
      */
     SeekSecond?: number;
-}
-/**
- * 混流布局参数。
- */
-export interface McuLayout {
     /**
-     * 用户媒体流参数。不填时腾讯云后台按照上行主播的进房顺序自动填充。
+     * 开启自动旁路推流，请确认控制台已经开启该功能。
      */
-    UserMediaStream?: UserMediaStream;
+    AutoPush?: boolean;
     /**
-     * 子画面在输出时的宽度，单位为像素值，不填默认为0。
-     */
-    ImageWidth?: number;
-    /**
-     * 子画面在输出时的高度，单位为像素值，不填默认为0。
-     */
-    ImageHeight?: number;
-    /**
-     * 子画面在输出时的X偏移，单位为像素值，LocationX与ImageWidth之和不能超过混流输出的总宽度，不填默认为0。
-     */
-    LocationX?: number;
-    /**
-     * 子画面在输出时的Y偏移，单位为像素值，LocationY与ImageHeight之和不能超过混流输出的总高度，不填默认为0。
-     */
-    LocationY?: number;
-    /**
-     * 子画面在输出时的层级，不填默认为0。
-     */
-    ZOrder?: number;
-    /**
-     * 子画面在输出时的显示模式：0为裁剪，1为缩放并显示背景，2为缩放并显示黑底。不填默认为0。
-     */
-    RenderMode?: number;
-    /**
-     * 【此参数配置无效，暂不支持】子画面的背景颜色，常用的颜色有：
-  红色：0xcc0033。
-  黄色：0xcc9900。
-  绿色：0xcccc33。
-  蓝色：0x99CCFF。
-  黑色：0x000000。
-  白色：0xFFFFFF。
-  灰色：0x999999。
-     */
-    BackGroundColor?: string;
-    /**
-     * 子画面的背景图url，填写该参数，当用户关闭摄像头或未进入TRTC房间时，会在布局位置填充为指定图片。若指定图片与布局位置尺寸比例不一致，则会对图片进行拉伸处理，优先级高于BackGroundColor。支持png、jpg、jpeg、bmp、gif、webm格式。图片大小限制不超过5MB。
-  注：您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，子画面的背景图将不会生效。
-     */
-    BackgroundImageUrl?: string;
-    /**
-     * 客户自定义裁剪，针对原始输入流裁剪
-     */
-    CustomCrop?: McuCustomCrop;
-    /**
-     * 子背景图在输出时的显示模式：0为裁剪，1为缩放并显示背景，2为缩放并显示黑底，3为变比例伸缩，4为自定义渲染。不填默认为3。
-     */
-    BackgroundRenderMode?: number;
-    /**
-     * 子画面的透明模版url，指向一张包含透明通道的模板图片。填写该参数，后台混流时会提取该模板图片的透明通道，将其缩放作为目标画面的透明通道，再和其他画面进行混合。您可以通过透明模版实现目标画面的半透明效果和任意形状裁剪（如圆角、星形、心形等）。 支持png格式。图片大小限制不超过5MB。
-  注：1，模板图片宽高比应接近目标画面宽高比，以避免缩放适配目标画面时出现模板效果变形；2，透明模版只有RenderMode为0（裁剪）时才生效；3，您需要确保图片链接的可访问性，后台单次下载超时时间为10秒，最多重试3次，若最终图片下载失败，透明模版将不会生效。
-     */
-    TransparentUrl?: string;
-    /**
-     * 子背景图的自定义渲染参数，当BackgroundRenderMode为4时必须配置。
-     */
-    BackgroundCustomRender?: McuBackgroundCustomRender;
-    /**
-     * 子背景色生效模式，默认值为0表示均不生效。
-  bit0:占位图缩放是否生效。
-  bit1:上行流缩放是否生效。
-  您可以将相应bit位置1启动生效，例如：
-  0(00)表示子背景色不生效。
-  1(01)表示子背景色只在占位图缩放时生效。
-  2(10)表示子背景色只在上行流缩放时生效。
-  3(11)表示子背景色在占位图缩放和上行流缩放时均生效。
+     * 循环播放次数, 取值范围[-1, 1000],  默认1次。
+   - 0 无效值
+   - -1 循环播放, 需要主动调用停止接口或设置MaxDuration
   
      */
-    BackGroundColorMode?: number;
+    RepeatNum?: number;
+    /**
+     * 循环播放最大时长,仅支持RepeatNum设置-1时生效，取值范围[1, 10080]，单位分钟。
+     */
+    MaxDuration?: number;
+}
+/**
+ * DescribeRecordingUsage返回参数结构体
+ */
+export interface DescribeRecordingUsageResponse {
+    /**
+     * 用量类型，与UsageValue中各个位置的值对应。
+     */
+    UsageKey?: Array<string>;
+    /**
+     * 各个时间点用量明细。
+     */
+    UsageList?: Array<TrtcUsage>;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
 }
 /**
  * StopMCUMixTranscode请求参数结构体
@@ -2149,29 +2241,17 @@ export interface TRTCDataResult {
     Total?: number;
 }
 /**
- * 混流布局参数。
+ * DismissRoom请求参数结构体
  */
-export interface McuLayoutParams {
+export interface DismissRoomRequest {
     /**
-     * 布局模式：动态布局（1：悬浮布局（默认），2：屏幕分享布局，3：九宫格布局），静态布局（4：自定义布局）。
+     * TRTC的SDKAppId。
      */
-    MixLayoutMode?: number;
+    SdkAppId: number;
     /**
-     * 纯音频上行是否占布局位置，只在动态布局中有效。0表示纯音频不占布局位置，1表示纯音频占布局位置，不填默认为0。
+     * 数字房间号。本接口仅支持解散数字类型房间号，如需解散字符串类型房间号，请使用DismissRoomByStrRoomId。
      */
-    PureAudioHoldPlaceMode?: number;
-    /**
-     * 自定义模板中有效，指定用户视频在混合画面中的位置。
-     */
-    MixLayoutList?: Array<McuLayout>;
-    /**
-     * 指定动态布局中悬浮布局和屏幕分享布局的大画面信息，只在悬浮布局和屏幕分享布局有效。
-     */
-    MaxVideoUser?: MaxVideoUser;
-    /**
-     * 屏幕分享模板、悬浮模板、九宫格模版有效，画面在输出时的显示模式：0为裁剪，1为缩放，2为缩放并显示黑底
-     */
-    RenderMode?: number;
+    RoomId: number;
 }
 /**
  * DescribeUnusualEvent请求参数结构体
@@ -2387,6 +2467,8 @@ export interface CreateCloudRecordingRequest {
     SdkAppId: number;
     /**
      * TRTC的[RoomId](https://cloud.tencent.com/document/product/647/46351#roomid)，录制的TRTC房间所对应的RoomId。
+  注：房间号类型默认为整型，若房间号类型为字符串，请通过RoomIdType指定。
+  
      */
     RoomId: string;
     /**
@@ -2483,66 +2565,51 @@ export interface StopMCUMixTranscodeByStrRoomIdRequest {
  */
 export interface RecognizeConfig {
     /**
-     * 语音识别支持的语言，默认是"zh"。目前全量支持的语言如下，等号左面是语言英文名，右面是Language字段需要填写的值，该值遵循[ISO639](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)：
-  中文 Chinese = "zh"
-  中文繁体 Chinese_TW = "zh-TW"
-  中文方言 Chinese_DIALECT = "zh-dialect"
-  English = "en"
-  Vietnamese = "vi"
-  Japanese = "ja"
-  Korean = "ko"
-  Indonesia = "id"
-  Thai = "th"
-  Portuguese = "pt"
-  Turkish = "tr"
-  Arabic = "ar"
-  Spanish = "es"
-  Hindi = "hi"
-  French = "fr"
-  Malay = "ms"
-  Filipino = "fil"
-  German = "de"
-  Italian = "it"
-  Russian = "ru"
+     * 语音转文字支持识别的语言，默认是"zh" 中文
+  目前全量支持的语言如下，等号左面是语言英文名，右面是Language字段需要填写的值，该值遵循[ISO639](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)：
+  可通过购买「语音转文本时长包」解锁或领取包月套餐体验版解锁此功能。
+  
+  语音转文本支持语言类型如下：
+  - Chinese = "zh" # 中文
+  - Chinese_TW = "zh-TW" # 中国台湾
+  - English = "en" # 英语
+  - Chinese_YUE = "zh-yue" # 中国粤语
+  - Chinese_DIALECT = "zh-dialect" # 中国方言
+  - English = "en" # 英语
+  - Vietnamese = "vi" # 越南语
+  - Japanese = "ja" # 日语
+  - Korean = "ko" # 韩语
+  - Indonesia = "id" # 印度尼西亚语
+  - Thai = "th" # 泰语
+  - Portuguese = "pt" # 葡萄牙语
+  - Turkish = "tr" # 土耳其语
+  - Arabic = "ar" # 阿拉伯语
+  - Spanish = "es" # 西班牙语
+  - Hindi = "hi" # 印地语
+  - French = "fr" # 法语
+  - Malay = "ms" # 马来语
+  - Filipino = "fil" # 菲律宾语
+  - German = "de" # 德语
+  - Italian = "it" # 意大利语
+  - Russian = "ru" # 俄语
   
   注意：
   如果缺少满足您需求的语言，请联系我们技术人员。
      */
     Language?: string;
     /**
-     * 额外的可能替代语言，最多3个，仅高级版支持。Language指定中文方言时，不能设置该字段。
+     * 发起模糊识别额外可能替代语言类型,最多填写3种语言类型。
+  注：Language指定为"zh-dialect" # 中国方言 时，不支持模糊识别，该字段无效
      */
     AlternativeLanguage?: Array<string>;
     /**
-     * 使用的模型，目前支持tencent和google，默认是tencent。
+     * 目前已不支持
      * @deprecated
      */
     Model?: string;
     /**
-     * 翻译功能支持的语言，如果填写，则会启用翻译，不填则只会使用语音识别。
-  目前全量支持的语言如下，等号左面是语言英文名，右面是Language字段需要填写的值，该值遵循[ISO639](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)：
-  Chinese = "zh"
-  Chinese_TW = "zh-TW"
-  English = "en"
-  Vietnamese = "vi"
-  Japanese = "ja"
-  Korean = "ko"
-  Indonesia = "id"
-  Thai = "th"
-  Portuguese = "pt"
-  Turkish = "tr"
-  Arabic = "ar"
-  Spanish = "es"
-  Hindi = "hi"
-  French = "fr"
-  Malay = "ms"
-  Filipino = "fil"
-  German = "de"
-  Italian = "it"
-  Russian = "ru"
-  
-  注意：
-  如果缺少满足您需求的语言，请联系我们技术人员。
+     * 目前已不支持
+     * @deprecated
      */
     TranslationLanguage?: string;
 }
@@ -2598,7 +2665,7 @@ export interface StartAIConversationRequest {
      */
     AgentConfig: AgentConfig;
     /**
-     * 调用方传入的唯一Id，服务端用来去重。
+     * 调用方传入的唯一Id，可用于客户侧防止重复发起任务以及可以通过该字段查询任务状态。
      */
     SessionId?: string;
     /**
@@ -2611,13 +2678,13 @@ export interface StartAIConversationRequest {
     STTConfig?: STTConfig;
     /**
      * LLM配置。需符合openai规范，为JSON字符串，示例如下：
-  <pre> { <br> &emsp;  "LLMType": “大模型类型"，  // String 必填，目前固定为"openai" <br> &emsp;  "Model": "您的模型名称", // String 必填，指定使用的模型<br>    "APIKey": "您的OpenAI API密钥", // String 必填，相当于环境变量中的OPENAI_API_KEY<br> &emsp;  "APIBaseUrl": "https://api.openai.com", // String 必填，OpenAI API的基础URL<br> &emsp;  "Streaming": true // Boolean 非必填，指定是否使用流式传输<br> &emsp;} </pre>
+  <pre> { <br> &emsp;  "LLMType": “大模型类型"，  // String 必填，如："openai" <br> &emsp;  "Model": "您的模型名称", // String 必填，指定使用的模型<br>    "APIKey": "您的LLM API密钥", // String 必填 <br> &emsp;  "APIUrl": "https://api.xxx.com/chat/completions", // String 必填，LLM API访问的URL<br> &emsp;  "Streaming": true // Boolean 非必填，指定是否使用流式传输<br> &emsp;} </pre>
   
      */
     LLMConfig?: string;
     /**
-     * TTS配置。目前支持腾讯云TTS, 为JSON字符串，示例如下：
-   <pre>{ <br> &emsp; "AppId": "您的应用ID", // String 必填<br> &emsp; "TTSType": "TTS类型", // String TTS类型, 固定为"tencent"<br> &emsp; "SercetId": "您的密钥ID", // String 必填<br> &emsp; "SercetKey":  "您的密钥Key", // String 必填<br> &emsp; "VoiceType": 101001, // Integer  必填，音色 ID，包括标准音色与精品音色，精品音色拟真度更高，价格不同于标准音色，请参见<a href="https://cloud.tencent.com/document/product/1073/34112">语音合成计费概述</a>。完整的音色 ID 列表请参见<a href="https://cloud.tencent.com/document/product/1073/92668#55924b56-1a73-4663-a7a1-a8dd82d6e823">语音合成音色列表</a>。<br> &emsp; "Speed": 1.25, // Integer 非必填，语速，范围：[-2，6]，分别对应不同语速： -2: 代表0.6倍 -1: 代表0.8倍 0: 代表1.0倍（默认） 1: 代表1.2倍 2: 代表1.5倍  6: 代表2.5倍  如果需要更细化的语速，可以保留小数点后 2 位，例如0.5/1.25/2.81等。 参数值与实际语速转换，可参考 <a href="https://sdk-1300466766.cos.ap-shanghai.myqcloud.com/sample/speed_sample.tar.gz">语速转换</a><br> &emsp; "Volume": 5, // Integer 非必填，音量大小，范围：[0，10]，分别对应11个等级的音量，默认值为0，代表正常音量。<br> &emsp; "PrimaryLanguage": "zh-CN" // String 非必填，主要语言<br> &emsp;}</pre>
+     * TTS配置，为JSON字符串，腾讯云TTS示例如下：
+   <pre>{ <br> &emsp; "AppId": 您的应用ID, // Integer 必填<br> &emsp; "TTSType": "TTS类型", // String TTS类型, 固定为"tencent"<br> &emsp; "SecretId": "您的密钥ID", // String 必填<br> &emsp; "SecretKey":  "您的密钥Key", // String 必填<br> &emsp; "VoiceType": 101001, // Integer  必填，音色 ID，包括标准音色与精品音色，精品音色拟真度更高，价格不同于标准音色，请参见<a href="https://cloud.tencent.com/document/product/1073/34112">语音合成计费概述</a>。完整的音色 ID 列表请参见<a href="https://cloud.tencent.com/document/product/1073/92668#55924b56-1a73-4663-a7a1-a8dd82d6e823">语音合成音色列表</a>。<br> &emsp; "Speed": 1.25, // Integer 非必填，语速，范围：[-2，6]，分别对应不同语速： -2: 代表0.6倍 -1: 代表0.8倍 0: 代表1.0倍（默认） 1: 代表1.2倍 2: 代表1.5倍  6: 代表2.5倍  如果需要更细化的语速，可以保留小数点后 2 位，例如0.5/1.25/2.81等。 参数值与实际语速转换，可参考 <a href="https://sdk-1300466766.cos.ap-shanghai.myqcloud.com/sample/speed_sample.tar.gz">语速转换</a><br> &emsp; "Volume": 5, // Integer 非必填，音量大小，范围：[0，10]，分别对应11个等级的音量，默认值为0，代表正常音量。<br> &emsp; "PrimaryLanguage": "zh-CN" // String 非必填，主要语言<br> &emsp;}</pre>
      */
     TTSConfig?: string;
 }
@@ -2856,6 +2923,31 @@ export interface TRTCDataResp {
     Total: number;
 }
 /**
+ * 录制视频转码参数。
+ */
+export interface VideoParams {
+    /**
+     * 视频的宽度值，单位为像素，默认值360。不能超过1920，与height的乘积不能超过1920*1080。
+     */
+    Width: number;
+    /**
+     * 视频的高度值，单位为像素，默认值640。不能超过1920，与width的乘积不能超过1920*1080。
+     */
+    Height: number;
+    /**
+     * 视频的帧率，范围[1, 60]，默认15。
+     */
+    Fps: number;
+    /**
+     * 视频的码率,单位是bps，范围[64000, 8192000]，默认550000bps。
+     */
+    BitRate: number;
+    /**
+     * 视频关键帧时间间隔，单位秒，默认值10秒。
+     */
+    Gop: number;
+}
+/**
  * DescribePicture返回参数结构体
  */
 export interface DescribePictureResponse {
@@ -2964,6 +3056,25 @@ export interface DescribeScaleInfoRequest {
     EndTime: number;
 }
 /**
+ * ControlAIConversation请求参数结构体
+ */
+export interface ControlAIConversationRequest {
+    /**
+     * 任务唯一标识
+     */
+    TaskId: string;
+    /**
+     * 控制命令，目前支持命令如下：
+  
+  - ServerPushText，服务端发送文本给AI机器人，AI机器人会播报该文本
+     */
+    Command: string;
+    /**
+     * 服务端发送播报文本命令，当Command为ServerPushText时必填
+     */
+    ServerPushText?: ServerPushText;
+}
+/**
  * DismissRoomByStrRoomId返回参数结构体
  */
 export interface DismissRoomByStrRoomIdResponse {
@@ -3039,19 +3150,19 @@ export interface DescribeCloudRecordingResponse {
     /**
      * 录制任务的唯一Id。
      */
-    TaskId: string;
+    TaskId?: string;
     /**
      * 云端录制任务的状态信息。
   Idle：表示当前录制任务空闲中
   InProgress：表示当前录制任务正在进行中。
   Exited：表示当前录制任务正在退出的过程中。
      */
-    Status: string;
+    Status?: string;
     /**
      * 录制文件信息。
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    StorageFileList: Array<StorageFile>;
+    StorageFileList?: Array<StorageFile>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -3203,7 +3314,7 @@ export interface UpdatePublishCdnStreamRequest {
      */
     WithTranscoding: number;
     /**
-     * 更新相关参数，只支持更新参与混音的主播列表参数。不填表示不更新此参数。
+     * 更新相关参数，只支持更新参与混音的主播列表参数，不支持更新Codec、采样率、码率和声道数。不填表示不更新此参数。
      */
     AudioParams?: McuAudioParams;
     /**
@@ -3290,6 +3401,23 @@ export interface AgentParams {
     MaxIdleTime?: number;
 }
 /**
+ * UpdateStreamIngest请求参数结构体
+ */
+export interface UpdateStreamIngestRequest {
+    /**
+     * TRTC的SDKAppId，和任务的房间所对应的SDKAppId相同
+     */
+    SdkAppId: number;
+    /**
+     * 任务的唯一Id，在启动任务成功后会返回。
+     */
+    TaskId: string;
+    /**
+     * 源流URL【必填】。
+     */
+    StreamUrl: string;
+}
+/**
  * StopWebRecord返回参数结构体
  */
 export interface StopWebRecordResponse {
@@ -3321,29 +3449,13 @@ export interface DeletePictureRequest {
     SdkAppId: number;
 }
 /**
- * 录制视频转码参数。
+ * StopWebRecord请求参数结构体
  */
-export interface VideoParams {
+export interface StopWebRecordRequest {
     /**
-     * 视频的宽度值，单位为像素，默认值360。不能超过1920，与height的乘积不能超过1920*1080。
+     * 需要停止的任务Id
      */
-    Width: number;
-    /**
-     * 视频的高度值，单位为像素，默认值640。不能超过1920，与width的乘积不能超过1920*1080。
-     */
-    Height: number;
-    /**
-     * 视频的帧率，范围[1, 60]，默认15。
-     */
-    Fps: number;
-    /**
-     * 视频的码率,单位是bps，范围[64000, 8192000]，默认550000bps。
-     */
-    BitRate: number;
-    /**
-     * 视频关键帧时间间隔，单位秒，默认值10秒。
-     */
-    Gop: number;
+    TaskId: string;
 }
 /**
  * 混流SEI参数
@@ -3809,6 +3921,35 @@ export interface AbnormalExperience {
      * 异常事件的上报时间
      */
     EventTime: number;
+}
+/**
+ * UpdateAIConversation请求参数结构体
+ */
+export interface UpdateAIConversationRequest {
+    /**
+     * 唯一标识一个任务
+     */
+    TaskId: string;
+    /**
+     * 不填写则不进行更新，机器人的欢迎语
+     */
+    WelcomeMessage?: string;
+    /**
+     * 不填写则不进行更新。智能打断模式，0表示服务端自动打断，1表示服务端不打断，由端上发送打断信令进行打断
+     */
+    InterruptMode?: number;
+    /**
+     * 不填写则不进行更新。InterruptMode为0时使用，单位为毫秒，默认为500ms。表示服务端检测到持续InterruptSpeechDuration毫秒的人声则进行打断
+     */
+    InterruptSpeechDuration?: number;
+    /**
+     * 不填写则不进行更新，LLM配置，详情见StartAIConversation接口
+     */
+    LLMConfig?: string;
+    /**
+     * 不填写则不进行更新，TTS配置，详情见StartAIConversation接口
+     */
+    TTSConfig?: string;
 }
 /**
  * 房间信息列表

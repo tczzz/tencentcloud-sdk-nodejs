@@ -251,6 +251,40 @@ export interface DescribeRenewalPriceResponse {
 }
 
 /**
+ * ModifyBackupConfigs请求参数结构体
+ */
+export interface ModifyBackupConfigsRequest {
+  /**
+   * 实例 ID，格式如：tdsql-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+   */
+  InstanceId: string
+  /**
+   * 常规备份存储时长，范围[1, 3650]。
+   */
+  Days?: number
+  /**
+   * 每天备份执行的区间的开始时间，格式 mm:ss，形如 22:00。
+   */
+  StartBackupTime?: string
+  /**
+   * 每天备份执行的区间的结束时间，格式 mm:ss，形如 23:59。
+   */
+  EndBackupTime?: string
+  /**
+   * 执行备份周期，枚举值：Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 沉降到归档存储时长，-1表示关闭归档设置。
+   */
+  ArchiveDays?: number
+  /**
+   * 超期备份配置。
+   */
+  BackupConfigSet?: Array<NewBackupConfig>
+}
+
+/**
  * ModifyInstanceNetwork返回参数结构体
  */
 export interface ModifyInstanceNetworkResponse {
@@ -365,17 +399,46 @@ export interface DescribeUpgradePriceRequest {
 }
 
 /**
- * TerminateDedicatedDBInstance返回参数结构体
+ * 数据库超期备份配置
  */
-export interface TerminateDedicatedDBInstanceResponse {
+export interface NewBackupConfig {
   /**
-   * 异步流程Id
+   * 备份策略是否启用。
    */
-  FlowId: number
+  EnableBackupPolicy: boolean
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 超期保留开始日期，早于开始日期的超期备份不保留，格式：yyyy-mm-dd。
    */
-  RequestId?: string
+  BeginDate: string
+  /**
+   * 超期备份保留时长，超出保留时间的超期备份将被删除，可填写1-3650整数。
+   */
+  MaxRetentionDays: number
+  /**
+   * 备份模式，可选择按年月周模式保存
+   * 按年：annually
+   * 按月：monthly
+   * 按周：weekly
+   */
+  Frequency: string
+  /**
+   * Frequency等于weekly时生效。
+表示保留特定工作日备份。可选择周一到周日，支持多选，取星期英文： 
+* 星期一 ：Monday 
+* 星期二 ：Tuesday 
+* 星期三：Wednesday
+* 星期四：Thursday 
+* 星期五：Friday
+* 星期六：Saturday
+* 星期日：Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 保留备份个数，Frequency等于monthly或weekly时生效。
+备份模式选择按月时，可填写1-28整数；
+备份模式选择年时，可填写1-336整数。
+   */
+  BackupCount?: number
 }
 
 /**
@@ -571,9 +634,9 @@ export interface CreateAccountRequest {
   /**
    * 账号密码，密码需要 8-32 个字符，不能以 '/' 开头，并且必须包含小写字母、大写字母、数字和符号()~!@#$%^&*-+=_|{}[]:<>,.?/。
    */
-  Password: string
+  Password?: string
   /**
-   * 是否创建为只读账号，0：否:； 1：只读账号，该账号的sql请求优先选择备机执行，备机延迟时选择主机执行；2：只读账号，优先选择备机执行，备机延迟时操作报错；3：只读账号，优先选择备机执行，忽略备机延迟只读备机；
+   * 是否创建为只读账号，0：否； 1：只读账号，该账号的sql请求优先选择备机执行，备机延迟时选择主机执行；2：只读账号，优先选择备机执行，备机延迟时操作报错；3：只读账号，优先选择备机执行，忽略备机延迟只读备机；
    */
   ReadOnly?: number
   /**
@@ -592,6 +655,10 @@ export interface CreateAccountRequest {
    * 用户最大连接数限制参数。不传或者传0表示为不限制，对应max_user_connections参数，目前10.1内核版本不支持设置。
    */
   MaxUserConnections?: number
+  /**
+   * 使用GetPublicKey返回的RSA2048公钥加密后的密码
+   */
+  EncryptedPassword?: string
 }
 
 /**
@@ -1072,7 +1139,11 @@ export interface ResetAccountPasswordRequest {
   /**
    * 新密码，由字母、数字或常见符号组成，不能包含分号、单引号和双引号，长度为6~32位。
    */
-  Password: string
+  Password?: string
+  /**
+   * 使用GetPublicKey返回的RSA2048公钥加密后的密码
+   */
+  EncryptedPassword?: string
 }
 
 /**
@@ -1131,17 +1202,46 @@ export interface CloneAccountRequest {
 }
 
 /**
- * DescribeDatabaseObjects请求参数结构体
+ * DescribePrice请求参数结构体
  */
-export interface DescribeDatabaseObjectsRequest {
+export interface DescribePriceRequest {
   /**
-   * 实例 ID，形如：dcdbt-ow7t8lmc。
+   * 欲新购实例的可用区ID。
    */
-  InstanceId: string
+  Zone: string
   /**
-   * 数据库名称，通过 DescribeDatabases 接口获取。
+   * 实例节点个数，可以通过 DescribeDBInstanceSpecs
+ 查询实例规格获得。
    */
-  DbName: string
+  NodeCount: number
+  /**
+   * 内存大小，单位：GB，可以通过 DescribeDBInstanceSpecs
+ 查询实例规格获得。
+   */
+  Memory: number
+  /**
+   * 存储空间大小，单位：GB，可以通过 DescribeDBInstanceSpecs
+ 查询实例规格获得不同内存大小对应的磁盘规格下限和上限。
+   */
+  Storage: number
+  /**
+   * 欲购买的时长，单位：月。
+   */
+  Period?: number
+  /**
+   * 欲购买的数量，默认查询购买1个实例的价格。
+   */
+  Count?: number
+  /**
+   * 付费类型。postpaid：按量付费   prepaid：预付费
+   */
+  Paymode?: string
+  /**
+   * 价格金额单位，不传默认单位为分，取值：
+   * pent：分
+   * microPent：微分
+   */
+  AmountUnit?: string
 }
 
 /**
@@ -1754,46 +1854,17 @@ export interface DescribeDBInstanceDetailResponse {
 }
 
 /**
- * DescribePrice请求参数结构体
+ * DescribeDatabaseObjects请求参数结构体
  */
-export interface DescribePriceRequest {
+export interface DescribeDatabaseObjectsRequest {
   /**
-   * 欲新购实例的可用区ID。
+   * 实例 ID，形如：dcdbt-ow7t8lmc。
    */
-  Zone: string
+  InstanceId: string
   /**
-   * 实例节点个数，可以通过 DescribeDBInstanceSpecs
- 查询实例规格获得。
+   * 数据库名称，通过 DescribeDatabases 接口获取。
    */
-  NodeCount: number
-  /**
-   * 内存大小，单位：GB，可以通过 DescribeDBInstanceSpecs
- 查询实例规格获得。
-   */
-  Memory: number
-  /**
-   * 存储空间大小，单位：GB，可以通过 DescribeDBInstanceSpecs
- 查询实例规格获得不同内存大小对应的磁盘规格下限和上限。
-   */
-  Storage: number
-  /**
-   * 欲购买的时长，单位：月。
-   */
-  Period?: number
-  /**
-   * 欲购买的数量，默认查询购买1个实例的价格。
-   */
-  Count?: number
-  /**
-   * 付费类型。postpaid：按量付费   prepaid：预付费
-   */
-  Paymode?: string
-  /**
-   * 价格金额单位，不传默认单位为分，取值：
-   * pent：分
-   * microPent：微分
-   */
-  AmountUnit?: string
+  DbName: string
 }
 
 /**
@@ -1870,6 +1941,20 @@ export interface DescribeSaleInfoResponse {
    * 可售卖地域信息列表
    */
   RegionList: Array<RegionInfo>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * TerminateDedicatedDBInstance返回参数结构体
+ */
+export interface TerminateDedicatedDBInstanceResponse {
+  /**
+   * 异步流程Id
+   */
+  FlowId: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2051,6 +2136,16 @@ export interface GrantAccountPrivilegesRequest {
    * 当 Type=table 时，ColName 为 \* 表示对表授权，如果为具体字段名，表示对字段授权
    */
   ColName?: string
+}
+
+/**
+ * DescribeBinlogTime请求参数结构体
+ */
+export interface DescribeBinlogTimeRequest {
+  /**
+   * 实例 ID，形如：tdsql-ow728lmc。
+   */
+  InstanceId: string
 }
 
 /**
@@ -2329,6 +2424,16 @@ export interface ModifyDBParametersRequest {
 }
 
 /**
+ * DescribeBackupConfigs请求参数结构体
+ */
+export interface DescribeBackupConfigsRequest {
+  /**
+   * 实例 ID，格式如：tdsql-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+   */
+  InstanceId: string
+}
+
+/**
  * ModifyDBInstanceSecurityGroups请求参数结构体
  */
 export interface ModifyDBInstanceSecurityGroupsRequest {
@@ -2596,6 +2701,62 @@ export interface DeleteAccountRequest {
    * 用户允许的访问 host
    */
   Host: string
+}
+
+/**
+ * DescribeBinlogTime返回参数结构体
+ */
+export interface DescribeBinlogTimeResponse {
+  /**
+   * 开始时间
+   */
+  StartTime: string
+  /**
+   * 结束时间
+   */
+  EndTime: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * DescribeBackupConfigs返回参数结构体
+ */
+export interface DescribeBackupConfigsResponse {
+  /**
+   * 实例 ID。
+   */
+  InstanceId?: string
+  /**
+   * 常规备份存储时长，范围[1, 3650]。
+   */
+  Days?: number
+  /**
+   * 每天备份执行的区间的开始时间，格式 mm:ss，形如 22:00。
+   */
+  StartBackupTime?: string
+  /**
+   * 每天备份执行的区间的结束时间，格式 mm:ss，形如 23:59。
+   */
+  EndBackupTime?: string
+  /**
+   * 执行备份周期，枚举值：Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 沉降到归档存储时长，-1表示关闭归档设置。
+   */
+  ArchiveDays?: number
+  /**
+   * 超期备份配置。
+   */
+  BackupConfigSet?: Array<BackupConfig>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -3064,6 +3225,49 @@ export interface ModifyAccountPrivilegesResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 数据库超期备份配置
+ */
+export interface BackupConfig {
+  /**
+   * 备份策略是否启用。
+   */
+  EnableBackupPolicy?: boolean
+  /**
+   * 超期保留开始日期，早于开始日期的超期备份不保留，格式：yyyy-mm-dd。
+   */
+  BeginDate?: string
+  /**
+   * 超期备份保留时长，超出保留时间的超期备份将被删除，可填写1-3650整数。
+   */
+  MaxRetentionDays?: number
+  /**
+   * 备份模式，可选择按年月周模式保存
+   * 按年：annually
+   * 按月：monthly
+   * 按周：weekly
+   */
+  Frequency?: string
+  /**
+   * Frequency等于weekly时生效。
+表示保留特定工作日备份。可选择周一到周日，支持多选，取星期英文：
+* 星期一 ：Monday
+* 星期二 ：Tuesday
+* 星期三：Wednesday
+* 星期四：Thursday
+* 星期五：Friday
+* 星期六：Saturday
+* 星期日：Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 保留备份个数，Frequency等于monthly或weekly时生效。
+备份模式选择按月时，可填写1-28整数；
+备份模式选择年时，可填写1-336整数。
+   */
+  BackupCount?: number
 }
 
 /**
@@ -3588,6 +3792,16 @@ export interface ModifyAccountPrivilegesRequest {
 注意，不传该参数表示保留现有权限，如需清除，请在复杂类型Privileges字段传空数组。
    */
   ProcedurePrivileges?: Array<ProcedurePrivilege>
+}
+
+/**
+ * ModifyBackupConfigs返回参数结构体
+ */
+export interface ModifyBackupConfigsResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**

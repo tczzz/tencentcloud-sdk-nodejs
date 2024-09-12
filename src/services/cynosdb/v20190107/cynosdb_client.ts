@@ -47,6 +47,7 @@ import {
   OpenReadOnlyInstanceExclusiveAccessResponse,
   SearchClusterDatabasesResponse,
   CreateParamTemplateRequest,
+  SearchClusterTablesResponse,
   DescribeClusterDetailRequest,
   ModifyResourcePackageNameRequest,
   UpgradeProxy,
@@ -79,10 +80,11 @@ import {
   DescribeProxyNodesResponse,
   ProxyNodeInfo,
   DescribeZonesResponse,
-  SearchClusterTablesResponse,
+  GrantAccountPrivilegesRequest,
   ModifyParamTemplateRequest,
   OpenAuditServiceResponse,
   DescribeChangedParamsAfterUpgradeResponse,
+  ModifyServerlessStrategyResponse,
   ProxyGroupRwInfo,
   DescribeProxyNodesRequest,
   InquirePriceCreateResponse,
@@ -96,6 +98,7 @@ import {
   DescribeClusterInstanceGrpsResponse,
   ModifyBackupConfigResponse,
   ModifyClusterDatabaseRequest,
+  DescribeServerlessStrategyResponse,
   InstanceCLSDeliveryInfo,
   ModifyMaintainPeriodConfigResponse,
   DisassociateSecurityGroupsRequest,
@@ -154,6 +157,7 @@ import {
   DescribeInstanceDetailResponse,
   DeleteAccountsResponse,
   CreateResourcePackageResponse,
+  ModifyBinlogConfigRequest,
   SetRenewFlagResponse,
   CreateClusterDatabaseResponse,
   DescribeClustersResponse,
@@ -203,7 +207,7 @@ import {
   AuditLog,
   CreateProxyResponse,
   BizTaskModifyParamsData,
-  InstanceInitInfo,
+  RollBackClusterRequest,
   Module,
   ModifyBackupConfigRequest,
   DisassociateSecurityGroupsResponse,
@@ -252,7 +256,7 @@ import {
   ExportInstanceSlowQueriesResponse,
   SwitchClusterZoneRequest,
   Ability,
-  RollBackClusterRequest,
+  InstanceInitInfo,
   ModifyResourcePackagesDeductionPriorityRequest,
   RemoveClusterSlaveZoneResponse,
   RenewClustersRequest,
@@ -284,6 +288,7 @@ import {
   CloseClusterPasswordComplexityResponse,
   DescribeBackupDownloadUrlResponse,
   TradePrice,
+  DescribeBinlogConfigRequest,
   CreateAuditRuleTemplateRequest,
   PauseServerlessRequest,
   CynosdbCluster,
@@ -307,6 +312,7 @@ import {
   CynosdbClusterDetail,
   RestartInstanceRequest,
   PackageDetail,
+  BinlogConfigInfo,
   DescribeAccountPrivilegesRequest,
   ModifyAccountParamsResponse,
   DescribeInstanceSpecsResponse,
@@ -332,6 +338,7 @@ import {
   OpenClusterPasswordComplexityRequest,
   DescribeAuditLogsResponse,
   PackagePriority,
+  CynosdbInstanceGroup,
   ModifyAccountDescriptionResponse,
   SetRenewFlagRequest,
   ProxyGroup,
@@ -341,6 +348,7 @@ import {
   ModifyClusterStorageResponse,
   ModifyInstanceUpgradeLimitDaysRequest,
   CloseClusterPasswordComplexityRequest,
+  DescribeIsolatedInstancesRequest,
   ModifyAccountParamsRequest,
   AuditLogFile,
   DescribeAuditRuleTemplatesResponse,
@@ -357,7 +365,7 @@ import {
   SwitchClusterLogBin,
   ExportInstanceErrorLogsResponse,
   ParamItemDetail,
-  GrantAccountPrivilegesRequest,
+  DescribeBinlogSaveDaysResponse,
   IsolateClusterResponse,
   RenewClustersResponse,
   RollbackTableInfo,
@@ -378,7 +386,6 @@ import {
   CreateBackupResponse,
   RollbackToNewClusterResponse,
   ResourcePackage,
-  DescribeBinlogSaveDaysResponse,
   BillingResourceInfo,
   ModifyProxyRwSplitResponse,
   ModifyAccountDescriptionRequest,
@@ -392,15 +399,19 @@ import {
   DescribeAuditRuleTemplatesRequest,
   InstanceSpec,
   IsolateInstanceRequest,
+  ModifyServerlessStrategyRequest,
+  DescribeBinlogConfigResponse,
   DescribeAuditLogFilesRequest,
   SaleRegion,
   DeleteAuditLogFileRequest,
+  DescribeIsolatedInstancesResponse,
   GrantAccountPrivilegesResponse,
   ClusterParamModifyLog,
-  CynosdbInstanceGroup,
+  ModifyBinlogConfigResponse,
   ResetAccountPasswordRequest,
   ModifiableInfo,
   TaskMaintainInfo,
+  DescribeServerlessStrategyRequest,
   TablePrivileges,
   RemoveClusterSlaveZoneRequest,
   DeleteBackupRequest,
@@ -452,6 +463,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DescribeBackupConfigResponse) => void
   ): Promise<DescribeBackupConfigResponse> {
     return this.request("DescribeBackupConfig", req, cb)
+  }
+
+  /**
+   * 该接口（ModifyBinlogConfig）用于修改Binlog配置
+   */
+  async ModifyBinlogConfig(
+    req: ModifyBinlogConfigRequest,
+    cb?: (error: string, rep: ModifyBinlogConfigResponse) => void
+  ): Promise<ModifyBinlogConfigResponse> {
+    return this.request("ModifyBinlogConfig", req, cb)
   }
 
   /**
@@ -765,13 +786,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 销毁集群
+   * 本接口(DescribeIsolatedInstances)用于查询回收站实例列表。
    */
-  async OfflineCluster(
-    req: OfflineClusterRequest,
-    cb?: (error: string, rep: OfflineClusterResponse) => void
-  ): Promise<OfflineClusterResponse> {
-    return this.request("OfflineCluster", req, cb)
+  async DescribeIsolatedInstances(
+    req: DescribeIsolatedInstancesRequest,
+    cb?: (error: string, rep: DescribeIsolatedInstancesResponse) => void
+  ): Promise<DescribeIsolatedInstancesResponse> {
+    return this.request("DescribeIsolatedInstances", req, cb)
   }
 
   /**
@@ -1095,6 +1116,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口(SearchClusterDatabases)搜索集群数据库列表
+   */
+  async SearchClusterDatabases(
+    req: SearchClusterDatabasesRequest,
+    cb?: (error: string, rep: SearchClusterDatabasesResponse) => void
+  ): Promise<SearchClusterDatabasesResponse> {
+    return this.request("SearchClusterDatabases", req, cb)
+  }
+
+  /**
    * 本接口（AddInstances）用于集群添加实例
    */
   async AddInstances(
@@ -1138,7 +1169,7 @@ export class Client extends AbstractClient {
    * 开启只读实例组接入
    */
   async OpenClusterReadOnlyInstanceGroupAccess(
-    req?: OpenClusterReadOnlyInstanceGroupAccessRequest,
+    req: OpenClusterReadOnlyInstanceGroupAccessRequest,
     cb?: (error: string, rep: OpenClusterReadOnlyInstanceGroupAccessResponse) => void
   ): Promise<OpenClusterReadOnlyInstanceGroupAccessResponse> {
     return this.request("OpenClusterReadOnlyInstanceGroupAccess", req, cb)
@@ -1172,6 +1203,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DeleteBackupResponse) => void
   ): Promise<DeleteBackupResponse> {
     return this.request("DeleteBackup", req, cb)
+  }
+
+  /**
+   * 查询serverless策略
+   */
+  async DescribeServerlessStrategy(
+    req: DescribeServerlessStrategyRequest,
+    cb?: (error: string, rep: DescribeServerlessStrategyResponse) => void
+  ): Promise<DescribeServerlessStrategyResponse> {
+    return this.request("DescribeServerlessStrategy", req, cb)
   }
 
   /**
@@ -1335,6 +1376,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 该接口（DescribeBinlogConfig）用于查询binlog配置
+   */
+  async DescribeBinlogConfig(
+    req: DescribeBinlogConfigRequest,
+    cb?: (error: string, rep: DescribeBinlogConfigResponse) => void
+  ): Promise<DescribeBinlogConfigResponse> {
+    return this.request("DescribeBinlogConfig", req, cb)
+  }
+
+  /**
    * 查询资源包规格
    */
   async DescribeResourcePackageSaleSpec(
@@ -1365,13 +1416,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口(IsolateInstance)用于隔离实例。
+   * 此接口（ExportInstanceErrorLogs）用于导出实例错误日志。
    */
-  async IsolateInstance(
-    req: IsolateInstanceRequest,
-    cb?: (error: string, rep: IsolateInstanceResponse) => void
-  ): Promise<IsolateInstanceResponse> {
-    return this.request("IsolateInstance", req, cb)
+  async ExportInstanceErrorLogs(
+    req: ExportInstanceErrorLogsRequest,
+    cb?: (error: string, rep: ExportInstanceErrorLogsResponse) => void
+  ): Promise<ExportInstanceErrorLogsResponse> {
+    return this.request("ExportInstanceErrorLogs", req, cb)
   }
 
   /**
@@ -1445,13 +1496,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口(SearchClusterDatabases)搜索集群数据库列表
+   * 销毁集群
    */
-  async SearchClusterDatabases(
-    req: SearchClusterDatabasesRequest,
-    cb?: (error: string, rep: SearchClusterDatabasesResponse) => void
-  ): Promise<SearchClusterDatabasesResponse> {
-    return this.request("SearchClusterDatabases", req, cb)
+  async OfflineCluster(
+    req: OfflineClusterRequest,
+    cb?: (error: string, rep: OfflineClusterResponse) => void
+  ): Promise<OfflineClusterResponse> {
+    return this.request("OfflineCluster", req, cb)
   }
 
   /**
@@ -1495,13 +1546,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 更换集群vpc
+   * 修改serverless策略
    */
-  async SwitchClusterVpc(
-    req: SwitchClusterVpcRequest,
-    cb?: (error: string, rep: SwitchClusterVpcResponse) => void
-  ): Promise<SwitchClusterVpcResponse> {
-    return this.request("SwitchClusterVpc", req, cb)
+  async ModifyServerlessStrategy(
+    req: ModifyServerlessStrategyRequest,
+    cb?: (error: string, rep: ModifyServerlessStrategyResponse) => void
+  ): Promise<ModifyServerlessStrategyResponse> {
+    return this.request("ModifyServerlessStrategy", req, cb)
   }
 
   /**
@@ -1685,6 +1736,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 更换集群vpc
+   */
+  async SwitchClusterVpc(
+    req: SwitchClusterVpcRequest,
+    cb?: (error: string, rep: SwitchClusterVpcResponse) => void
+  ): Promise<SwitchClusterVpcResponse> {
+    return this.request("SwitchClusterVpc", req, cb)
+  }
+
+  /**
    * 创建数据库代理
    */
   async CreateProxy(
@@ -1857,12 +1918,12 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 此接口（ExportInstanceErrorLogs）用于导出实例错误日志。
+   * 本接口(IsolateInstance)用于隔离实例。
    */
-  async ExportInstanceErrorLogs(
-    req: ExportInstanceErrorLogsRequest,
-    cb?: (error: string, rep: ExportInstanceErrorLogsResponse) => void
-  ): Promise<ExportInstanceErrorLogsResponse> {
-    return this.request("ExportInstanceErrorLogs", req, cb)
+  async IsolateInstance(
+    req: IsolateInstanceRequest,
+    cb?: (error: string, rep: IsolateInstanceResponse) => void
+  ): Promise<IsolateInstanceResponse> {
+    return this.request("IsolateInstance", req, cb)
   }
 }

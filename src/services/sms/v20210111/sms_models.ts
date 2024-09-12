@@ -322,7 +322,7 @@ export interface AddSmsTemplateRequest {
   TemplateContent: string
   /**
    * 短信类型，1表示营销短信，2表示通知短信，3表示验证码短信。
-注：原“普通短信”类型模板目前仍支持提交申请，但为进一步提升短信发送质量、提高短信模板审核通过率，建议按“通知短信”类型或“验证码短信”类型申请新增模板，可参考[关于腾讯云短信模板类型优化公告](https://cloud.tencent.com/document/product/382/106171)。
+注：为进一步提升短信发送质量、提高短信模板审核通过率，从2024年5月16日起，腾讯云短信模板类型优化为“验证码短信”、“通知短信”、“营销短信”，可参考[关于腾讯云短信模板类型优化公告](https://cloud.tencent.com/document/product/382/106171)。新开通短信服务的客户需严格参考新的短信类型申请短信模板。
    */
   SmsType: number
   /**
@@ -355,7 +355,7 @@ export interface ModifySmsTemplateRequest {
   TemplateContent: string
   /**
    * 短信类型，1表示营销短信，2表示通知短信，3表示验证码短信。
-注：原“普通短信”类型模板目前仍支持提交申请，为进一步提升短信发送质量、提高短信模板审核通过率，建议按“通知短信”类型或“验证码短信”类型申请新增模板，可参考[关于腾讯云短信模板类型优化公告](https://cloud.tencent.com/document/product/382/106171)。
+注：为进一步提升短信发送质量、提高短信模板审核通过率，从2024年5月16日起，腾讯云短信模板类型优化为“验证码短信”、“通知短信”、“营销短信”，可参考[关于腾讯云短信模板类型优化公告](https://cloud.tencent.com/document/product/382/106171)。新开通短信服务的客户需严格参考新的短信类型申请短信模板。
    */
   SmsType: number
   /**
@@ -504,8 +504,7 @@ export interface DescribeSignListStatus {
    */
   International?: number
   /**
-   * 申请签名状态，其中0表示审核通过，1表示审核中。
--1：表示审核未通过或审核失败。
+   * 申请签名状态，其中0表示审核通过且已生效，1表示审核中，2表示审核通过待生效，-1表示审核未通过或审核失败。
    */
   StatusCode?: number
   /**
@@ -570,7 +569,8 @@ export interface SendSmsRequest {
   TemplateId: string
   /**
    * 短信签名内容，使用 UTF-8 编码，必须填写已审核通过的签名，例如：腾讯云，签名信息可前往 [国内短信](https://console.cloud.tencent.com/smsv2/csms-sign) 或 [国际/港澳台短信](https://console.cloud.tencent.com/smsv2/isms-sign) 的签名管理查看。
-<dx-alert infotype="notice" title="注意">发送国内短信该参数必填，且需填写签名内容而非签名ID。</dx-alert>
+<dx-alert infotype="notice" title="注意"><ul><li>发送国内短信该参数必填，且需填写签名内容而非签名ID。
+</li><li>发送国际/港澳台短信该参数非必填。</li></ul></dx-alert>
    */
   SignName?: string
   /**
@@ -740,36 +740,36 @@ export interface PullSmsSendStatus {
   /**
    * 用户实际接收到短信的时间，UNIX 时间戳（单位：秒）。
    */
-  UserReceiveTime: number
+  UserReceiveTime?: number
   /**
    * 国家（或地区）码。
    */
-  CountryCode: string
+  CountryCode?: string
   /**
    * 用户号码，普通格式，示例如：13711112222。
    */
-  SubscriberNumber: string
+  SubscriberNumber?: string
   /**
    * 手机号码，E.164标准，+[国家或地区码][手机号] ，示例如：+8613711112222， 其中前面有一个+号 ，86为国家码，13711112222为手机号。
    */
-  PhoneNumber: string
+  PhoneNumber?: string
   /**
    * 本次发送标识 ID。
    */
-  SerialNo: string
+  SerialNo?: string
   /**
    * 实际是否收到短信接收状态，SUCCESS（成功）、FAIL（失败）。
    */
-  ReportStatus: string
+  ReportStatus?: string
   /**
    * 用户接收短信状态描述。
    */
-  Description: string
+  Description?: string
   /**
-   * 用户的 session 内容。与请求中的 SessionContext 一致，默认为空，如需开通请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。
+   * 用户的 session 内容。与请求中的 SessionContext 一致，默认为空，如需开通请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81) 评估。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  SessionContext: string
+  SessionContext?: string
 }
 
 /**

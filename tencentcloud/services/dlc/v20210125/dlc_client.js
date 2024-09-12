@@ -544,6 +544,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("CreateCHDFSBindingProduct", req, cb);
     }
     /**
+     * 本接口（QueryInternalTableWarehouse）用于获取原生表warehouse路径
+     */
+    async QueryInternalTableWarehouse(req, cb) {
+        return this.request("QueryInternalTableWarehouse", req, cb);
+    }
+    /**
      * 本接口（DescribeDatasourceConnection）用于查询数据源信息
      */
     async DescribeDatasourceConnection(req, cb) {
@@ -614,6 +620,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DeleteUser(req, cb) {
         return this.request("DeleteUser", req, cb);
+    }
+    /**
+     * 删除表
+     */
+    async DeleteTable(req, cb) {
+        return this.request("DeleteTable", req, cb);
     }
     /**
      * 本接口根据引擎ID查询数据引擎资源使用情况
@@ -712,7 +724,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("CreateTable", req, cb);
     }
     /**
-     * 查询任务结果
+     * 查询任务结果，仅支持30天以内的任务查询结果，且返回数据大小超过近50M会进行截断。
      */
     async DescribeTaskResult(req, cb) {
         return this.request("DescribeTaskResult", req, cb);

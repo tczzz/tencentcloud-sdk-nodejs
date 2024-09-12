@@ -20,59 +20,76 @@ import { ClientConfig } from "../../../common/interface"
 import {
   MonthRepeatStrategy,
   ClusterSetting,
+  ZoneDetailPriceResult,
   PodSpecInfo,
   PodSaleSpec,
   DescribeHBaseTableOverviewRequest,
   ScaleOutInstanceResponse,
   DescribeClusterFlowStatusDetailResponse,
+  SchedulerTaskInfo,
+  DynamicPodSpec,
   ModifyUserManagerPwdResponse,
   ImpalaQuery,
-  PodVolume,
+  DescribeHiveQueriesRequest,
   SyncPodStateResponse,
   CreateInstanceResponse,
   PersistentVolumeContext,
   TerminateTasksRequest,
   HostVolumeContext,
-  ScaleOutClusterRequest,
+  DescribeServiceNodeInfosRequest,
   DiskSpecInfo,
   HiveQuery,
   Step,
+  PreExecuteFileSettings,
   KeyValue,
-  PodNewSpec,
+  DescribeAutoScaleGroupGlobalConfRequest,
   EmrProductConfigDetail,
-  DayRepeatStrategy,
+  DescribeInstancesResponse,
+  DescribeTrinoQueryInfoResponse,
+  PriceResult,
+  TrinoQueryInfo,
   WeekRepeatStrategy,
   UserManagerFilter,
-  DynamicPodSpec,
+  DeleteAutoScaleStrategyResponse,
   OverviewRow,
   DiskSpec,
   LoadAutoScaleStrategy,
+  SLInstanceInfo,
   ModifyUserManagerPwdRequest,
   COSSettings,
   ClusterInstancesInfo,
-  SubnetInfo,
+  CreateSLInstanceRequest,
   ScaleOutInstanceRequest,
-  ZoneDetailPriceResult,
+  ResetYarnConfigRequest,
   DescribeHBaseTableOverviewResponse,
-  DescribeAutoScaleGroupGlobalConfRequest,
+  DescribeServiceNodeInfosResponse,
   ModifyAutoScaleStrategyRequest,
-  Configuration,
-  NodeResourceSpec,
+  FlowParamsDesc,
+  ModifyYarnDeployResponse,
   ModifyResourceScheduleConfigResponse,
   InsightResult,
   NodeDetailPriceResult,
   Tag,
+  HealthStatus,
+  TerminateSLInstanceRequest,
   Arg,
   ClusterIDToFlowID,
   EmrListInstance,
+  ServiceNodeDetailInfo,
   AddUsersForUserManagerResponse,
+  SearchItem,
+  DescribeResourceScheduleDiffDetailResponse,
+  DescribeYarnQueueResponse,
   TopologyInfo,
+  SchedulerTaskDetail,
+  NodeResourceSpec,
   AddMetricScaleStrategyRequest,
   EmrProductConfigOutter,
   VPCSettings,
-  DescribeHiveQueriesRequest,
+  DiffHeader,
+  DescribeInstancesListResponse,
   DescribeInstanceRenewNodesRequest,
-  YarnApplication,
+  ResetYarnConfigResponse,
   JobResult,
   Resource,
   FlowParam,
@@ -87,23 +104,31 @@ import {
   OverviewMetricData,
   AutoScaleRecord,
   JobFlowResourceSpec,
-  FlowParamsDesc,
+  Configuration,
   DescribeResourceScheduleRequest,
+  ZoneSetting,
   AllNodeResourceSpec,
   Placement,
   QuotaEntity,
+  ModifyYarnDeployRequest,
   PodParameter,
   DescribeClusterFlowStatusDetailRequest,
   DescribeUsersForUserManagerRequest,
-  RenewInstancesInfo,
+  ConfigSetInfo,
+  DiffDetail,
   DescribeInsightListRequest,
-  RunJobFlowResponse,
+  DescribeYarnScheduleHistoryRequest,
   StartStopServiceOrMonitorResponse,
   DescribeHiveQueriesResponse,
-  PodNewParameter,
-  DescribeInstanceRenewNodesResponse,
+  RunJobFlowResponse,
+  DescribeYarnQueueRequest,
+  DescribeImpalaQueriesResponse,
   ModifyResourcesTagsResponse,
+  ModifyAutoRenewFlagResponse,
   ScaleOutServiceConfGroupsInfo,
+  CreateSLInstanceResponse,
+  UserManagerUserBriefInfo,
+  DescribeYarnScheduleHistoryResponse,
   DescribeAutoScaleGroupGlobalConfResponse,
   DescribeEmrApplicationStaticsRequest,
   DescribeClusterNodesResponse,
@@ -113,6 +138,7 @@ import {
   DiskGroup,
   ScaleOutNodeConfig,
   DeleteUserManagerUserListRequest,
+  PodVolume,
   PriceDetail,
   DescribeResourceScheduleResponse,
   MultiDisk,
@@ -126,44 +152,57 @@ import {
   GroupGlobalConfs,
   PriceResource,
   TimeAutoScaleStrategy,
+  ModifySLInstanceRequest,
   DescribeInsightListResponse,
   CustomServiceDefine,
-  DeleteAutoScaleStrategyResponse,
+  StageInfoDetail,
   CreateClusterResponse,
   DescribeAutoScaleRecordsResponse,
   DescribeCvmQuotaResponse,
-  SearchItem,
+  DescribeSLInstanceListRequest,
   CreateClusterRequest,
   UserAndGroup,
   AddMetricScaleStrategyResponse,
+  SubnetInfo,
   BootstrapAction,
+  ScaleOutClusterRequest,
   DescribeClusterNodesRequest,
+  ModifyYarnQueueV2Request,
   DescribeCvmQuotaRequest,
   DescribeImpalaQueriesRequest,
   ComponentBasicRestartInfo,
   CreateInstanceRequest,
+  DiffDetailItem,
   MetaDbInfo,
   Execution,
+  DescribeSLInstanceListResponse,
   UpdateInstanceSettings,
-  DescribeEmrOverviewMetricsResponse,
+  DescribeSLInstanceResponse,
   ScriptBootstrapActionConfig,
   DescribeInstancesRequest,
   NotRepeatStrategy,
+  TerminateSLInstanceResponse,
+  PodNewSpec,
   InquiryPriceUpdateInstanceRequest,
   DescribeAutoScaleStrategiesRequest,
+  DeployYarnConfRequest,
   TerminateClusterNodesRequest,
   DescribeInstancesListRequest,
+  ItemSeq,
   RepeatStrategy,
+  RenewInstancesInfo,
   OutterResource,
   OpScope,
   DeleteAutoScaleStrategyRequest,
-  DescribeInstancesListResponse,
+  DeployYarnConfResponse,
   DeleteUserManagerUserListResponse,
   ModifyResourcePoolsResponse,
   TerminateTasksResponse,
-  DescribeInstancesResponse,
+  DayRepeatStrategy,
   DescribeYarnApplicationsResponse,
   DescribeUsersForUserManagerResponse,
+  YarnApplication,
+  DescribeResourceScheduleDiffDetailRequest,
   FlowExtraDetail,
   InquiryPriceRenewInstanceRequest,
   CdbInfo,
@@ -173,34 +212,40 @@ import {
   AddUsersForUserManagerRequest,
   ZoneResourceConfiguration,
   SyncPodStateRequest,
+  DescribeSLInstanceRequest,
   CustomMetaInfo,
   ApplicationStatics,
   InquiryPriceCreateInstanceRequest,
+  DescribeEmrOverviewMetricsResponse,
   MultiZoneSetting,
+  ModifyAutoRenewFlagRequest,
   ModifyResourceScheduleConfigRequest,
   UserInfoForUserManager,
-  TriggerConditions,
+  PodNewParameter,
   DescribeEmrOverviewMetricsRequest,
   PodState,
   ScaleOutClusterResponse,
+  ServiceProcessFunctionInfo,
   PartDetailPriceItem,
   ExternalService,
-  PreExecuteFileSettings,
+  RestartPolicy,
+  ModifyYarnQueueV2Response,
   ClusterExternalServiceInfo,
   SoftDependInfo,
   ModifyAutoScaleStrategyResponse,
   InquiryPriceScaleOutInstanceRequest,
+  ModifySLInstanceResponse,
   LoadMetricsConditions,
   JobFlowResource,
   DescribeEmrApplicationStaticsResponse,
   InquirePriceRenewEmrRequest,
   ModifyResourceTags,
   LoadMetricsCondition,
-  DescribeImpalaQueriesResponse,
+  DescribeInstanceRenewNodesResponse,
   CustomMetaDBInfo,
-  UserManagerUserBriefInfo,
+  Item,
   TableSchemaItem,
-  StageInfoDetail,
+  ConfigModifyInfoV2,
   InquiryPriceScaleOutInstanceResponse,
   AutoScaleResourceConf,
   ModifyResourceSchedulerResponse,
@@ -209,6 +254,7 @@ import {
   ResourceDetail,
   SceneSoftwareConfig,
   ShortNodeInfo,
+  DescribeTrinoQueryInfoRequest,
   EmrPrice,
   NodeHardwareInfo,
   ServiceBasicRestartInfo,
@@ -290,23 +336,33 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 修改YARN资源调度的资源配置
+   * 获取资源调度中的队列信息
    */
-  async ModifyResourceScheduleConfig(
-    req: ModifyResourceScheduleConfigRequest,
-    cb?: (error: string, rep: ModifyResourceScheduleConfigResponse) => void
-  ): Promise<ModifyResourceScheduleConfigResponse> {
-    return this.request("ModifyResourceScheduleConfig", req, cb)
+  async DescribeYarnQueue(
+    req: DescribeYarnQueueRequest,
+    cb?: (error: string, rep: DescribeYarnQueueResponse) => void
+  ): Promise<DescribeYarnQueueResponse> {
+    return this.request("DescribeYarnQueue", req, cb)
   }
 
   /**
-   * 集群续费询价。
+   * 修改资源调度中队列信息
    */
-  async InquirePriceRenewEmr(
-    req: InquirePriceRenewEmrRequest,
-    cb?: (error: string, rep: InquirePriceRenewEmrResponse) => void
-  ): Promise<InquirePriceRenewEmrResponse> {
-    return this.request("InquirePriceRenewEmr", req, cb)
+  async ModifyYarnQueueV2(
+    req: ModifyYarnQueueV2Request,
+    cb?: (error: string, rep: ModifyYarnQueueV2Response) => void
+  ): Promise<ModifyYarnQueueV2Response> {
+    return this.request("ModifyYarnQueueV2", req, cb)
+  }
+
+  /**
+   * yarn资源调度-部署生效
+   */
+  async DeployYarnConf(
+    req: DeployYarnConfRequest,
+    cb?: (error: string, rep: DeployYarnConfResponse) => void
+  ): Promise<DeployYarnConfResponse> {
+    return this.request("DeployYarnConf", req, cb)
   }
 
   /**
@@ -380,6 +436,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 查询服务进程信息
+   */
+  async DescribeServiceNodeInfos(
+    req: DescribeServiceNodeInfosRequest,
+    cb?: (error: string, rep: DescribeServiceNodeInfosResponse) => void
+  ): Promise<DescribeServiceNodeInfosResponse> {
+    return this.request("DescribeServiceNodeInfos", req, cb)
+  }
+
+  /**
    * 查询集群实例信息
    */
   async DescribeInstances(
@@ -390,13 +456,23 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 创建流程作业
+   * 部署生效。已废弃，请使用`DeployYarnConf`接口进行部署生效
    */
-  async RunJobFlow(
-    req: RunJobFlowRequest,
-    cb?: (error: string, rep: RunJobFlowResponse) => void
-  ): Promise<RunJobFlowResponse> {
-    return this.request("RunJobFlow", req, cb)
+  async ModifyYarnDeploy(
+    req: ModifyYarnDeployRequest,
+    cb?: (error: string, rep: ModifyYarnDeployResponse) => void
+  ): Promise<ModifyYarnDeployResponse> {
+    return this.request("ModifyYarnDeploy", req, cb)
+  }
+
+  /**
+   * 缩容Task节点
+   */
+  async TerminateTasks(
+    req: TerminateTasksRequest,
+    cb?: (error: string, rep: TerminateTasksResponse) => void
+  ): Promise<TerminateTasksResponse> {
+    return this.request("TerminateTasks", req, cb)
   }
 
   /**
@@ -407,6 +483,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: TerminateClusterNodesResponse) => void
   ): Promise<TerminateClusterNodesResponse> {
     return this.request("TerminateClusterNodes", req, cb)
+  }
+
+  /**
+   * 修改YARN资源调度的资源配置
+   */
+  async ResetYarnConfig(
+    req: ResetYarnConfigRequest,
+    cb?: (error: string, rep: ResetYarnConfigResponse) => void
+  ): Promise<ResetYarnConfigResponse> {
+    return this.request("ResetYarnConfig", req, cb)
   }
 
   /**
@@ -431,6 +517,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口（TerminateSLInstance）用于销毁 Lite HBase 实例
+   */
+  async TerminateSLInstance(
+    req: TerminateSLInstanceRequest,
+    cb?: (error: string, rep: TerminateSLInstanceResponse) => void
+  ): Promise<TerminateSLInstanceResponse> {
+    return this.request("TerminateSLInstance", req, cb)
+  }
+
+  /**
      * 该接口支持安装了OpenLdap组件的集群。
 新增用户列表（用户管理）。
      */
@@ -439,6 +535,39 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: AddUsersForUserManagerResponse) => void
   ): Promise<AddUsersForUserManagerResponse> {
     return this.request("AddUsersForUserManager", req, cb)
+  }
+
+  /**
+     * 前提：预付费集群
+资源级别开启或关闭自动续费
+     */
+  async ModifyAutoRenewFlag(
+    req: ModifyAutoRenewFlagRequest,
+    cb?: (error: string, rep: ModifyAutoRenewFlagResponse) => void
+  ): Promise<ModifyAutoRenewFlagResponse> {
+    return this.request("ModifyAutoRenewFlag", req, cb)
+  }
+
+  /**
+     * 本接口（CreateSLInstance）用于创建 Lite HBase 实例
+- 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回创建实例的 InstaceId 和请求的 RequestID。
+- 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+     */
+  async CreateSLInstance(
+    req: CreateSLInstanceRequest,
+    cb?: (error: string, rep: CreateSLInstanceResponse) => void
+  ): Promise<CreateSLInstanceResponse> {
+    return this.request("CreateSLInstance", req, cb)
+  }
+
+  /**
+   * 本接口（DescribeSLInstanceList）用于查询 Lite HBase 实例列表详细信息
+   */
+  async DescribeSLInstanceList(
+    req: DescribeSLInstanceListRequest,
+    cb?: (error: string, rep: DescribeSLInstanceListResponse) => void
+  ): Promise<DescribeSLInstanceListResponse> {
+    return this.request("DescribeSLInstanceList", req, cb)
   }
 
   /**
@@ -482,7 +611,17 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 修改了yarn的资源调度器，点击部署生效
+   * 用于启停服务 重启服务等功能
+   */
+  async StartStopServiceOrMonitor(
+    req: StartStopServiceOrMonitorRequest,
+    cb?: (error: string, rep: StartStopServiceOrMonitorResponse) => void
+  ): Promise<StartStopServiceOrMonitorResponse> {
+    return this.request("StartStopServiceOrMonitor", req, cb)
+  }
+
+  /**
+   * 修改了yarn的资源调度器，点击部署生效。
    */
   async ModifyResourceScheduler(
     req: ModifyResourceSchedulerRequest,
@@ -492,23 +631,35 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * EMR同步TKE中POD状态
+   * YARN资源调度-变更详情
    */
-  async SyncPodState(
-    req: SyncPodStateRequest,
-    cb?: (error: string, rep: SyncPodStateResponse) => void
-  ): Promise<SyncPodStateResponse> {
-    return this.request("SyncPodState", req, cb)
+  async DescribeResourceScheduleDiffDetail(
+    req: DescribeResourceScheduleDiffDetailRequest,
+    cb?: (error: string, rep: DescribeResourceScheduleDiffDetailResponse) => void
+  ): Promise<DescribeResourceScheduleDiffDetailResponse> {
+    return this.request("DescribeResourceScheduleDiffDetail", req, cb)
   }
 
   /**
-   * 用于启停服务 重启服务等功能
+   * 本接口（DescribeSLInstance）用于查询 Lite HBase 实例基本信息
    */
-  async StartStopServiceOrMonitor(
-    req: StartStopServiceOrMonitorRequest,
-    cb?: (error: string, rep: StartStopServiceOrMonitorResponse) => void
-  ): Promise<StartStopServiceOrMonitorResponse> {
-    return this.request("StartStopServiceOrMonitor", req, cb)
+  async DescribeSLInstance(
+    req: DescribeSLInstanceRequest,
+    cb?: (error: string, rep: DescribeSLInstanceResponse) => void
+  ): Promise<DescribeSLInstanceResponse> {
+    return this.request("DescribeSLInstance", req, cb)
+  }
+
+  /**
+     * 本接口（ModifySLInstance）用于修改Lite HBase 实例节点数。
+- 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回请求的 RequestID。
+- 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+     */
+  async ModifySLInstance(
+    req: ModifySLInstanceRequest,
+    cb?: (error: string, rep: ModifySLInstanceResponse) => void
+  ): Promise<ModifySLInstanceResponse> {
+    return this.request("ModifySLInstance", req, cb)
   }
 
   /**
@@ -542,6 +693,26 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 查看yarn资源调度的调度历史。废弃，请使用流程中心查看历史记录。
+   */
+  async DescribeYarnScheduleHistory(
+    req: DescribeYarnScheduleHistoryRequest,
+    cb?: (error: string, rep: DescribeYarnScheduleHistoryResponse) => void
+  ): Promise<DescribeYarnScheduleHistoryResponse> {
+    return this.request("DescribeYarnScheduleHistory", req, cb)
+  }
+
+  /**
+   * 修改YARN资源调度的资源配置。已废弃，请使用`ModifyYarnQueueV2`来修改队列配置
+   */
+  async ModifyResourceScheduleConfig(
+    req: ModifyResourceScheduleConfigRequest,
+    cb?: (error: string, rep: ModifyResourceScheduleConfigResponse) => void
+  ): Promise<ModifyResourceScheduleConfigResponse> {
+    return this.request("ModifyResourceScheduleConfig", req, cb)
+  }
+
+  /**
    * 查询流程任务
    */
   async DescribeJobFlow(
@@ -572,13 +743,23 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 缩容Task节点
+   * EMR同步TKE中POD状态
    */
-  async TerminateTasks(
-    req: TerminateTasksRequest,
-    cb?: (error: string, rep: TerminateTasksResponse) => void
-  ): Promise<TerminateTasksResponse> {
-    return this.request("TerminateTasks", req, cb)
+  async SyncPodState(
+    req: SyncPodStateRequest,
+    cb?: (error: string, rep: SyncPodStateResponse) => void
+  ): Promise<SyncPodStateResponse> {
+    return this.request("SyncPodState", req, cb)
+  }
+
+  /**
+   * 集群续费询价。
+   */
+  async InquirePriceRenewEmr(
+    req: InquirePriceRenewEmrRequest,
+    cb?: (error: string, rep: InquirePriceRenewEmrResponse) => void
+  ): Promise<InquirePriceRenewEmrResponse> {
+    return this.request("InquirePriceRenewEmr", req, cb)
   }
 
   /**
@@ -602,7 +783,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 查询YARN资源调度数据信息
+   * 查询YARN资源调度数据信息。已废弃，请使用`DescribeYarnQueue`去查询队列信息。
    */
   async DescribeResourceSchedule(
     req: DescribeResourceScheduleRequest,
@@ -632,6 +813,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 获取trino查询结果
+   */
+  async DescribeTrinoQueryInfo(
+    req: DescribeTrinoQueryInfoRequest,
+    cb?: (error: string, rep: DescribeTrinoQueryInfoResponse) => void
+  ): Promise<DescribeTrinoQueryInfoResponse> {
+    return this.request("DescribeTrinoQueryInfo", req, cb)
+  }
+
+  /**
    * 查询集群列表
    */
   async DescribeInstancesList(
@@ -642,7 +833,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 刷新YARN的动态资源池
+   * 刷新YARN的动态资源池。已废弃，请使用`DeployYarnConf`
    */
   async ModifyResourcePools(
     req: ModifyResourcePoolsRequest,
@@ -669,5 +860,15 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: ScaleOutClusterResponse) => void
   ): Promise<ScaleOutClusterResponse> {
     return this.request("ScaleOutCluster", req, cb)
+  }
+
+  /**
+   * 创建流程作业
+   */
+  async RunJobFlow(
+    req: RunJobFlowRequest,
+    cb?: (error: string, rep: RunJobFlowResponse) => void
+  ): Promise<RunJobFlowResponse> {
+    return this.request("RunJobFlow", req, cb)
   }
 }

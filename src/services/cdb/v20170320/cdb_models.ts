@@ -942,6 +942,10 @@ export interface DescribeDBInstancesRequest {
    * 数据库引擎类型。
    */
   EngineTypes?: Array<string>
+  /**
+   * 是否获取集群版实例节点信息，可填：true或false
+   */
+  QueryClusterInfo?: boolean
 }
 
 /**
@@ -2174,21 +2178,21 @@ export interface UploadInfo {
 }
 
 /**
- * 独享集群CDB实例的节点分布情况
+ * DisassociateSecurityGroups请求参数结构体
  */
-export interface NodeDistribution {
+export interface DisassociateSecurityGroupsRequest {
   /**
-   * 主实例Master节点所在主机ID或者只读实例所在主机ID
+   * 安全组 ID。
    */
-  Node: string
+  SecurityGroupId: string
   /**
-   * 主实例第一Slave节点所在主机ID
+   * 实例 ID 列表，一个或者多个实例 ID 组成的数组。
    */
-  SlaveNodeOne: string
+  InstanceIds: Array<string>
   /**
-   * 主实例第二Slave节点所在主机ID
+   * 当传入只读实例ID时，默认操作的是对应只读组的安全组。如果需要操作只读实例ID的安全组， 需要将该入参置为True
    */
-  SlaveNodeTwo: string
+  ForReadonlyInstance?: boolean
 }
 
 /**
@@ -2200,6 +2204,20 @@ export interface AuditRuleFilters {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   RuleFilters?: Array<RuleFilters>
+}
+
+/**
+ * SubmitInstanceUpgradeCheckJob请求参数结构体
+ */
+export interface SubmitInstanceUpgradeCheckJobRequest {
+  /**
+   * 实例D
+   */
+  InstanceId: string
+  /**
+   * 目标数据库版本
+   */
+  DstMysqlVersion: string
 }
 
 /**
@@ -2587,18 +2605,17 @@ export interface AssociateSecurityGroupsRequest {
 }
 
 /**
- * StartReplication返回参数结构体
+ * DescribeInstanceUpgradeCheckJob请求参数结构体
  */
-export interface StartReplicationResponse {
+export interface DescribeInstanceUpgradeCheckJobRequest {
   /**
-   * 异步任务 ID。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 实例ID
    */
-  AsyncRequestId: string
+  InstanceId: string
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 目标数据库版本
    */
-  RequestId?: string
+  DstMysqlVersion: string
 }
 
 /**
@@ -2641,6 +2658,20 @@ export interface DescribeDBFeaturesResponse {
    * 可供升级的内核版本。
    */
   TargetSubVersion?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * SubmitInstanceUpgradeCheckJob返回参数结构体
+ */
+export interface SubmitInstanceUpgradeCheckJobResponse {
+  /**
+   * 任务ID
+   */
+  JobId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3006,7 +3037,7 @@ export interface BinlogInfo {
    */
   RemoteInfo?: Array<RemoteBackupInfo>
   /**
-   * 存储方式，0-常规存储，1-归档存储，默认为0
+   * 存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0
    */
   CosStorageType?: number
   /**
@@ -4927,7 +4958,8 @@ export interface CreateDBInstanceRequest {
    */
   Zone?: string
   /**
-   * 私有网络 ID，如果不传则默认选择基础网络，请使用 [查询私有网络列表](/document/api/215/15778) 。
+   * 私有网络 ID，如果不传则默认选择基础网络，请使用 [查询私有网络列表](/document/api/215/15778)。
+说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。
    */
   UniqVpcId?: string
   /**
@@ -4952,7 +4984,7 @@ export interface CreateDBInstanceRequest {
   MasterInstanceId?: string
   /**
    * MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-说明：若此参数不填，则默认值为5.6。
+说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
    */
   EngineVersion?: string
   /**
@@ -5012,7 +5044,8 @@ export interface CreateDBInstanceRequest {
    */
   ClientToken?: string
   /**
-   * 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - ONTKE单节点实例。 不指定则默认为通用型实例。
+   * 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
+说明：如果创建的是集群版实例，此参数为必填。
    */
   DeviceType?: string
   /**
@@ -5062,6 +5095,19 @@ export interface CreateDBInstanceRequest {
    * 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
    */
   Vips?: Array<string>
+  /**
+   * 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+   */
+  DataProtectVolume?: number
+  /**
+   * 集群版节点拓扑配置。
+说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+   */
+  ClusterTopology?: ClusterTopology
+  /**
+   * 磁盘类型，基础版或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
+   */
+  DiskType?: string
 }
 
 /**
@@ -5426,24 +5472,6 @@ export interface ResetRootAccountResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
-}
-
-/**
- * DisassociateSecurityGroups请求参数结构体
- */
-export interface DisassociateSecurityGroupsRequest {
-  /**
-   * 安全组 ID。
-   */
-  SecurityGroupId: string
-  /**
-   * 实例 ID 列表，一个或者多个实例 ID 组成的数组。
-   */
-  InstanceIds: Array<string>
-  /**
-   * 当传入只读实例ID时，默认操作的是对应只读组的安全组。如果需要操作只读实例ID的安全组， 需要将该入参置为True
-   */
-  ForReadonlyInstance?: boolean
 }
 
 /**
@@ -6087,7 +6115,7 @@ export interface BackupInfo {
    */
   RemoteInfo?: Array<RemoteBackupInfo>
   /**
-   * 存储方式，0-常规存储，1-归档存储，默认为0
+   * 存储方式，0-常规存储，1-归档存储，2-标准存储，默认为0
    */
   CosStorageType?: number
   /**
@@ -6186,6 +6214,24 @@ export interface ModifyLocalBinlogConfigResponse {
  * DeleteDatabase返回参数结构体
  */
 export interface DeleteDatabaseResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * DescribeInstanceUpgradeCheckJob返回参数结构体
+ */
+export interface DescribeInstanceUpgradeCheckJobResponse {
+  /**
+   * 24小时内是否存在历史升级校验任务
+   */
+  ExistUpgradeCheckJob?: boolean
+  /**
+   * 任务id
+   */
+  JobId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -6877,6 +6923,11 @@ export interface InstanceInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ExpandCpu?: number
+  /**
+   * 实例集群版节点信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ClusterInfo?: Array<ClusterInfo>
 }
 
 /**
@@ -6909,6 +6960,21 @@ export interface SwitchCDBProxyRequest {
    * 数据库代理ID
    */
   ProxyGroupId: string
+}
+
+/**
+ * StartReplication返回参数结构体
+ */
+export interface StartReplicationResponse {
+  /**
+   * 异步任务 ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  AsyncRequestId: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -7648,6 +7714,10 @@ export interface UpgradeDBInstanceEngineVersionRequest {
    * 延迟阈值。取值范围1~10
    */
   MaxDelayTime?: number
+  /**
+   * 5.7升级8.0是否忽略关键字错误，取值范围[0,1]，1表示忽略，0表示不忽略
+   */
+  IgnoreErrKeyword?: number
   /**
    * 版本升级支持指定参数
    */
@@ -8657,6 +8727,24 @@ export interface DeleteDeployGroupsResponse {
 }
 
 /**
+ * 独享集群CDB实例的节点分布情况
+ */
+export interface NodeDistribution {
+  /**
+   * 主实例Master节点所在主机ID或者只读实例所在主机ID
+   */
+  Node: string
+  /**
+   * 主实例第一Slave节点所在主机ID
+   */
+  SlaveNodeOne: string
+  /**
+   * 主实例第二Slave节点所在主机ID
+   */
+  SlaveNodeTwo: string
+}
+
+/**
  * DescribeTasks请求参数结构体
  */
 export interface DescribeTasksRequest {
@@ -8764,16 +8852,17 @@ export interface CreateDBInstanceHourRequest {
    */
   Volume: number
   /**
-   * MySQL 版本，值包括：5.5、5.6、5.7、8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
-说明：若此参数不填，则默认值为5.6。
+   * MySQL 版本，值包括：5.5、5.6、5.7和8.0，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的实例版本。
+说明：创建非集群版实例时，请根据需要指定实例版本（推荐5.7或8.0），若此参数不填，则默认值为5.6；若创建的是集群版实例，则此参数仅能指定为5.7或8.0。
    */
   EngineVersion?: string
   /**
    * 私有网络 ID，如果不传则默认选择基础网络，请使用 [查询私有网络列表](/document/api/215/15778) 。
+说明：如果创建的是集群版实例，此参数为必填且为私有网络类型。
    */
   UniqVpcId?: string
   /**
-   * 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用[查询子网列表](/document/api/215/15784)。
+   * 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
    */
   UniqSubnetId?: string
   /**
@@ -8853,7 +8942,8 @@ export interface CreateDBInstanceHourRequest {
    */
   ClientToken?: string
   /**
-   * 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - ONTKE单节点实例。 不指定则默认为通用型实例。
+   * 实例隔离类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"BASIC_V2" - ONTKE 单节点实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型实例。
+说明：如果创建的是集群版实例，此参数为必填。
    */
   DeviceType?: string
   /**
@@ -8902,6 +8992,19 @@ export interface CreateDBInstanceHourRequest {
    * 指定实例的IP列表。仅支持主实例指定，按实例顺序，不足则按未指定处理。
    */
   Vips?: Array<string>
+  /**
+   * 集群版实例的数据保护空间大小，单位 GB，设置范围1 - 10。
+   */
+  DataProtectVolume?: number
+  /**
+   * 集群版节点拓扑配置。
+说明：若购买的是集群版实例，此参数为必填，需设置集群版实例的 RW 和 RO 节点拓扑，RO 节点范围是1 - 5个，请至少设置1个 RO 节点。
+   */
+  ClusterTopology?: ClusterTopology
+  /**
+   * 磁盘类型，基础版或者集群版实例可以指定此参数。CLOUD_SSD 表示 SSD 云硬盘，CLOUD_HSSD 表示增强型 SSD 云硬盘。
+   */
+  DiskType?: string
 }
 
 /**
@@ -8961,11 +9064,13 @@ export interface CreateCloneInstanceRequest {
    */
   InstanceId: string
   /**
-   * 如果需要克隆实例回档到指定时间，则指定该值。时间格式为： yyyy-mm-dd hh:mm:ss 。
+   * 如果需要克隆实例回档到指定时间，则指定该值。时间格式为：yyyy-mm-dd hh:mm:ss。
+说明：此参数和 SpecifiedBackupId 参数需要2选1进行设置。
    */
   SpecifiedRollbackTime?: string
   /**
-   * 如果需要克隆实例回档到指定备份的时间点，则指定该值为物理备份的Id。请使用 [查询数据备份文件列表](/document/api/236/15842) 。
+   * 如果需要克隆实例回档到指定备份集，则指定该值为备份文件的 Id。请使用 [查询数据备份文件列表](/document/api/236/15842)。
+说明：如果是克隆双节点、三节点实例，备份文件为物理备份，如果是克隆单节点、集群版实例，备份文件为快照备份。
    */
   SpecifiedBackupId?: number
   /**
@@ -9017,7 +9122,7 @@ export interface CreateCloneInstanceRequest {
    */
   BackupZone?: string
   /**
-   * 克隆实例类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例。 不指定则默认为通用型。
+   * 克隆实例类型。支持值包括："UNIVERSAL" - 通用型实例，"EXCLUSIVE" - 独享型实例，"CLOUD_NATIVE_CLUSTER" - 集群版标准型，"CLOUD_NATIVE_CLUSTER_EXCLUSIVE" - 集群版加强型。不指定则默认为通用型。
    */
   DeviceType?: string
   /**
@@ -9048,6 +9153,31 @@ export interface CreateCloneInstanceRequest {
    * 实例时长，PayType为PRE_PAID时必传，单位：月，可选值包括 [1,2,3,4,5,6,7,8,9,10,11,12,24,36]。
    */
   Period?: number
+  /**
+   * 集群版节点拓扑配置。
+   */
+  ClusterTopology?: ClusterTopology
+}
+
+/**
+ * 集群版节点信息
+ */
+export interface ClusterInfo {
+  /**
+   * 节点id
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NodeId?: string
+  /**
+   * 节点类型：主节点，从节点
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Role?: string
+  /**
+   * 地域
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Zone?: string
 }
 
 /**

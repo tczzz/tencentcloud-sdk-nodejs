@@ -2047,7 +2047,7 @@ export interface ModifyComputeEnvResponse {
  */
 export interface Placement {
     /**
-     * 实例所属的可用区ID。该参数可以通过调用  [DescribeZones](https://cloud.tencent.com/document/product/213/15707) 的返回值中的Zone字段来获取。
+     * 实例所属的可用区名称。该参数可以通过调用  [DescribeZones](https://cloud.tencent.com/document/product/213/15707) 的返回值中的Zone字段来获取。
      */
     Zone: string;
     /**
@@ -2873,7 +2873,7 @@ export interface VirtualPrivateCloud {
      */
     SubnetId: string;
     /**
-     * 是否用作公网网关。公网网关只有在实例拥有公网IP以及处于私有网络下时才能正常使用。取值范围：<br><li>true：表示用作公网网关<br><li>false：表示不作为公网网关<br><br>默认取值：false。
+     * 是否用作公网网关。公网网关只有在实例拥有公网IP以及处于私有网络下时才能正常使用。取值范围：<li>true：表示用作公网网关</li><li>false：表示不作为公网网关</li>默认取值：false。
      */
     AsVpcGateway?: boolean;
     /**

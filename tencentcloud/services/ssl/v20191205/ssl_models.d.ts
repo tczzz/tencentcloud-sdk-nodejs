@@ -113,68 +113,73 @@ export interface ManagerInfo {
     /**
      * 状态: audit: 审核中 ok: 审核通过 invalid: 失效 expiring: 即将过期 expired: 已过期
      */
-    Status: string;
+    Status?: string;
     /**
      * 管理人姓名
      */
-    ManagerFirstName: string;
+    ManagerFirstName?: string;
     /**
      * 管理人姓名
      */
-    ManagerLastName: string;
+    ManagerLastName?: string;
     /**
      * 管理人职位
      */
-    ManagerPosition: string;
+    ManagerPosition?: string;
     /**
      * 管理人电话
      */
-    ManagerPhone: string;
+    ManagerPhone?: string;
     /**
      * 管理人邮箱
      */
-    ManagerMail: string;
+    ManagerMail?: string;
     /**
      * 管理人所属部门
      */
-    ManagerDepartment: string;
+    ManagerDepartment?: string;
     /**
      * 创建时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    CreateTime: string;
+    CreateTime?: string;
     /**
      * 管理人域名数量
      */
-    DomainCount: number;
+    DomainCount?: number;
     /**
      * 管理人证书数量
      */
-    CertCount: number;
+    CertCount?: number;
     /**
      * 管理人ID
      */
-    ManagerId: number;
+    ManagerId?: number;
     /**
      * 审核有效到期时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    ExpireTime: string;
+    ExpireTime?: string;
     /**
      * 最近一次提交审核时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    SubmitAuditTime: string;
+    SubmitAuditTime?: string;
     /**
      * 审核通过时间
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    VerifyTime: string;
+    VerifyTime?: string;
     /**
      * 具体审核状态信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    StatusInfo: Array<ManagerStatusInfo>;
+    StatusInfo?: Array<ManagerStatusInfo>;
+    /**
+     * 标签
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Tags?: Array<Tags>;
 }
 /**
  * DescribeHostDeployRecordDetail返回参数结构体
@@ -651,6 +656,11 @@ export interface Certificates {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     SupportDownloadType?: SupportDownloadType;
+    /**
+     * 证书吊销完成时间
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CertRevokedTime?: string;
 }
 /**
  * 获取证书列表（DescribeCertificates）返回参数键为 Certificates 数组下，key为CertificateExtra 的内容。
@@ -759,7 +769,7 @@ export interface VerifyManagerResponse {
     /**
      * 管理人ID
      */
-    ManagerId: number;
+    ManagerId?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -942,15 +952,53 @@ export interface DescribeCompaniesResponse {
     /**
      * 公司列表
      */
-    Companies: Array<CompanyInfo>;
+    Companies?: Array<CompanyInfo>;
     /**
      * 公司总数
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
     RequestId?: string;
+}
+/**
+ * 部署记录信息
+ */
+export interface UpdateRecordInfo {
+    /**
+     * 记录ID
+     */
+    Id: number;
+    /**
+     * 新证书ID
+     */
+    CertId: string;
+    /**
+     * 原证书ID
+     */
+    OldCertId: string;
+    /**
+     * 部署资源类型列表
+     */
+    ResourceTypes: Array<string>;
+    /**
+     * 部署地域列表
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Regions: Array<string>;
+    /**
+     * 部署状态
+     */
+    Status: number;
+    /**
+     * 部署时间
+     */
+    CreateTime: string;
+    /**
+     * 最后一次更新时间
+     */
+    UpdateTime: string;
 }
 /**
  * CheckCertificateChain返回参数结构体
@@ -1923,11 +1971,11 @@ export interface DescribeManagersResponse {
     /**
      * 公司管理人列表
      */
-    Managers: Array<ManagerInfo>;
+    Managers?: Array<ManagerInfo>;
     /**
      * 公司管理人总数
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -1953,31 +2001,31 @@ export interface CompanyInfo {
     /**
      * 公司名称
      */
-    CompanyName: string;
+    CompanyName?: string;
     /**
      * 公司ID
      */
-    CompanyId: number;
+    CompanyId?: number;
     /**
      * 公司所在国家
      */
-    CompanyCountry: string;
+    CompanyCountry?: string;
     /**
      * 公司所在省份
      */
-    CompanyProvince: string;
+    CompanyProvince?: string;
     /**
      * 公司所在城市
      */
-    CompanyCity: string;
+    CompanyCity?: string;
     /**
      * 公司所在详细地址
      */
-    CompanyAddress: string;
+    CompanyAddress?: string;
     /**
      * 公司电话
      */
-    CompanyPhone: string;
+    CompanyPhone?: string;
     /**
      * 类型
   注意：此字段可能返回 null，表示取不到有效值。
@@ -1988,6 +2036,11 @@ export interface CompanyInfo {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     IdNumber?: string;
+    /**
+     * 标签
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Tags?: Array<Tags>;
 }
 /**
  * 权益包转出详情
@@ -2102,12 +2155,12 @@ export interface DescribeHostUpdateRecordResponse {
      * 总数
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 证书部署记录列表
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    DeployRecordList: Array<UpdateRecordInfo>;
+    DeployRecordList?: Array<UpdateRecordInfo>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -2120,7 +2173,7 @@ export interface UpdateCertificateRecordRollbackResponse {
     /**
      * 回滚部署记录ID
      */
-    DeployRecordId: number;
+    DeployRecordId?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -2271,6 +2324,15 @@ export interface DvAuthDetail {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     DvAuths: Array<DvAuths>;
+}
+/**
+ * CheckCertificateDomainVerification请求参数结构体
+ */
+export interface CheckCertificateDomainVerificationRequest {
+    /**
+     * 证书ID。
+     */
+    CertificateId: string;
 }
 /**
  * cdn实例详情 - 异步关联云资源数据结构
@@ -2434,7 +2496,7 @@ export interface DeleteManagerResponse {
     /**
      * 管理人ID
      */
-    ManagerId: number;
+    ManagerId?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -3267,12 +3329,26 @@ export interface DescribeHostDeployRecordResponse {
      * 总数
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 证书部署记录列表
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    DeployRecordList: Array<DeployRecordInfo>;
+    DeployRecordList?: Array<DeployRecordInfo>;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
+ * CheckCertificateDomainVerification返回参数结构体
+ */
+export interface CheckCertificateDomainVerificationResponse {
+    /**
+     * 域名验证结果
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    VerificationResults: Array<DomainValidationResult>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -3881,7 +3957,7 @@ export interface DeployCertificateRecordRollbackResponse {
     /**
      * 回滚部署记录ID
      */
-    DeployRecordId: number;
+    DeployRecordId?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -4250,7 +4326,7 @@ export interface SubmitAuditManagerResponse {
     /**
      * 管理人ID
      */
-    ManagerId: number;
+    ManagerId?: number;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -4432,42 +4508,44 @@ export interface Error {
     Message?: string;
 }
 /**
- * 部署记录信息
+ * 域名验证结果
  */
-export interface UpdateRecordInfo {
+export interface DomainValidationResult {
     /**
-     * 记录ID
+     * 域名。
      */
-    Id: number;
+    Domain: string;
     /**
-     * 新证书ID
-     */
-    CertId: string;
-    /**
-     * 原证书ID
-     */
-    OldCertId: string;
-    /**
-     * 部署资源类型列表
-     */
-    ResourceTypes: Array<string>;
-    /**
-     * 部署地域列表
+     * 验证类型。
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Regions: Array<string>;
+    VerifyType: string;
     /**
-     * 部署状态
+     * 本地检查结果。
      */
-    Status: number;
+    LocalCheck: number;
     /**
-     * 部署时间
+     * CA检查结果。
      */
-    CreateTime: string;
+    CaCheck: number;
     /**
-     * 最后一次更新时间
+     * 检查失败原因。
+  注意：此字段可能返回 null，表示取不到有效值。
      */
-    UpdateTime: string;
+    LocalCheckFailReason: string;
+    /**
+     * 检查到的值。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CheckValue: Array<string>;
+    /**
+     * 是否频繁请求。
+     */
+    Frequently: boolean;
+    /**
+     * 是否已经签发。
+     */
+    Issued: boolean;
 }
 /**
  * DescribeHostApiGatewayInstanceList返回参数结构体

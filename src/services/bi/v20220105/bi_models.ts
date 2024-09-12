@@ -625,6 +625,10 @@ export interface ModifyUserRoleRequest {
    * 企业微信应用用户id
    */
   AppUserId?: string
+  /**
+   * 是否开启手机验证码登录（0 关闭，1 开启）
+   */
+  LoginSecurityStatus?: number
 }
 
 /**
@@ -771,7 +775,7 @@ export interface CreateEmbedTokenRequest {
    */
   PageId?: number
   /**
-   * page表示嵌出页面，panel表嵌出整个看板
+   * page表示嵌出页面，panel表示嵌出整个看板
    */
   Scope?: string
   /**
@@ -1775,6 +1779,11 @@ export interface DatasourceInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ClusterId?: string
+  /**
+   * 数据源名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  DbTypeName?: string
 }
 
 /**

@@ -1245,6 +1245,11 @@ export interface KongActiveHealthCheck {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   HttpPath?: string
+  /**
+   * GET HTTP 请求的超时时间，单位：秒。默认 60。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Timeout?: number
 }
 
 /**
@@ -1458,10 +1463,6 @@ export interface CreateCloudNativeAPIGatewayServiceRequest {
    */
   Protocol: string
   /**
-   * 请求路径
-   */
-  Path: string
-  /**
    * 超时时间，单位ms
    */
   Timeout: number
@@ -1482,6 +1483,10 @@ export interface CreateCloudNativeAPIGatewayServiceRequest {
    * 服务配置信息
    */
   UpstreamInfo: KongUpstreamInfo
+  /**
+   * 请求路径
+   */
+  Path?: string
 }
 
 /**
@@ -2402,6 +2407,27 @@ export interface DescribeZookeeperReplicasRequest {
 }
 
 /**
+ * 新增Location字段，展示zone/region/campus
+ */
+export interface Location {
+  /**
+   * 大区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Region?: string
+  /**
+   * 可用区
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Zone?: string
+  /**
+   * 机房
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Campus?: string
+}
+
+/**
  * DeleteGovernanceInstances返回参数结构体
  */
 export interface DeleteGovernanceInstancesResponse {
@@ -3188,6 +3214,10 @@ export interface DescribeGovernanceInstancesResponse {
    * 服务里实例列表。
    */
   Content?: Array<GovernanceInstance>
+  /**
+   * 地域
+   */
+  Location?: Location
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5716,10 +5746,6 @@ export interface ModifyCloudNativeAPIGatewayServiceRequest {
    */
   Protocol: string
   /**
-   * 请求路径
-   */
-  Path: string
-  /**
    * 超时时间，单位ms
    */
   Timeout: number
@@ -5744,6 +5770,10 @@ export interface ModifyCloudNativeAPIGatewayServiceRequest {
    * 服务ID
    */
   ID: string
+  /**
+   * 请求路径
+   */
+  Path?: string
 }
 
 /**
@@ -5972,6 +6002,10 @@ export interface DescribeGovernanceInstancesRequest {
    * 返回数量，默认为20，最大值为100。
    */
   Limit?: number
+  /**
+   * 地域
+   */
+  Location?: Location
 }
 
 /**
@@ -7732,7 +7766,8 @@ polarismesh - STANDARD版本
 - ap-jakarta：雅加达
 - ap-singapore：新加坡
 北美区 参考值
-- na-toronto：多伦多
+- na-siliconvalley：硅谷
+- na-ashburn: 弗吉尼亚
 金融专区 参考值
 - ap-beijing-fsi：北京金融
 - ap-shanghai-fsi：上海金融

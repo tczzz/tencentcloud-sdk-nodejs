@@ -436,6 +436,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeMachineLicenseDetail", req, cb);
     }
     /**
+     * 编辑反弹Shell规则（支持多服务器选择）
+     */
+    async ModifyReverseShellRulesAggregation(req, cb) {
+        return this.request("ModifyReverseShellRulesAggregation", req, cb);
+    }
+    /**
      * 切换高危命令规则状态
      */
     async SwitchBashRules(req, cb) {
@@ -2383,7 +2389,9 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeLicenseList", req, cb);
     }
     /**
-     * 云护航服务使用完成后，该接口可以确认收货
+     * 云护航计费产品已下线
+
+云护航服务使用完成后，该接口可以确认收货
      */
     async CreateCloudProtectServiceOrderRecord(req, cb) {
         return this.request("CreateCloudProtectServiceOrderRecord", req, cb);
@@ -2467,7 +2475,9 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeVulLabels", req, cb);
     }
     /**
-     * 查询云护航服务订单列表
+     * 云护航计费产品已下线
+
+查询云护航服务订单列表
      */
     async DescribeCloudProtectServiceOrderList(req, cb) {
         return this.request("DescribeCloudProtectServiceOrderList", req, cb);

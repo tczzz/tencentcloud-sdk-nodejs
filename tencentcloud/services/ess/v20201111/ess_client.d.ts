@@ -1,6 +1,6 @@
 import { AbstractClient } from "../../../common/abstract_client";
 import { ClientConfig } from "../../../common/interface";
-import { DescribePersonCertificateResponse, CreateOrganizationGroupInvitationLinkRequest, DescribeCancelFlowsTaskResponse, CreateSealRequest, CancelFlowResponse, DescribeExtendedServiceAuthDetailResponse, UpdateIntegrationEmployeesResponse, CreatePreparedPersonalEsignRequest, CreateLegalSealQrCodeResponse, DescribeIntegrationDepartmentsResponse, DeleteExtendedServiceAuthInfosResponse, CreateFlowApproversResponse, DescribeFileUrlsResponse, CreateExtendedServiceAuthInfosRequest, CancelUserAutoSignEnableUrlRequest, ModifyApplicationCallbackInfoResponse, CreateMultiFlowSignQRCodeResponse, DescribeThirdPartyAuthCodeResponse, DescribeUserVerifyStatusResponse, DisableUserAutoSignResponse, ModifyExtendedServiceRequest, CancelUserAutoSignEnableUrlResponse, BindEmployeeUserIdWithClientOpenIdResponse, CreateIntegrationEmployeesRequest, DescribeIntegrationRolesRequest, CreateFlowEvidenceReportRequest, StartFlowResponse, CreateOrganizationAuthUrlRequest, CreateBatchQuickSignUrlResponse, CreateIntegrationRoleRequest, DeleteIntegrationRoleUsersResponse, CreateConvertTaskApiRequest, DeleteIntegrationEmployeesResponse, CreateFlowGroupSignReviewResponse, CreateBatchSignUrlResponse, CreateFlowRemindsResponse, DescribeOrganizationGroupOrganizationsRequest, CreateFlowGroupByFilesRequest, DescribeFlowComponentsResponse, DescribeFlowEvidenceReportResponse, DescribeSignFaceVideoRequest, CreateEmployeeQualificationSealQrCodeResponse, CreateFlowGroupByTemplatesResponse, CreateUserVerifyUrlResponse, DescribeBatchOrganizationRegistrationUrlsRequest, CreateDocumentResponse, DescribeIntegrationEmployeesRequest, UnbindEmployeeUserIdWithClientOpenIdResponse, CreateIntegrationUserRolesResponse, CreateFlowRequest, CreateSchemeUrlRequest, DeleteIntegrationDepartmentResponse, DescribeThirdPartyAuthCodeRequest, CreateBatchOrganizationRegistrationTasksResponse, CreateReleaseFlowResponse, CreateWebThemeConfigResponse, BindEmployeeUserIdWithClientOpenIdRequest, CreateOrganizationInfoChangeUrlResponse, DescribeExtendedServiceAuthDetailRequest, CreateIntegrationDepartmentResponse, DescribeFlowTemplatesRequest, CreateIntegrationSubOrganizationActiveRecordResponse, DeleteSealPoliciesResponse, CreateLegalSealQrCodeRequest, DescribeUserAutoSignStatusResponse, CreateUserAutoSignSealUrlResponse, CreateEmployeeQualificationSealQrCodeRequest, CreatePersonAuthCertificateImageResponse, CreateBatchCancelFlowUrlResponse, CreateSealPolicyResponse, DisableUserAutoSignRequest, DescribeIntegrationEmployeesResponse, DeleteSealPoliciesRequest, CreateConvertTaskApiResponse, CreateFlowSignReviewRequest, CreateOrganizationAuthUrlResponse, UnbindEmployeeUserIdWithClientOpenIdRequest, CreateSchemeUrlResponse, CreateFlowByFilesRequest, CreateFlowSignUrlResponse, DescribeFileUrlsRequest, CreatePartnerAutoSignAuthUrlResponse, CreateUserAutoSignSealUrlRequest, ModifyFlowDeadlineRequest, CreateFlowApproversRequest, ModifyFlowDeadlineResponse, CreateOrganizationGroupInvitationLinkResponse, CreateFlowEvidenceReportResponse, CreateIntegrationRoleResponse, DescribeFlowComponentsRequest, CreateIntegrationDepartmentRequest, DescribeUserVerifyStatusRequest, CreateFlowBlockchainEvidenceUrlResponse, CreateDocumentRequest, CreatePreparedPersonalEsignResponse, DescribeOrganizationSealsResponse, CreateUserMobileChangeUrlRequest, CreateEmbedWebUrlRequest, DeleteIntegrationEmployeesRequest, GetTaskResultApiRequest, DescribeFlowBriefsResponse, ModifyIntegrationRoleRequest, CreateFlowGroupByFilesResponse, CreateReleaseFlowRequest, DeleteIntegrationRoleUsersRequest, CreateFlowSignUrlRequest, CreateIntegrationEmployeesResponse, CreateIntegrationUserRolesRequest, CreatePersonAuthCertificateImageRequest, CreateFlowByFilesResponse, UploadFilesResponse, DescribeFlowEvidenceReportRequest, DescribeBillUsageRequest, DescribeBillUsageResponse, CreateFlowSignReviewResponse, ModifyIntegrationDepartmentRequest, RenewAutoSignLicenseRequest, CreateUserAutoSignEnableUrlRequest, CreateOrganizationBatchSignUrlResponse, CreateBatchOrganizationRegistrationTasksRequest, CreateUserVerifyUrlRequest, CreatePartnerAutoSignAuthUrlRequest, CreateExtendedServiceAuthInfosResponse, CreateWebThemeConfigRequest, CreateOrganizationBatchSignUrlRequest, CreatePrepareFlowResponse, ModifyIntegrationDepartmentResponse, GetTaskResultApiResponse, CancelMultiFlowSignQRCodeRequest, DeleteIntegrationDepartmentRequest, ModifyApplicationCallbackInfoRequest, DescribeUserAutoSignStatusRequest, StartFlowRequest, CreateSealResponse, CreatePrepareFlowRequest, DescribeCancelFlowsTaskRequest, CreateEmbedWebUrlResponse, ModifyExtendedServiceResponse, CreateFlowGroupByTemplatesRequest, DescribeOrganizationSealsRequest, CancelFlowRequest, DescribeExtendedServiceAuthInfosRequest, DescribeIntegrationRolesResponse, CreateBatchSignUrlRequest, CreateFlowRemindsRequest, UpdateIntegrationEmployeesRequest, DescribeFlowBriefsRequest, CreateSealPolicyRequest, DescribeBillUsageDetailResponse, CreateUserMobileChangeUrlResponse, CreateUserAutoSignEnableUrlResponse, DescribeSignFaceVideoResponse, ModifyIntegrationRoleResponse, VerifyPdfResponse, CreateFlowGroupSignReviewRequest, DescribeBillUsageDetailRequest, DescribeFlowTemplatesResponse, DescribeBatchOrganizationRegistrationUrlsResponse, UploadFilesRequest, DescribePersonCertificateRequest, CreateBatchCancelFlowUrlRequest, CreateMultiFlowSignQRCodeRequest, VerifyPdfRequest, DescribeFlowInfoRequest, DeleteExtendedServiceAuthInfosRequest, DescribeExtendedServiceAuthInfosResponse, DescribeIntegrationDepartmentsRequest, DescribeFlowInfoResponse, RenewAutoSignLicenseResponse, CancelMultiFlowSignQRCodeResponse, CreateFlowResponse, CreateIntegrationSubOrganizationActiveRecordRequest, CreateFlowBlockchainEvidenceUrlRequest, CreateBatchQuickSignUrlRequest, CreateOrganizationInfoChangeUrlRequest, DescribeOrganizationGroupOrganizationsResponse } from "./ess_models";
+import { DescribePersonCertificateResponse, CreateOrganizationGroupInvitationLinkRequest, DescribeCancelFlowsTaskResponse, CreateSealRequest, CancelFlowResponse, DescribeExtendedServiceAuthDetailResponse, UpdateIntegrationEmployeesResponse, CreatePreparedPersonalEsignRequest, CreateLegalSealQrCodeResponse, DescribeIntegrationDepartmentsResponse, DeleteExtendedServiceAuthInfosResponse, CreateFlowApproversResponse, DescribeFileUrlsResponse, CreateExtendedServiceAuthInfosRequest, CancelUserAutoSignEnableUrlRequest, ModifyApplicationCallbackInfoResponse, CreateMultiFlowSignQRCodeResponse, DescribeIntegrationDepartmentsRequest, DescribeThirdPartyAuthCodeResponse, DescribeUserVerifyStatusResponse, DisableUserAutoSignResponse, ModifyExtendedServiceRequest, CreateBatchInitOrganizationUrlResponse, BindEmployeeUserIdWithClientOpenIdResponse, CreateIntegrationEmployeesRequest, DescribeIntegrationRolesRequest, CreateFlowEvidenceReportRequest, StartFlowResponse, CreateOrganizationAuthUrlRequest, CreateBatchQuickSignUrlResponse, CreateIntegrationRoleRequest, DeleteIntegrationRoleUsersResponse, CreateConvertTaskApiRequest, DeleteIntegrationEmployeesResponse, CreateFlowGroupSignReviewResponse, CreateBatchSignUrlResponse, CreateFlowRemindsResponse, DescribeOrganizationGroupOrganizationsRequest, DescribeUserAutoSignStatusResponse, CreateFlowGroupByFilesRequest, DescribeFlowComponentsResponse, DescribeFlowEvidenceReportResponse, DescribeSignFaceVideoRequest, CreateEmployeeQualificationSealQrCodeResponse, CreateFlowGroupByTemplatesResponse, CreateUserVerifyUrlResponse, DescribeBatchOrganizationRegistrationUrlsRequest, CreateDocumentResponse, DescribeIntegrationEmployeesRequest, UnbindEmployeeUserIdWithClientOpenIdResponse, CreateIntegrationUserRolesResponse, CreateFlowRequest, CreateSchemeUrlRequest, DeleteIntegrationDepartmentResponse, DescribeThirdPartyAuthCodeRequest, CreateBatchOrganizationRegistrationTasksResponse, CreateReleaseFlowResponse, CreateBatchInitOrganizationUrlRequest, CreateWebThemeConfigResponse, BindEmployeeUserIdWithClientOpenIdRequest, CreateOrganizationInfoChangeUrlResponse, DescribeExtendedServiceAuthDetailRequest, CreateIntegrationDepartmentResponse, DescribeFlowTemplatesRequest, CreateIntegrationSubOrganizationActiveRecordResponse, DeleteSealPoliciesResponse, CreateLegalSealQrCodeRequest, DescribeOrganizationAuthStatusResponse, CreateUserAutoSignSealUrlResponse, CreateEmployeeQualificationSealQrCodeRequest, CreatePersonAuthCertificateImageResponse, CreateBatchCancelFlowUrlResponse, CreateSealPolicyResponse, DisableUserAutoSignRequest, DescribeIntegrationEmployeesResponse, DeleteSealPoliciesRequest, CreateConvertTaskApiResponse, CreateFlowSignReviewRequest, CreateOrganizationAuthUrlResponse, DescribeOrganizationAuthStatusRequest, CreateSchemeUrlResponse, CreateFlowByFilesRequest, CreateFlowSignUrlResponse, DescribeFileUrlsRequest, CreatePartnerAutoSignAuthUrlResponse, CreateUserAutoSignSealUrlRequest, ModifyFlowDeadlineRequest, CreateFlowApproversRequest, ModifyFlowDeadlineResponse, CreateFlowEvidenceReportResponse, CreateIntegrationRoleResponse, DescribeFlowComponentsRequest, CreateIntegrationDepartmentRequest, DescribeUserVerifyStatusRequest, CreateFlowBlockchainEvidenceUrlResponse, CreateDocumentRequest, CreatePreparedPersonalEsignResponse, DescribeOrganizationSealsResponse, CreateUserMobileChangeUrlRequest, CreateEmbedWebUrlRequest, DeleteIntegrationEmployeesRequest, GetTaskResultApiRequest, DescribeFlowBriefsResponse, ModifyIntegrationRoleRequest, CreateFlowGroupByFilesResponse, CreateReleaseFlowRequest, DeleteIntegrationRoleUsersRequest, CreateFlowSignUrlRequest, CreateIntegrationEmployeesResponse, CreateIntegrationUserRolesRequest, CreatePersonAuthCertificateImageRequest, CreateFlowByFilesResponse, UploadFilesResponse, DescribeFlowEvidenceReportRequest, DescribeBillUsageRequest, DescribeBillUsageResponse, CreateFlowSignReviewResponse, ModifyIntegrationDepartmentRequest, RenewAutoSignLicenseRequest, CreateUserAutoSignEnableUrlRequest, CreateOrganizationBatchSignUrlResponse, UnbindEmployeeUserIdWithClientOpenIdRequest, CreateBatchOrganizationRegistrationTasksRequest, CreateUserVerifyUrlRequest, CreatePartnerAutoSignAuthUrlRequest, CreateExtendedServiceAuthInfosResponse, CreateWebThemeConfigRequest, CreateOrganizationBatchSignUrlRequest, CreatePrepareFlowResponse, ModifyIntegrationDepartmentResponse, GetTaskResultApiResponse, CancelMultiFlowSignQRCodeRequest, DeleteIntegrationDepartmentRequest, CancelUserAutoSignEnableUrlResponse, ModifyApplicationCallbackInfoRequest, DescribeUserAutoSignStatusRequest, StartFlowRequest, CreateSealResponse, CreatePrepareFlowRequest, DescribeCancelFlowsTaskRequest, CreateEmbedWebUrlResponse, ModifyExtendedServiceResponse, CreateFlowGroupByTemplatesRequest, DescribeOrganizationSealsRequest, CancelFlowRequest, DescribeExtendedServiceAuthInfosRequest, DescribeIntegrationRolesResponse, CreateBatchSignUrlRequest, CreateFlowRemindsRequest, UpdateIntegrationEmployeesRequest, DescribeFlowBriefsRequest, CreateSealPolicyRequest, DescribeBillUsageDetailResponse, CreateUserMobileChangeUrlResponse, CreateUserAutoSignEnableUrlResponse, DescribeSignFaceVideoResponse, ModifyIntegrationRoleResponse, VerifyPdfResponse, CreateFlowGroupSignReviewRequest, DescribeBillUsageDetailRequest, DescribeFlowTemplatesResponse, DescribeBatchOrganizationRegistrationUrlsResponse, UploadFilesRequest, DescribePersonCertificateRequest, CreateBatchOrganizationAuthorizationUrlRequest, CreateBatchCancelFlowUrlRequest, CreateMultiFlowSignQRCodeRequest, VerifyPdfRequest, DescribeFlowInfoRequest, DeleteExtendedServiceAuthInfosRequest, DescribeExtendedServiceAuthInfosResponse, CreateBatchOrganizationAuthorizationUrlResponse, DescribeFlowInfoResponse, RenewAutoSignLicenseResponse, CancelMultiFlowSignQRCodeResponse, CreateFlowResponse, CreateIntegrationSubOrganizationActiveRecordRequest, CreateFlowBlockchainEvidenceUrlRequest, CreateBatchQuickSignUrlRequest, CreateOrganizationInfoChangeUrlRequest, DescribeOrganizationGroupOrganizationsResponse, CreateOrganizationGroupInvitationLinkResponse } from "./ess_models";
 /**
  * ess client
  * @class
@@ -60,11 +60,9 @@ export declare class Client extends AbstractClient {
      */
     CreateFlowGroupSignReview(req: CreateFlowGroupSignReviewRequest, cb?: (error: string, rep: CreateFlowGroupSignReviewResponse) => void): Promise<CreateFlowGroupSignReviewResponse>;
     /**
-     * 客户可以主动调用生成实名链接去做C端用户实名，会对实名的用户进行打标记为调用链接客户的用户
-使用场景：
-用户集成场景
-使用限制：
-此接口需要购买单独的实名套餐包方可调用，如有需求请联系对接人员评估
+     * 生成个人用户实名认证链接，个人用户点击此链接进入实名流程（若用户已完成实名认证，则直接进入成功页面）。
+
+注： 调用此接口需要购买<font color="red"><b>单独的实名套餐包</b></font>。使用前请联系对接的客户经理沟通。
      */
     CreateUserVerifyUrl(req: CreateUserVerifyUrlRequest, cb?: (error: string, rep: CreateUserVerifyUrlResponse) => void): Promise<CreateUserVerifyUrlResponse>;
     /**
@@ -107,7 +105,7 @@ export declare class Client extends AbstractClient {
 <li>CreateFlowGroupByFiles</li>
 <li>CreatePrepareFlow</li>
 </ul>
-发起签署流程时，通过指定NeedSignReview为true，则可以调用此接口，并指定operate=SignReview，以提交企业内部签署审批结果</li>
+发起签署流程时，通过指定NeedSignReview为true，则可以调用此接口，并指定operate=SignReview，以提交企业内部签署审批结果（<font color="red">审核对象：本企业合同参与方的签署动作</font>）</li>
 <li>在通过接口
 <ul>
 <li>CreateFlowByFiles</li>
@@ -115,14 +113,23 @@ export declare class Client extends AbstractClient {
 <li>CreateFlowGroupByTemplates</li>
 <li>CreateFlowGroupByFiles</li>
 </ul>
-发起签署流程时，通过指定签署人ApproverNeedSignReview为true，则可以调用此接口，并指定operate=SignReview，并指定RecipientId，以提交企业内部签署审批结果</li>
+发起签署流程时，通过指定签署人ApproverNeedSignReview为true，则可以调用此接口，并指定operate=SignReview，并指定RecipientId，以提交企业内部签署审批结果（<font color="red">审核对象：本企业、合同企业、自然人合同参与方的签署动作</font>）</li>
 </ul>
 </li>
+
+对应签署人在签署页面会看到下面的提示：
+![image](https://qcloudimg.tencent-cloud.cn/raw/3bf065bf5afa6de862e80da316be1c53.png)
+
 <li>发起审核
  <ul>
-<li>通过接口CreatePrepareFlow指定发起后需要审核，那么可以调用此接口，并指定operate=CreateReview，以提交企业内部审批结果。可以多次提交审批结果，但一旦审批通过，后续提交的结果将无效
+<li>通过接口CreatePrepareFlow指定发起后需要审核，那么可以调用此接口，并指定operate=CreateReview，以提交企业内部审批结果。可以多次提交审批结果，但一旦审批通过，后续提交的结果将无效（<font color="red">审核对象：本企业合同发起方的发起动作</font>）
 </li>
 </ul>
+
+对应发起人在发起合同的最后环节会有<b>提交审批</b>的按钮：
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/cb4857b7b57302fdcbcf37dad31214a8.png)
+
 </li>
 </ul>
      */
@@ -208,7 +215,7 @@ export declare class Client extends AbstractClient {
      */
     CreateFlowGroupByTemplates(req: CreateFlowGroupByTemplatesRequest, cb?: (error: string, rep: CreateFlowGroupByTemplatesResponse) => void): Promise<CreateFlowGroupByTemplatesResponse>;
     /**
-     * 创建他方自动签授权链接，通过该链接可进入小程序进行合作方企业的自动签授权，若当前企业未开通企业自动签，通过该链接会先引导开通本企业自动签。
+     * 创建他方自动签授权链接（他方授权/我方授权），通过该链接可进入小程序进行合作方企业的自动签授权，若授权企业未开通企业自动签，通过该链接会先引导开通本企业自动签。
 该接口效果同控制台： 企业设置-> 扩展服务 -> 企业自动签署 -> 合作企业方授权
 
 
@@ -216,6 +223,7 @@ export declare class Client extends AbstractClient {
 注:
 1. <font color='red'>所在企业的超管、法人才有权限调用此接口</font>(Operator.UserId 需要传递超管或者法人的UserId)
 2. 已经在授权中或者授权成功的企业，无法重复授权
+3. 授权企业和被授权企业必须都是已认证企业
      */
     CreatePartnerAutoSignAuthUrl(req: CreatePartnerAutoSignAuthUrlRequest, cb?: (error: string, rep: CreatePartnerAutoSignAuthUrlResponse) => void): Promise<CreatePartnerAutoSignAuthUrlResponse>;
     /**
@@ -296,7 +304,7 @@ export declare class Client extends AbstractClient {
      * 通过此接口，可以创建小程序批量签署链接，个人/企业员工可通过此链接跳转至小程序进行批量签署。请确保生成链接时的身份信息与签署合同参与方的信息保持一致。
 
 注意事项：
-- 使用此接口生成链接，需要贵企业先开通 <font color="red">使用手机号验证签署方身份 </font>功能。您可以在 <b>【腾讯电子签网页端】->【企业设置】->【拓展服务】</b>中找到该功能。
+- 使用此接口生成链接，需要贵企业先开通 <font color="red">个人签署方仅校验手机号 </font>功能。您可以在 <b>【腾讯电子签网页端】->【企业设置】->【拓展服务】</b>中找到该功能。
 - 生成批量签署链接时，<font color="red">合同目标参与方的状态必须为<b>待签署</b>状态</font>。签署人点击链接后需要输入短信验证码才能查看合同内容。
 - 企业员工批量签署链接：需要传入签署方所在企业名称，用户名字和手机号（或者身份证件信息）参数来生成签署链接。<font color="red">该签署方企业必须已完成腾讯电子签企业认证</font>
 - 个人批量签署链接：需要传入签署方用户名字和手机号（或者身份证件信息）参数来生成签署链接。个人批量签署进行的合同的签名区， 全部变成<font color="red">手写签名</font>（不管合同里边设置的签名限制）来进行。
@@ -361,6 +369,10 @@ export declare class Client extends AbstractClient {
      */
     CreateUserAutoSignSealUrl(req: CreateUserAutoSignSealUrlRequest, cb?: (error: string, rep: CreateUserAutoSignSealUrlResponse) => void): Promise<CreateUserAutoSignSealUrlResponse>;
     /**
+     * 查询企业认证状态- 仅通过[CreateOrganizationAuthUrl](https://qian.tencent.com/developers/companyApis/organizations/CreateOrganizationAuthUrl) 和[CreateBatchOrganizationRegistrationTasks](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks)这两个接口进行引导认证的企业，调用方企业可以依据这个接口，查询认证状态。
+     */
+    DescribeOrganizationAuthStatus(req: DescribeOrganizationAuthStatusRequest, cb?: (error: string, rep: DescribeOrganizationAuthStatusResponse) => void): Promise<DescribeOrganizationAuthStatusResponse>;
+    /**
      * 给医疗个人自动签许可续期。续期成功后，可对医疗自动签许可追加一年有效期，只可续期一次。
 
 注意: `处方单等特殊场景专用，此接口为白名单功能，使用前请联系对接的客户经理沟通。`
@@ -368,6 +380,10 @@ export declare class Client extends AbstractClient {
     RenewAutoSignLicense(req: RenewAutoSignLicenseRequest, cb?: (error: string, rep: RenewAutoSignLicenseResponse) => void): Promise<RenewAutoSignLicenseResponse>;
     /**
      * 对合同流程文件进行数字签名验证，判断数字签名是否有效，合同文件内容是否被篡改。
+
+
+**补充**： 可以到控制台[合同验签](https://qian.tencent.com/verifySign)体验验签功能，界面如下
+![image](https://qcloudimg.tencent-cloud.cn/raw/81c333ccb07f0c5fbaf840d9cee61333.png)
      */
     VerifyPdf(req: VerifyPdfRequest, cb?: (error: string, rep: VerifyPdfResponse) => void): Promise<VerifyPdfResponse>;
     /**
@@ -530,9 +546,9 @@ export declare class Client extends AbstractClient {
     /**
      * 该接口用于在使用视频认证方式签署合同后，获取用户的签署人脸认证视频。
 
-1. 该接口**仅适用于在H5端签署**的合同，**在通过视频认证后**获取人脸图片。
-2. 该接口**不支持小程序端**的签署人脸图片获取。
-3. 请在**签署完成后的三天内**获取人脸图片，**过期后将无法获取**。
+1. 该接口**仅适用于在H5端签署**的合同，**在通过视频认证后**获取人脸视频。
+2. 该接口**不支持小程序端**的签署人脸视频获取。
+3. 请在**签署完成后的三天内**获取人脸视频，**过期后将无法获取**。
 
 **注意：该接口需要开通白名单，请联系客户经理开通后使用。**
      */
@@ -547,6 +563,17 @@ export declare class Client extends AbstractClient {
 3. 因h5涉及人脸身份认证能力基于慧眼人脸核身，对Android和iOS系统均有一定要求， 因此<font color='red'>App嵌入H5签署合同需要按照慧眼提供的<a href="https://cloud.tencent.com/document/product/1007/61076">慧眼人脸核身兼容性文档</a>做兼容性适配</font>。
      */
     CreateFlowSignUrl(req: CreateFlowSignUrlRequest, cb?: (error: string, rep: CreateFlowSignUrlResponse) => void): Promise<CreateFlowSignUrlResponse>;
+    /**
+     * 支持企业进行批量初始化操作：
+
+此接口存在以下限制：
+1. 若批量操作中包含<font  color="red">加入集团企业</font>操作,则调用此接口的员工须有<font  color="red">集团企业管理权限</font>。
+2. 批量操作的企业需要已经完成电子签的认证流程。
+3. 通过此接口生成的链接在小程序端进行操作时，操作人需要是<font  color="red">所有企业的超管或法人</font>。
+4. 批量操作的企业，需要是<a href="https://qian.tencent.com/developers/companyApis/organizations/CreateOrganizationAuthUrl" target="_blank">通过平台方引导认证</a>的企业。
+5. <font  color="red">操作链接过期时间默认为生成链接后7天。</font>
+     */
+    CreateBatchInitOrganizationUrl(req: CreateBatchInitOrganizationUrlRequest, cb?: (error: string, rep: CreateBatchInitOrganizationUrlResponse) => void): Promise<CreateBatchInitOrganizationUrlResponse>;
     /**
      * 用来撤销<a href="https://qian.tencent.com/developers/companyApis/users/CreateUserAutoSignEnableUrl" target="_blank">获取个人用户自动签的开通状态</a>生成的开通链接，撤销生成的链接失效。
 
@@ -655,25 +682,6 @@ export declare class Client extends AbstractClient {
      */
     CreateFlowBlockchainEvidenceUrl(req: CreateFlowBlockchainEvidenceUrlRequest, cb?: (error: string, rep: CreateFlowBlockchainEvidenceUrlResponse) => void): Promise<CreateFlowBlockchainEvidenceUrlResponse>;
     /**
-     * 用于客户企业在调用生成[C端用户实名链接（CreateUserVerifyUrl）](https://qian.tencent.com/developers/companyApis/users/CreateUserVerifyUrl)接口之前判断C端用户是否实名，如果已经实名，就不需要再次调用生成C端链接接口去实名
-注意：此接口仅会返回当前员工是否通过[C端用户实名链接（CreateUserVerifyUrl）](https://qian.tencent.com/developers/companyApis/users/CreateUserVerifyUrl)所实名的员工是否实名，并不会返回个人用户自己在电子签进行实名的状况
-     */
-    DescribeUserVerifyStatus(req: DescribeUserVerifyStatusRequest, cb?: (error: string, rep: DescribeUserVerifyStatusResponse) => void): Promise<DescribeUserVerifyStatusResponse>;
-    /**
-     * 此接口（ModifyIntegrationRole）用来更新企业自定义的SaaS角色或集团角色。
-
-适用场景1：更新当前企业的自定义SaaS角色或集团角色，并且更新时不进行角色中权限的更新（PermissionGroups 参数不传）。
-
-适用场景2：更新当前企业的自定义SaaS角色或集团角色，并且更新时进行角色中权限的设置（PermissionGroups 参数要传），权限树内容 PermissionGroups 可参考接口 DescribeIntegrationRoles 的输出。此处注意权限树内容可能会更新，需尽量拉取最新的权限树内容，并且权限树内容 PermissionGroups 必须是一颗完整的权限树。
-
-适用场景3：更新集团角色管理的子企业列表，可通过设置 SubOrganizationIds 参数达到此效果。
-
-适用场景4：主企业代理子企业操作的场景，需要设置Agent参数，并且ProxyOrganizationId设置为子企业的id即可。
-
-注意事项：SaaS角色和集团角色对应的权限树是不一样的。
-     */
-    ModifyIntegrationRole(req: ModifyIntegrationRoleRequest, cb?: (error: string, rep: ModifyIntegrationRoleResponse) => void): Promise<ModifyIntegrationRoleResponse>;
-    /**
      * 本接口（CreateBatchOrganizationRegistrationTasks）用于批量创建企业认证链接
 该接口为异步提交任务接口,需要跟查询企业批量认证链接(DescribeBatchOrganizationRegistrationUrls) 配合使用.
 
@@ -700,10 +708,47 @@ export declare class Client extends AbstractClient {
      */
     CreateBatchOrganizationRegistrationTasks(req: CreateBatchOrganizationRegistrationTasksRequest, cb?: (error: string, rep: CreateBatchOrganizationRegistrationTasksResponse) => void): Promise<CreateBatchOrganizationRegistrationTasksResponse>;
     /**
-     * 该接口用于获取个人授权执业章给企业的二维码，需要个人用户通过微信扫码。扫描后将跳转到腾讯电子签小程序，进入到授权执业章的流程。个人用户授权成功后，企业印章管理员需对印章进行审核，审核通过后，即可使用个人授权的执业章进行盖章操作。
+     * 用于客户企业在调用生成[C端用户实名链接（CreateUserVerifyUrl）](https://qian.tencent.com/developers/companyApis/users/CreateUserVerifyUrl)接口之前判断C端用户是否实名，如果已经实名，就不需要再次调用生成C端链接接口去实名
+注意：此接口仅会返回当前员工是否通过[C端用户实名链接（CreateUserVerifyUrl）](https://qian.tencent.com/developers/companyApis/users/CreateUserVerifyUrl)所实名的员工是否实名，并不会返回个人用户自己在电子签进行实名的状况
+     */
+    DescribeUserVerifyStatus(req: DescribeUserVerifyStatusRequest, cb?: (error: string, rep: DescribeUserVerifyStatusResponse) => void): Promise<DescribeUserVerifyStatusResponse>;
+    /**
+     * 此接口（ModifyIntegrationRole）用来更新企业自定义的SaaS角色或集团角色。
+
+适用场景1：更新当前企业的自定义SaaS角色或集团角色，并且更新时不进行角色中权限的更新（PermissionGroups 参数不传）。
+
+适用场景2：更新当前企业的自定义SaaS角色或集团角色，并且更新时进行角色中权限的设置（PermissionGroups 参数要传），权限树内容 PermissionGroups 可参考接口 DescribeIntegrationRoles 的输出。此处注意权限树内容可能会更新，需尽量拉取最新的权限树内容，并且权限树内容 PermissionGroups 必须是一颗完整的权限树。
+
+适用场景3：更新集团角色管理的子企业列表，可通过设置 SubOrganizationIds 参数达到此效果。
+
+适用场景4：主企业代理子企业操作的场景，需要设置Agent参数，并且ProxyOrganizationId设置为子企业的id即可。
+
+注意事项：SaaS角色和集团角色对应的权限树是不一样的。
+     */
+    ModifyIntegrationRole(req: ModifyIntegrationRoleRequest, cb?: (error: string, rep: ModifyIntegrationRoleResponse) => void): Promise<ModifyIntegrationRoleResponse>;
+    /**
+     * 此接口用于获取企业批量认证链接-单链接包含多条认证流。
+
+前提条件：已调用 [CreateBatchOrganizationRegistrationTasks创建企业批量认证链接任务接口](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks) 和[查询企业批量认证链接DescribeBatchOrganizationRegistrationUrls](https://qian.tencent.com/developers/companyApis/organizations/DescribeBatchOrganizationRegistrationUrls) 确保认证任务已经完成。
+
+异步任务的处理完成时间视当前已提交的任务量、任务的复杂程度等因素决定，正常情况下 3~5 秒即可完成，但也可能需要更长的时间。
+此链接包含多条认证流程，使用该链接可以批量的对企业进行认证。
+     */
+    CreateBatchOrganizationAuthorizationUrl(req: CreateBatchOrganizationAuthorizationUrlRequest, cb?: (error: string, rep: CreateBatchOrganizationAuthorizationUrlResponse) => void): Promise<CreateBatchOrganizationAuthorizationUrlResponse>;
+    /**
+     * 该接口用于获取个人授权执业章给企业的微信二维码，需要个人用户通过微信扫码。
+
+扫描后将跳转到腾讯电子签小程序，进入到授权执业章的流程。
+
+个人用户授权成功后，企业印章管理员需对印章进行审核，审核通过后，即可使用个人授权的执业章进行盖章操作。
+
 
 **注意**
 1. 该二维码**有效期为7天**，过期后将失效，可重新创建。
+
+整体流程入下图
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/21b6b56dbc796c9d6f402d6ce6febb07.png)
      */
     CreateEmployeeQualificationSealQrCode(req: CreateEmployeeQualificationSealQrCodeRequest, cb?: (error: string, rep: CreateEmployeeQualificationSealQrCodeResponse) => void): Promise<CreateEmployeeQualificationSealQrCodeResponse>;
     /**
@@ -762,10 +807,22 @@ export declare class Client extends AbstractClient {
      */
     CreateConvertTaskApi(req: CreateConvertTaskApiRequest, cb?: (error: string, rep: CreateConvertTaskApiResponse) => void): Promise<CreateConvertTaskApiResponse>;
     /**
-     * 本接口（CreateOrganizationAuthUrl）用于生成创建企业认证链接。
-用于业务方系统自己生成认证链接进行跳转.而不用电子签自带的生成链接
+     * 本接口（CreateOrganizationAuthUrl）的主要功能是生成合作企业的认证链接。
 
-注： **此接口需要购买单独的实名套餐包方可调用，如有需求请联系对接人员评估**
+在生成链接的过程中，可以提供一部分已知信息，以便为对方进行认证流程提供便利。
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/7ec91b79a0a4860e77c9ff9f4a5f13ad/channel_SyncProxyOrganization2.png)
+
+
+- **企业统一社会信用代码**: 对应上图中的**1**
+- **企业名称**: 对应上图中的**2**
+- **企业法定代表人的名字**:对应上图中的**3**
+- **企业详细住所**:对应上图中的**4**
+
+
+
+
+<b>注</b>：此接口需要 <font  color="red"><b>购买单独的实名套餐包</b></font>方可调用，如有需求请联系对接人员评估
      */
     CreateOrganizationAuthUrl(req: CreateOrganizationAuthUrlRequest, cb?: (error: string, rep: CreateOrganizationAuthUrlResponse) => void): Promise<CreateOrganizationAuthUrlResponse>;
     /**
@@ -788,13 +845,15 @@ httpProfile.setEndpoint("file.test.ess.tencent.cn");
      */
     UploadFiles(req: UploadFilesRequest, cb?: (error: string, rep: UploadFilesResponse) => void): Promise<UploadFilesResponse>;
     /**
-     * 通过此接口，创建子企业激活记录，集团企业管理员可针对未激活的成员企业进行激活。
-激活子企业时请保证子企业 lisence 充足。
+     * 使用此接口，可创建子企业激活记录。<font color="red">集团企业管理员</font>可以针对尚未激活的成员企业进行激活操作。
+
+
 这个操作与页面端激活成员企业操作类似
 ![image](https://qcloudimg.tencent-cloud.cn/raw/c4e76fbac92e4ce451a03601c964793b.png)
 
-p.s.
-此接口只能用于激活，不能用于续期。
+注意：
+1. 此接口只能用于激活，**不能用于续期**。
+2. 在激活子企业时，**请确保子企业的许可证数量充足**。
      */
     CreateIntegrationSubOrganizationActiveRecord(req: CreateIntegrationSubOrganizationActiveRecordRequest, cb?: (error: string, rep: CreateIntegrationSubOrganizationActiveRecordResponse) => void): Promise<CreateIntegrationSubOrganizationActiveRecordResponse>;
     /**
@@ -917,14 +976,35 @@ p.s.
      */
     DeleteIntegrationDepartment(req: DeleteIntegrationDepartmentRequest, cb?: (error: string, rep: DeleteIntegrationDepartmentResponse) => void): Promise<DeleteIntegrationDepartmentResponse>;
     /**
-     * 适用场景： 当通过模板或文件发起合同时，若未指定企业签署人信息，则可调用此接口补充或添加签署人。同一签署人可补充多个员工作为或签署人，最终实际签署人取决于谁先领取合同完成签署。
+     * **适用场景 ：**
 
-限制条件：
+当通过模板或文件发起合同时， 签署人不制定， 等合同发起后再指定 可以用下面2种方案
+
+<b><font color="red">1. 或签合同</font>: 若未指定企业签署人信息（只指定企业的名字），合同变成或签合同（个人签署方不支持或签合同）</b>。需调用此接口补充或添加签署人。或签签署人在控制台上的展示样式如下（会带有<b>或签</b>标识）：
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/b2715f0236faee807cfc0521f93cf01b.png)
+
+<b><font color="red">2. 动态签署人合同</font>: 若未指定具体签署人的信息，则合同变成动态签署人合同</b>。需调用此接口补充或添加签署人。可以参考文档    [动态签署人合同](https://qian.tencent.com/developers/company/dynamic_signer/)    。动态签署人在控制台上的展示样式如下：
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/2729477978e020c3bbb4d2e767bb78eb.png)
+
+实际签署人需要通过[获取跳转至腾讯电子签小程序的签署链接](https://qian.tencent.com/developers/companyApis/startFlows/CreateSchemeUrl/)生成的链接进入小程序，领取合同并签署。同一签署环节可补充多个员工作为或签署人，最终实际签署人取决于谁先领取合同完成签署。
+
+
+**限制条件**：
 
 1.本企业（发起方企业）企业微信签署人仅支持通过企业微信UserId或姓名+手机号进行补充。
+
 2.本企业（发起方企业）非企业微信签署人仅支持通过姓名+手机号进行补充。
+
 3.他方企业仅支持通过姓名+手机号进行补充。
-4.个人签署人支持通过姓名+手机号进行补充，补充动态签署人时：若个人用户已完成实名，则可通过姓名+证件号码进行补充。
+
+4.个人签署人支持通过姓名+手机号进行补充（若<b>个人用户已完成实名</b>，动态签署人合同也可以可通过姓名+证件号码进行补充）
+
+
+**整体流程如下图：**
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/29a0fba0ceebf9227849459947384862.png)
      */
     CreateFlowApprovers(req: CreateFlowApproversRequest, cb?: (error: string, rep: CreateFlowApproversResponse) => void): Promise<CreateFlowApproversResponse>;
     /**
@@ -1036,8 +1116,8 @@ p.s.
 
 注意:
 <ul>
-<li>此接口为合作引流场景使用，使用`有白名单限制`，使用前请联系对接的客户经理沟通。</li>
-<li>`AuthCode 只能使用一次`，查询一次再次查询会返回错误</li>
+<li>此接口为合作引流场景使用，使用<b>有白名单限制</b>，使用前请联系对接的客户经理沟通。</li>
+<li><b>AuthCode 只能使用一次</b>，查询一次再次查询会返回错误</li>
 </ul>
      */
     DescribeThirdPartyAuthCode(req: DescribeThirdPartyAuthCodeRequest, cb?: (error: string, rep: DescribeThirdPartyAuthCodeResponse) => void): Promise<DescribeThirdPartyAuthCodeResponse>;

@@ -268,6 +268,16 @@ it("sqlserver.v20180328.DescribeDatabases", async function () {
     }
 })
 
+it("sqlserver.v20180328.CutXEvents", async function () {
+    try {
+       const data = await client.CutXEvents({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
 it("sqlserver.v20180328.DescribeReadOnlyGroupList", async function () {
     try {
        const data = await client.DescribeReadOnlyGroupList({})
@@ -581,6 +591,16 @@ it("sqlserver.v20180328.DescribeRestoreTask", async function () {
 it("sqlserver.v20180328.DescribeInstanceParams", async function () {
     try {
        const data = await client.DescribeInstanceParams({})
+       expect(data).to.be.ok
+    } catch(error) {
+      expect(error.requestId).to.be.ok
+      expect(error.code).to.be.ok
+    }
+})
+
+it("sqlserver.v20180328.ModifyDatabasePrivilege", async function () {
+    try {
+       const data = await client.ModifyDatabasePrivilege({})
        expect(data).to.be.ok
     } catch(error) {
       expect(error.requestId).to.be.ok

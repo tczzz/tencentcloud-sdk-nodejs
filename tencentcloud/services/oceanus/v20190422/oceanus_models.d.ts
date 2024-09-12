@@ -159,6 +159,10 @@ export interface DeleteJobsRequest {
      * 工作空间Id
      */
     WorkSpaceId?: string;
+    /**
+     * 作业名称列表
+     */
+    JobNames?: Array<string>;
 }
 /**
  * ModifyWorkSpace请求参数结构体
@@ -2745,6 +2749,11 @@ export interface Cluster {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     BillingResourceMode?: string;
+    /**
+     * Cu比例
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    MemRatio?: number;
 }
 /**
  * DescribeJobSubmissionLog请求参数结构体

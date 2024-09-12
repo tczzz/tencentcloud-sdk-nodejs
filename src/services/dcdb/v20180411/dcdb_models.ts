@@ -206,6 +206,40 @@ export interface ModifyRealServerAccessStrategyResponse {
 }
 
 /**
+ * ModifyBackupConfigs请求参数结构体
+ */
+export interface ModifyBackupConfigsRequest {
+  /**
+   * 实例 ID，格式如：tdsqlshard-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+   */
+  InstanceId: string
+  /**
+   * 常规备份存储时长，范围[1, 3650]。
+   */
+  Days?: number
+  /**
+   * 每天备份执行的区间的开始时间，格式 mm:ss，形如 22:00。
+   */
+  StartBackupTime?: string
+  /**
+   * 每天备份执行的区间的结束时间，格式 mm:ss，形如 23:59。
+   */
+  EndBackupTime?: string
+  /**
+   * 执行备份周期，枚举值：Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 沉降到归档存储时长，-1表示关闭归档设置。
+   */
+  ArchiveDays?: number
+  /**
+   * 超期备份配置。
+   */
+  BackupConfigSet?: Array<NewBackupConfig>
+}
+
+/**
  * ActiveHourDCDBInstance返回参数结构体
  */
 export interface ActiveHourDCDBInstanceResponse {
@@ -365,17 +399,46 @@ export interface ShardBriefInfo {
 }
 
 /**
- * TerminateDedicatedDBInstance返回参数结构体
+ * 数据库超期备份配置
  */
-export interface TerminateDedicatedDBInstanceResponse {
+export interface NewBackupConfig {
   /**
-   * 异步流程Id
+   * 备份策略是否启用。
    */
-  FlowId: number
+  EnableBackupPolicy: boolean
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 超期保留开始日期，早于开始日期的超期备份不保留，格式：yyyy-mm-dd。
    */
-  RequestId?: string
+  BeginDate: string
+  /**
+   * 超期备份保留时长，超出保留时间的超期备份将被删除，可填写1-3650整数。
+   */
+  MaxRetentionDays: number
+  /**
+   * 备份模式，可选择按年月周模式保存
+   * 按年：annually
+   * 按月：monthly
+   * 按周：weekly
+   */
+  Frequency: string
+  /**
+   * Frequency等于weekly时生效。
+表示保留特定工作日备份。可选择周一到周日，支持多选，取星期英文：
+* 星期一 ：Monday
+* 星期二 ：Tuesday
+* 星期三：Wednesday
+* 星期四：Thursday
+* 星期五：Friday
+* 星期六：Saturday
+* 星期日：Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 保留备份个数，Frequency等于monthly或weekly时生效。
+备份模式选择按月时，可填写1-28整数；
+备份模式选择年时，可填写1-336整数。
+   */
+  BackupCount?: number
 }
 
 /**
@@ -452,7 +515,7 @@ export interface UpgradeDCDBInstanceResponse {
    * 长订单号。可以据此调用 DescribeOrders
  查询订单详细信息，或在支付失败时调用用户账号相关接口进行支付。
    */
-  DealName: string
+  DealName?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -586,7 +649,7 @@ export interface CreateAccountRequest {
   /**
    * 账号密码，密码需要 8-32 个字符，不能以 '/' 开头，并且必须包含小写字母、大写字母、数字和符号()~!@#$%^&*-+=_|{}[]:<>,.?/。
    */
-  Password: string
+  Password?: string
   /**
    * 是否创建为只读账号，0：否， 1：该账号的sql请求优先选择备机执行，备机不可用时选择主机执行，2：优先选择备机执行，备机不可用时操作失败，3：只从备机读取。
    */
@@ -608,6 +671,10 @@ export interface CreateAccountRequest {
    * 用户最大连接数限制参数。不传或者传0表示为不限制，对应max_user_connections参数，目前10.1内核版本不支持设置。
    */
   MaxUserConnections?: number
+  /**
+   * 使用GetPublicKey返回的RSA2048公钥加密后的密码
+   */
+  EncryptedPassword?: string
 }
 
 /**
@@ -1262,7 +1329,11 @@ export interface ResetAccountPasswordRequest {
   /**
    * 新密码，由字母、数字或常见符号组成，不能包含分号、单引号和双引号，长度为6~32位。
    */
-  Password: string
+  Password?: string
+  /**
+   * 使用GetPublicKey返回的RSA2048公钥加密后的密码，加密算法是PKCS1v15
+   */
+  EncryptedPassword?: string
 }
 
 /**
@@ -1809,6 +1880,20 @@ export interface ModifyAccountConfigRequest {
    * 配置列表，每一个元素是Config和Value的组合
    */
   Configs: Array<ConfigValue>
+}
+
+/**
+ * TerminateDedicatedDBInstance返回参数结构体
+ */
+export interface TerminateDedicatedDBInstanceResponse {
+  /**
+   * 异步流程Id
+   */
+  FlowId: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -2444,6 +2529,16 @@ export interface DCDBInstanceInfo {
 }
 
 /**
+ * DescribeBackupConfigs请求参数结构体
+ */
+export interface DescribeBackupConfigsRequest {
+  /**
+   * 实例 ID，格式如：tdsqlshard-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+   */
+  InstanceId: string
+}
+
+/**
  * ModifyDBInstanceSecurityGroups请求参数结构体
  */
 export interface ModifyDBInstanceSecurityGroupsRequest {
@@ -2811,6 +2906,58 @@ export interface DescribeDcnDetailResponse {
 }
 
 /**
+ * DescribeBackupConfigs返回参数结构体
+ */
+export interface DescribeBackupConfigsResponse {
+  /**
+   * 实例 ID。
+   */
+  InstanceId?: string
+  /**
+   * 常规备份存储时长，范围[1, 3650]。
+   */
+  Days?: number
+  /**
+   * 每天备份执行的区间的开始时间，格式 mm:ss，形如 22:00。
+   */
+  StartBackupTime?: string
+  /**
+   * 每天备份执行的区间的结束时间，格式 mm:ss，形如 23:59。
+   */
+  EndBackupTime?: string
+  /**
+   * 执行备份周期，枚举值：Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 沉降到归档存储时长，-1表示关闭归档设置。
+   */
+  ArchiveDays?: number
+  /**
+   * 超期备份配置。
+   */
+  BackupConfigSet?: Array<BackupConfig>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * ModifyDBEncryptAttributes请求参数结构体
+ */
+export interface ModifyDBEncryptAttributesRequest {
+  /**
+   * 实例Id，形如：tdsqlshard-ow728lmc。
+   */
+  InstanceId: string
+  /**
+   * 是否启用数据加密，开启后暂不支持关闭。本接口的可选值为：1-开启数据加密。
+   */
+  EncryptEnabled: number
+}
+
+/**
  * 数据库列信息
  */
 export interface TableColumn {
@@ -2976,6 +3123,16 @@ export interface AssociateSecurityGroupsResponse {
 }
 
 /**
+ * DescribeDCDBBinlogTime请求参数结构体
+ */
+export interface DescribeDCDBBinlogTimeRequest {
+  /**
+   * 需要回档的实例ID
+   */
+  InstanceId: string
+}
+
+/**
  * DescribeShardSpec返回参数结构体
  */
 export interface DescribeShardSpecResponse {
@@ -3109,6 +3266,49 @@ export interface CreateHourDCDBInstanceResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 数据库超期备份配置
+ */
+export interface BackupConfig {
+  /**
+   * 备份策略是否启用。
+   */
+  EnableBackupPolicy?: boolean
+  /**
+   * 超期保留开始日期，早于开始日期的超期备份不保留，格式：yyyy-mm-dd。
+   */
+  BeginDate?: string
+  /**
+   * 超期备份保留时长，超出保留时间的超期备份将被删除，可填写1-3650整数。
+   */
+  MaxRetentionDays?: number
+  /**
+   * 备份模式，可选择按年月周模式保存
+   * 按年：annually
+   * 按月：monthly
+   * 按周：weekly
+   */
+  Frequency?: string
+  /**
+   * Frequency等于weekly时生效。
+表示保留特定工作日备份。可选择周一到周日，支持多选，取星期英文：
+* 星期一 ：Monday
+* 星期二 ：Tuesday
+* 星期三：Wednesday
+* 星期四：Thursday
+* 星期五：Friday
+* 星期六：Saturday
+* 星期日：Sunday
+   */
+  WeekDays?: Array<string>
+  /**
+   * 保留备份个数，Frequency等于monthly或weekly时生效。
+备份模式选择按月时，可填写1-28整数；
+备份模式选择年时，可填写1-336整数。
+   */
+  BackupCount?: number
 }
 
 /**
@@ -3265,6 +3465,16 @@ export interface ReservedNetResource {
    * Vip的回收时间
    */
   RecycleTime?: string
+}
+
+/**
+ * ModifyBackupConfigs返回参数结构体
+ */
+export interface ModifyBackupConfigsResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -4025,17 +4235,21 @@ export interface DescribeDBTmpInstancesResponse {
 }
 
 /**
- * ModifyDBEncryptAttributes请求参数结构体
+ * DescribeDCDBBinlogTime返回参数结构体
  */
-export interface ModifyDBEncryptAttributesRequest {
+export interface DescribeDCDBBinlogTimeResponse {
   /**
-   * 实例Id，形如：tdsqlshard-ow728lmc。
+   * 开始时间
    */
-  InstanceId: string
+  StartTime: string
   /**
-   * 是否启用数据加密，开启后暂不支持关闭。本接口的可选值为：1-开启数据加密。
+   * 结束时间
    */
-  EncryptEnabled: number
+  EndTime: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -4259,6 +4473,18 @@ export interface UpgradeDCDBInstanceRequest {
    * 变更部署时指定的新可用区列表，第1个为主可用区，其余为从可用区
    */
   Zones?: Array<string>
+  /**
+   * 切换开始时间，格式如: "2019-12-12 07:00:00"。开始时间必须在当前时间一个小时以后，3天以内。
+   */
+  SwitchStartTime?: string
+  /**
+   * 切换结束时间, 格式如: "2019-12-12 07:15:00"，结束时间必须大于开始时间。
+   */
+  SwitchEndTime?: string
+  /**
+   * 是否自动重试。 0：不自动重试 1：自动重试
+   */
+  SwitchAutoRetry?: number
 }
 
 /**

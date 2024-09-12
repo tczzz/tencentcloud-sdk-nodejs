@@ -370,6 +370,10 @@ export interface CreateResourceRequest {
      * 部署zone
      */
     DeployZone?: string;
+    /**
+     * 0非试用版，1试用版
+     */
+    Trial?: number;
 }
 /**
  * DescribeDevices返回参数结构体
@@ -3342,6 +3346,11 @@ export interface Resource {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     UsedDomainCount?: number;
+    /**
+     * 0 非试用版，1 试用版
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Trial?: number;
 }
 /**
  * RunChangePwdTask返回参数结构体
@@ -3363,7 +3372,7 @@ export interface BindDeviceResourceRequest {
     /**
      * 堡垒机服务ID
      */
-    ResourceId: string;
+    ResourceId?: string;
     /**
      * 网络域ID
      */

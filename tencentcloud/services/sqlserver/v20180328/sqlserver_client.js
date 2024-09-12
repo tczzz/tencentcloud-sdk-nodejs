@@ -178,6 +178,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeDatabases", req, cb);
     }
     /**
+     * 本接口(CutXEvents)用于手动切割阻塞日志和死锁日志。
+     */
+    async CutXEvents(req, cb) {
+        return this.request("CutXEvents", req, cb);
+    }
+    /**
      * 本接口（DescribeReadOnlyGroupList）用于查询只读组列表。
      */
     async DescribeReadOnlyGroupList(req, cb) {
@@ -368,6 +374,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DescribeInstanceParams(req, cb) {
         return this.request("DescribeInstanceParams", req, cb);
+    }
+    /**
+     * 本接口（ModifyDatabasePrivilege）用于修改实例数据库权限。
+     */
+    async ModifyDatabasePrivilege(req, cb) {
+        return this.request("ModifyDatabasePrivilege", req, cb);
     }
     /**
      * 本接口(ModifyCloseWanIp)用于关闭实例外网。

@@ -25,6 +25,7 @@ import {
   ModifyInstanceAvailabilityZonesRequest,
   RedisBackupSet,
   DescribeInstanceMonitorTopNCmdResponse,
+  ModifyInstanceAvailabilityZonesResponse,
   ModifyAutoBackupConfigResponse,
   RestoreInstanceRequest,
   AllocateWanAddressRequest,
@@ -54,6 +55,7 @@ import {
   DescribeBackupUrlRequest,
   DeleteParamTemplateResponse,
   DescribeInstancesResponse,
+  TaskInfoDetail,
   DescribeInstanceZoneInfoResponse,
   Account,
   InstanceProxySlowlogDetail,
@@ -78,11 +80,13 @@ import {
   DescribeProjectSecurityGroupRequest,
   ParameterDetail,
   DescribeInstanceShardsResponse,
-  DestroyPrepaidInstanceRequest,
+  DescribeRedisClusterOverviewResponse,
   DisableReplicaReadonlyRequest,
-  TaskInfoDetail,
+  CDCResource,
+  ModifyInstanceLogDeliveryResponse,
   ModifyBackupDownloadRestrictionRequest,
   DisableReplicaReadonlyResponse,
+  DestroyPrepaidInstanceRequest,
   CreateParamTemplateResponse,
   InstanceTagInfo,
   DescribeInstanceDTSInfoResponse,
@@ -108,6 +112,7 @@ import {
   DescribeBackupUrlResponse,
   InquiryPriceRenewInstanceResponse,
   DescribeDBSecurityGroupsRequest,
+  ModifyInstanceLogDeliveryRequest,
   DescribeProductInfoRequest,
   InquiryPriceCreateInstanceResponse,
   InstanceSecurityGroupDetail,
@@ -128,6 +133,7 @@ import {
   AllocateWanAddressResponse,
   DescribeInstanceMonitorTookDistRequest,
   DeleteReplicationInstanceRequest,
+  SwitchAccessNewInstanceRequest,
   KillMasterGroupRequest,
   SwitchAccessNewInstanceResponse,
   CloneInstancesResponse,
@@ -137,6 +143,7 @@ import {
   DescribeInstanceMonitorBigKeySizeDistRequest,
   DescribeInstanceAccountRequest,
   InstanceTextParam,
+  DescribeInstanceLogDeliveryResponse,
   DescribeInstanceParamRecordsRequest,
   DescribeTaskListRequest,
   ChangeMasterInstanceResponse,
@@ -182,7 +189,7 @@ import {
   TradeDealDetail,
   ResourceTag,
   AssociateSecurityGroupsResponse,
-  ReplicaGroup,
+  LogDeliveryInfo,
   DescribeTaskInfoResponse,
   DescribeInstanceMonitorBigKeyTypeDistResponse,
   DeleteReplicationInstanceResponse,
@@ -205,7 +212,7 @@ import {
   DescribeInstanceMonitorHotKeyRequest,
   DescribeBackupDownloadRestrictionResponse,
   UpgradeInstanceResponse,
-  SwitchAccessNewInstanceRequest,
+  ResourceBundle,
   ManualBackupInstanceRequest,
   DescribeReplicationGroupResponse,
   ModifyParamTemplateRequest,
@@ -219,8 +226,11 @@ import {
   DescribeInstanceMonitorBigKeyTypeDistRequest,
   DescribeInstanceMonitorTopNCmdTookRequest,
   DestroyPrepaidInstanceResponse,
+  ReplicaGroup,
+  DescribeRedisClusterOverviewRequest,
   DescribeCommonDBInstancesResponse,
   InquiryPriceCreateInstanceRequest,
+  DescribeRedisClustersRequest,
   UpgradeSmallVersionResponse,
   ModifyInstanceParamsRequest,
   DescribeSSLStatusRequest,
@@ -230,12 +240,13 @@ import {
   DescribeInstanceNodeInfoRequest,
   DescribeMaintenanceWindowRequest,
   DescribeInstanceSupportFeatureResponse,
+  DescribeInstanceLogDeliveryRequest,
   AddReplicationInstanceRequest,
   InstanceClusterNode,
   DescribeSSLStatusResponse,
   DescribeTendisSlowLogRequest,
   DescribeProxySlowLogRequest,
-  ModifyInstanceAvailabilityZonesResponse,
+  DescribeRedisClustersResponse,
   DescribeProxySlowLogResponse,
   ModifyInstanceReadOnlyRequest,
   DescribeInstanceAccountResponse,
@@ -515,6 +526,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口（DescribeInstanceLogDelivery）用于查询实例的日志投递配置。
+   */
+  async DescribeInstanceLogDelivery(
+    req: DescribeInstanceLogDeliveryRequest,
+    cb?: (error: string, rep: DescribeInstanceLogDeliveryResponse) => void
+  ): Promise<DescribeInstanceLogDeliveryResponse> {
+    return this.request("DescribeInstanceLogDelivery", req, cb)
+  }
+
+  /**
    * 修改实例相关信息
    */
   async ModifyInstance(
@@ -672,6 +693,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: RenewInstanceResponse) => void
   ): Promise<RenewInstanceResponse> {
     return this.request("RenewInstance", req, cb)
+  }
+
+  /**
+   * 本接口（ModifyInstanceLogDelivery）用于开启或关闭投递实例日志到CLS。
+   */
+  async ModifyInstanceLogDelivery(
+    req: ModifyInstanceLogDeliveryRequest,
+    cb?: (error: string, rep: ModifyInstanceLogDeliveryResponse) => void
+  ): Promise<ModifyInstanceLogDeliveryResponse> {
+    return this.request("ModifyInstanceLogDelivery", req, cb)
   }
 
   /**
@@ -1015,6 +1046,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 查询Redis独享集群列表
+   */
+  async DescribeRedisClusters(
+    req: DescribeRedisClustersRequest,
+    cb?: (error: string, rep: DescribeRedisClustersResponse) => void
+  ): Promise<DescribeRedisClustersResponse> {
+    return this.request("DescribeRedisClusters", req, cb)
+  }
+
+  /**
    * 本接口（KillMasterGroup）模拟故障。
    */
   async KillMasterGroup(
@@ -1082,6 +1123,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: SwitchInstanceVipResponse) => void
   ): Promise<SwitchInstanceVipResponse> {
     return this.request("SwitchInstanceVip", req, cb)
+  }
+
+  /**
+   * 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
+   */
+  async DescribeDBSecurityGroups(
+    req: DescribeDBSecurityGroupsRequest,
+    cb?: (error: string, rep: DescribeDBSecurityGroupsResponse) => void
+  ): Promise<DescribeDBSecurityGroupsResponse> {
+    return this.request("DescribeDBSecurityGroups", req, cb)
   }
 
   /**
@@ -1235,7 +1286,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 变更实例配置
+   * 本接口（UpgradeInstance）用于变更实例的配置规格。
    */
   async UpgradeInstance(
     req: UpgradeInstanceRequest,
@@ -1245,13 +1296,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
+   * 查询Redis独享集群概览信息
    */
-  async DescribeDBSecurityGroups(
-    req: DescribeDBSecurityGroupsRequest,
-    cb?: (error: string, rep: DescribeDBSecurityGroupsResponse) => void
-  ): Promise<DescribeDBSecurityGroupsResponse> {
-    return this.request("DescribeDBSecurityGroups", req, cb)
+  async DescribeRedisClusterOverview(
+    req: DescribeRedisClusterOverviewRequest,
+    cb?: (error: string, rep: DescribeRedisClusterOverviewResponse) => void
+  ): Promise<DescribeRedisClusterOverviewResponse> {
+    return this.request("DescribeRedisClusterOverview", req, cb)
   }
 
   /**

@@ -619,38 +619,35 @@ export interface CreateMultiFlowSignQRCodeResponse {
     RequestId?: string;
 }
 /**
- * 签署链接信息。
+ * DescribeIntegrationDepartments请求参数结构体
  */
-export interface FlowApproverUrlInfo {
+export interface DescribeIntegrationDepartmentsRequest {
     /**
-     * 签署短链接。
-  注意:
-  1. 该链接有效期为<b>30分钟</b>，同时需要注意保密，不要外泄给无关用户。
-  2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。
-  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     * 执行本接口操作的员工信息。
+  注: `在调用此接口时，请确保指定的员工已获得组织架构管理权限，并具备接口传入的相应资源的数据权限。`
      */
-    SignUrl?: string;
+    Operator: UserInfo;
     /**
-     * 签署人类型。
-  - **1**: 个人
+     * 查询类型，支持以下类型：
+  <ul><li>**0**：查询单个部门节点列表，不包含子节点部门信息</li>
+  <li>**1**：查询单个部门节点级一级子节点部门信息列表</li></ul>
      */
-    ApproverType?: number;
+    QueryType: number;
     /**
-     * 签署人姓名。
+     * 代理企业和员工的信息。
+  在集团企业代理子企业操作的场景中，需设置此参数。在此情境下，ProxyOrganizationId（子企业的组织ID）为必填项。
      */
-    ApproverName?: string;
+    Agent?: Agent;
     /**
-     * 签署人手机号。
+     * 查询的部门ID。
+  注：`如果同时指定了DeptId与DeptOpenId参数，系统将优先使用DeptId参数进行查询。当二者都未指定时，系统将返回根节点部门数据。`
      */
-    ApproverMobile?: string;
+    DeptId?: string;
     /**
-     * 签署长链接。
-  注意:
-  1. 该链接有效期为**30分钟**，同时需要注意保密，不要外泄给无关用户。
-  2. 该链接不支持小程序嵌入，仅支持**移动端浏览器**打开。
-  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     * 查询的客户系统部门ID。
+  注：`如果同时指定了DeptId与DeptOpenId参数，系统将优先使用DeptId参数进行查询。当二者都未指定时，系统将返回根节点部门数据。`
      */
-    LongUrl?: string;
+    DeptOpenId?: string;
 }
 /**
  * 关注方信息
@@ -871,9 +868,25 @@ export interface ModifyExtendedServiceRequest {
     Endpoint?: string;
 }
 /**
- * CancelUserAutoSignEnableUrl返回参数结构体
+ * CreateBatchInitOrganizationUrl返回参数结构体
  */
-export interface CancelUserAutoSignEnableUrlResponse {
+export interface CreateBatchInitOrganizationUrlResponse {
+    /**
+     * 小程序路径
+     */
+    MiniAppPath?: string;
+    /**
+     * 操作长链
+     */
+    OperateLongUrl?: string;
+    /**
+     * 操作短链
+     */
+    OperateShortUrl?: string;
+    /**
+     * 操作二维码
+     */
+    QRCodeUrl?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -1363,14 +1376,22 @@ export interface CreateOrganizationAuthUrlRequest {
     Operator: UserInfo;
     /**
      * 指定授权方式 支持多选:
-  1-上传授权书方式
-  2- 法人授权方式
-  3- 法人身份认证方式
+  
+  <ul>
+  <li><strong>1</strong>:上传授权书方式</li>
+  <li><strong>2</strong>: 法人授权方式</li>
+  <li><strong>3</strong>: 法人身份认证方式</li>
+  </ul>
      */
     AuthorizationTypes?: Array<number | bigint>;
     /**
-     * 企业名称
-  EndPointType=“H5”或者"SHORT_H5"时，该参数必填
+     * 认证企业名称，请确认该名称与企业营业执照中注册的名称一致。
+  
+  注：
+  
+  1. `如果名称中包含英文括号()，请使用中文括号（）代替。`
+  
+  2. `EndPointType=“H5”或者"SHORT_H5"时，该参数必填`
   
      */
     OrganizationName?: string;
@@ -1379,16 +1400,15 @@ export interface CreateOrganizationAuthUrlRequest {
      */
     UniformSocialCreditCode?: string;
     /**
-     * 法人姓名
+     * 企业法人的姓名
      */
     LegalName?: string;
     /**
-     * 认证完成跳转链接
+     * 认证完成跳回的链接，最长500个字符
      */
     AutoJumpUrl?: string;
     /**
      * 营业执照企业地址
-  示例：xx省xx市xx县/区xx街道
      */
     OrganizationAddress?: string;
     /**
@@ -1404,66 +1424,55 @@ export interface CreateOrganizationAuthUrlRequest {
      */
     AdminIdCardNumber?: string;
     /**
-     * 认证人证件类型
-  支持以下类型
-  <ul><li>ID_CARD : 中国大陆居民身份证  (默认值)</li>
-  <li>HONGKONG_AND_MACAO : 港澳居民来往内地通行证</li>
-  <li>HONGKONG_MACAO_AND_TAIWAN : 港澳台居民居住证(格式同居民身份证)</li></ul>
+     * 认证人证件类型， 支持以下类型
+  <ul><li><b>ID_CARD</b> : 中国大陆居民身份证  (默认值)</li>
+  <li><b>HONGKONG_AND_MACAO</b>  : 港澳居民来往内地通行证</li>
+  <li><b>HONGKONG_MACAO_AND_TAIWAN</b>  : 港澳台居民居住证(格式同居民身份证)</li></ul>
   
      */
     AdminIdCardType?: string;
     /**
-     * 营业执照的社会信用代码保持一致
-  false 关闭-默认
-  true 开启
+     * 对方打开链接认证时，对方填写的营业执照的社会信用代码是否与接口上传上来的要保持一致。<ul><li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li><li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li></ul>
      */
     UniformSocialCreditCodeSame?: boolean;
     /**
-     * 法人姓名保持一致
-  false 关闭-默认
-  true 开启
+     * 对方打开链接认证时，法人姓名是否要与接口传递上来的保持一致。<ul><li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li><li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li></ul>
      */
     LegalNameSame?: boolean;
     /**
-     * 认证人姓名一致
-  false 关闭-默认
-  true 开启
-  注意：
-  开启后在认证过程前会校验拦截
+     * 对方打开链接认证时，认证人姓名是否要与接口传递上来的保持一致。<ul><li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li><li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li></ul>
      */
     AdminNameSame?: boolean;
     /**
-     * 认证人居民身份证件号一致
-  false 关闭-默认
-  true 开启
-  注意：
-  开启后在认证过程前会校验拦截
+     * 对方打开链接认证时，认证人居民身份证件号是否要与接口传递上来的保持一致。<ul><li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li><li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li></ul>
      */
     AdminIdCardNumberSame?: boolean;
     /**
-     * 认证人手机号一致
-  false 关闭-默认
-  true 开启
-  注意：
-  开启后在认证过程前会校验拦截
+     * 对方打开链接认证时，认证人手机号是否要与接口传递上来的保持一致。<ul>
+  <li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li>
+  <li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li>
+  </ul>
      */
     AdminMobileSame?: boolean;
     /**
-     * 企业名称保持一致
-  false 关闭-默认
-  true 开启
+     * 对方打开链接认证时，企业名称是否要与接口传递上来的保持一致。<ul><li><b>false（默认值）</b>：关闭状态，实际认证时允许与接口传递的信息存在不一致。</li><li><b>true</b>：启用状态，实际认证时必须与接口传递的信息完全相符。</li></ul>
      */
     OrganizationNameSame?: boolean;
     /**
-     * 营业执照正面照(PNG或JPG) base64格式, 大小不超过5M
+     * 营业执照正面照（支持PNG或JPG格式）需以base64格式提供，且文件大小不得超过5MB。
      */
     BusinessLicense?: string;
     /**
      * 跳转链接类型：
-  "PC"-PC端认证链接
-  "APP"-全屏或半屏跳转小程序链接
-  “H5”-H5页面认证链接 "SHORT_H5"- H5认证短链
-  "SHORT_URL"- 跳转小程序短链
+  
+  <ul>
+  <li><b>PC</b>：适用于PC端的认证链接</li>
+  <li><b>APP</b>：用于全屏或半屏跳转的小程序链接</li>
+  <li><b>SHORT_URL</b>：跳转小程序的链接的短链形式</li>
+  <li><b>H5</b>：适用于H5页面的认证链接</li>
+  <li><b>SHORT_H5</b>：H5认证链接的短链形式</li>
+  </ul>
+  
      */
     Endpoint?: string;
 }
@@ -1755,6 +1764,39 @@ export interface Agent {
     ProxyOperator?: string;
 }
 /**
+ * DescribeUserAutoSignStatus返回参数结构体
+ */
+export interface DescribeUserAutoSignStatusResponse {
+    /**
+     * 查询用户是否已开通自动签
+     */
+    IsOpen?: boolean;
+    /**
+     * 自动签许可生效时间。当且仅当已通过许可开通自动签时有值。
+  
+  值为unix时间戳,单位为秒。
+     */
+    LicenseFrom?: number;
+    /**
+     * 自动签许可到期时间。当且仅当已通过许可开通自动签时有值。
+  
+  值为unix时间戳,单位为秒。
+     */
+    LicenseTo?: number;
+    /**
+     * 设置用户开通自动签时是否绑定个人自动签账号许可。<ul><li>**0**: 使用个人自动签账号许可进行开通，个人自动签账号许可有效期1年，注: `不可解绑释放更换他人`</li><li>**1**: 不绑定自动签账号许可开通，后续使用合同份额进行合同发起</li></ul>
+     */
+    LicenseType?: number;
+    /**
+     * 用户开通自动签指定使用的印章，为空则未设置印章，需重新进入开通链接设置印章。
+     */
+    SealId?: string;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
  * 签署人详情信息
  */
 export interface FlowApproverDetail {
@@ -2019,28 +2061,28 @@ export interface CreateUserVerifyUrlResponse {
      * 腾讯电子签小程序的实名认证链接。
   如果没有传递，默认值是 HTTP。 链接的有效期均是 7 天。
   
-  - 如果EndPoint是APP，
-  得到的链接类似于pages/guide/index?to=MP_PERSONAL_VERIFY&shortKey=yDCZHUyOcExAlcOvNod0, 用法可以参考描述中的"跳转到小程序的实现"
+  <strong>1.如果EndPoint是APP</strong>：
+  得到的链接类似于<a href="">pages/guide/index?to=MP_PERSONAL_VERIFY&shortKey=yDCZHUyOcExAlcOvNod0</a>, 用法可以参考描述中的"跳转到小程序的实现"
   
-  - 如果EndPoint是HTTP，
-  得到的链接类似于https://res.ess.tencent.cn/cdn/h5-activity/jump-mp.html?to=TAG_VERIFY&shortKey=yDCZHUyOcChrfpaswT0d，点击后会跳转到腾讯电子签小程序进行签署
+  <strong>2.如果EndPoint是HTTP</strong>：
+  得到的链接类似于 <a href="">https://res.ess.tencent.cn/cdn/h5-activity/jump-mp.html?to=TAG_VERIFY&shortKey=yDCZHUyOcChrfpaswT0d</a>，点击后会跳转到腾讯电子签小程序进行签署
   
-  - 如果EndPoint是HTTP_SHORT_URL，
-  得到的链接类似于https://essurl.cn/2n**42Nd，点击后会跳转到腾讯电子签小程序进行签署
+  <strong>3.如果EndPoint是HTTP_SHORT_URL</strong>：
+  得到的链接类似于<a href="">https://essurl.cn/2n**42Nd</a>，点击后会跳转到腾讯电子签小程序进行签署
   
-  - 如果EndPoint是H5，
-  得到的链接类似于 https://quick.test.qian.tencent.cn/guide?Code=yDU****VJhsS5q&CodeType=xxx&shortKey=yD*****frcb，点击后会跳转到腾讯电子签H5页面进行签署
+  <strong>4.如果EndPoint是H5</strong>：
+  得到的链接类似于 <a href="">https://quick.test.qian.tencent.cn/guide?Code=yDU****VJhsS5q&CodeType=xxx&shortKey=yD*****frcb</a>，点击后会跳转到腾讯电子签H5页面进行签署
   
-  - 如果EndPoint是H5_SHORT_URL，
-  得到的链接类似于https://essurl.cn/2n**42Nd，点击后会跳转到腾讯电子签H5页面进行签署
+  <strong>5.如果EndPoint是H5_SHORT_URL</strong>：
+  得到的链接类似于<a href="">https://essurl.cn/2n**42Nd</a>，点击后会跳转到腾讯电子签H5页面进行签署
   
   
-  `注：` <font color="red">生成的链路后面不能再增加参数</font>
+  `注：` <font color="red">生成的链路后面不能再增加参数，防止出错重复参数覆盖原有的参数</font>
   示例值：https://essurl.cn/2n**42Nd
      */
     UserVerifyUrl?: string;
     /**
-     * 链接过期时间
+     * 链接过期时间，为Unix时间戳（单位为秒）。
      */
     ExpireTime?: number;
     /**
@@ -2228,6 +2270,24 @@ export interface TemplateInfo {
      * @deprecated
      */
     Seals?: Array<SealInfo>;
+}
+/**
+ * 签署二维码的基本信息，用于创建二维码，用户可扫描该二维码进行签署操作。
+ */
+export interface SignQrCode {
+    /**
+     * 二维码ID，为32位字符串。
+     */
+    QrCodeId?: string;
+    /**
+     * 二维码URL，可通过转换二维码的工具或代码组件将此URL转化为二维码，以便用户扫描进行流程签署。
+     */
+    QrCodeUrl?: string;
+    /**
+     * 二维码的有截止时间，格式为Unix标准时间戳（秒）。
+  一旦超过二维码的有效期限，该二维码将自动失效。
+     */
+    ExpiredTime?: number;
 }
 /**
  * CreateDocument返回参数结构体
@@ -2671,6 +2731,31 @@ export interface CreateReleaseFlowResponse {
     RequestId?: string;
 }
 /**
+ * CreateBatchInitOrganizationUrl请求参数结构体
+ */
+export interface CreateBatchInitOrganizationUrlRequest {
+    /**
+     * 执行本接口操作的员工信息。
+  注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
+     */
+    Operator: UserInfo;
+    /**
+     * 初始化操作类型
+  <ul><li>CREATE_SEAL : 创建印章</li>
+  <li>AUTH_JOIN_ORGANIZATION_GROUP : 加入集团企业</li>
+  <li>OPEN_AUTO_SIGN :开通企业自动签署</li></ul>
+     */
+    OperateTypes: Array<string>;
+    /**
+     * 批量操作的企业Id列表，最大支持50个
+     */
+    OrganizationIds: Array<string>;
+    /**
+     * 代理相关应用信息，如集团主企业代子企业操作的场景中ProxyOrganizationId必填
+     */
+    Agent?: Agent;
+}
+/**
  * CreateWebThemeConfig返回参数结构体
  */
 export interface CreateWebThemeConfigResponse {
@@ -2834,6 +2919,10 @@ export interface OrganizationAuthUrl {
      * 企业批量注册的错误信息，例如：企业三要素不通过
      */
     ErrorMessage?: string;
+    /**
+     * 企业批量注册的唯一 Id， 此 Id 可以用在[创建企业批量认证链接-单链接](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationAuthorizationUrl)。
+     */
+    SubTaskId?: string;
 }
 /**
  * 企业员工信息。
@@ -3073,31 +3162,27 @@ export interface CreateLegalSealQrCodeRequest {
     Organization?: OrganizationInfo;
 }
 /**
- * DescribeUserAutoSignStatus返回参数结构体
+ * DescribeOrganizationAuthStatus返回参数结构体
  */
-export interface DescribeUserAutoSignStatusResponse {
+export interface DescribeOrganizationAuthStatusResponse {
     /**
-     * 查询用户是否已开通自动签
+     * 企业是否已认证
      */
-    IsOpen?: boolean;
+    IsVerified?: boolean;
     /**
-     * 自动签许可生效时间。当且仅当已通过许可开通自动签时有值。
-  
-  值为unix时间戳,单位为秒。
+     * 企业认证状态 0-未认证 1-认证中 2-已认证
      */
-    LicenseFrom?: number;
+    AuthStatus?: number;
     /**
-     * 自动签许可到期时间。当且仅当已通过许可开通自动签时有值。
-  
-  值为unix时间戳,单位为秒。
+     * 企业认证信息
      */
-    LicenseTo?: number;
+    AuthRecords?: Array<AuthRecord>;
     /**
-     * 设置用户开通自动签时是否绑定个人自动签账号许可。
-  
-  <ul><li>**0**: 使用个人自动签账号许可进行开通，个人自动签账号许可有效期1年，注: `不可解绑释放更换他人`</li></ul>
+     * 企业在腾讯电子签平台的唯一身份标识，为32位字符串。
+  可登录腾讯电子签控制台，在 "更多"->"企业设置"->"企业中心"- 中查看企业电子签账号。
+  p.s. 只有当前企业认证成功的时候返回
      */
-    LicenseType?: number;
+    OrganizationId?: string;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -3269,7 +3354,9 @@ export interface CreateEmployeeQualificationSealQrCodeRequest {
      */
     Agent?: Agent;
     /**
-     * 提示信息，扫码后此信息会展示给扫描用户，用来提示用户授权操作的目的
+     * 提示信息，扫码后此信息会展示给扫描用户，用来提示用户授权操作的目的，会在授权界面下面的位置展示。
+  
+  ![image](https://qcloudimg.tencent-cloud.cn/raw/8436ffd78c20605e6b133ff4bc4d2ac7.png)
      */
     HintText?: string;
 }
@@ -3452,22 +3539,35 @@ export interface UserThreeFactor {
     IdCardNumber: string;
 }
 /**
- * 签署二维码的基本信息，用于创建二维码，用户可扫描该二维码进行签署操作。
+ * 企业认证信息
  */
-export interface SignQrCode {
+export interface AuthRecord {
     /**
-     * 二维码ID，为32位字符串。
+     * 经办人姓名。
      */
-    QrCodeId?: string;
+    OperatorName?: string;
     /**
-     * 二维码URL，可通过转换二维码的工具或代码组件将此URL转化为二维码，以便用户扫描进行流程签署。
+     * 经办人手机号。
      */
-    QrCodeUrl?: string;
+    OperatorMobile?: string;
     /**
-     * 二维码的有截止时间，格式为Unix标准时间戳（秒）。
-  一旦超过二维码的有效期限，该二维码将自动失效。
+     * 认证授权方式：
+  <ul><li> **0**：未选择授权方式（默认值）</li>
+  <li> **1**：上传授权书</li>
+  <li> **2**：法人授权</li>
+  <li> **3**：法人认证</li></ul>
      */
-    ExpiredTime?: number;
+    AuthType?: number;
+    /**
+     * 企业认证授权书审核状态：
+  <ul><li> **0**：未提交授权书（默认值）</li>
+  <li> **1**：审核通过</li>
+  <li> **2**：审核驳回</li>
+  <li> **3**：审核中</li>
+  <li> **4**：AI识别中</li>
+  <li> **5**：客户确认AI信息</li></ul>
+     */
+    AuditStatus?: number;
 }
 /**
  * CreateSealPolicy返回参数结构体
@@ -3482,6 +3582,40 @@ export interface CreateSealPolicyResponse {
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
     RequestId?: string;
+}
+/**
+ * 签署链接信息。
+ */
+export interface FlowApproverUrlInfo {
+    /**
+     * 签署短链接。
+  注意:
+  1. 该链接有效期为<b>30分钟</b>，同时需要注意保密，不要外泄给无关用户。
+  2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。
+  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     */
+    SignUrl?: string;
+    /**
+     * 签署人类型。
+  - **1**: 个人
+     */
+    ApproverType?: number;
+    /**
+     * 签署人姓名。
+     */
+    ApproverName?: string;
+    /**
+     * 签署人手机号。
+     */
+    ApproverMobile?: string;
+    /**
+     * 签署长链接。
+  注意:
+  1. 该链接有效期为**30分钟**，同时需要注意保密，不要外泄给无关用户。
+  2. 该链接不支持小程序嵌入，仅支持**移动端浏览器**打开。
+  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     */
+    LongUrl?: string;
 }
 /**
  * DisableUserAutoSign请求参数结构体
@@ -3650,15 +3784,13 @@ export interface CreateFlowSignReviewRequest {
  */
 export interface CreateOrganizationAuthUrlResponse {
     /**
-     * “H5”-H5长连接
-  "SHORT_H5"- H5短链
-  "APP"-小程序
-  "PC"-PC浏览器
-  链接有效期统一30天
+     * 生成的认证链接。
+  
+  注： `链接有效期统一30天`
      */
     AuthUrl?: string;
     /**
-     * 链接过期时间戳
+     * 链接过期时间，格式为Unix标准时间戳（秒）
      */
     ExpiredTime?: number;
     /**
@@ -3667,31 +3799,26 @@ export interface CreateOrganizationAuthUrlResponse {
     RequestId?: string;
 }
 /**
- * UnbindEmployeeUserIdWithClientOpenId请求参数结构体
+ * DescribeOrganizationAuthStatus请求参数结构体
  */
-export interface UnbindEmployeeUserIdWithClientOpenIdRequest {
+export interface DescribeOrganizationAuthStatusRequest {
     /**
-     * 执行本接口操作的员工信息。使用此接口时，必须填写UserId。
-  注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
+     * 执行本接口操作的员工信息。使用此接口时，必须填写userId。 支持填入集团子公司经办人 userId 代发合同。  注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
      */
     Operator: UserInfo;
     /**
-     * 员工在腾讯电子签平台的唯一身份标识，为32位字符串。
-  
-  通过<a href="https://qian.tencent.com/developers/companyApis/staffs/DescribeIntegrationEmployees" target="_blank">DescribeIntegrationEmployees</a>接口获取，也可登录腾讯电子签控制台查看
-  ![image](https://qcloudimg.tencent-cloud.cn/raw/97cfffabb0caa61df16999cd395d7850.png)
+     * 组织机构名称。 请确认该名称与企业营业执照中注册的名称一致。 如果名称中包含英文括号()，请使用中文括号（）代替。
      */
-    UserId: string;
+    OrganizationName?: string;
     /**
-     * 员工在贵司业务系统中的唯一身份标识，用于与腾讯电子签账号进行映射，确保在同一企业内不会出现重复。
-  该标识最大长度为64位字符串，仅支持包含26个英文字母和数字0-9的字符。
+     * 企业统一社会信用代码
+  注意：OrganizationName和UniformSocialCreditCode不能同时为空
      */
-    OpenId: string;
+    UniformSocialCreditCode?: string;
     /**
-     * 代理企业和员工的信息。
-  在集团企业代理子企业操作的场景中，需设置此参数。在此情境下，ProxyOrganizationId（子企业的组织ID）为必填项。
+     * 法人姓名
      */
-    Agent?: Agent;
+    LegalName?: string;
 }
 /**
  * CreateSchemeUrl返回参数结构体
@@ -4465,11 +4592,9 @@ export interface CreateFlowApproversRequest {
      */
     Operator: UserInfo;
     /**
-     * 补充企业签署人信息。
+     * 补充签署环节签署候选人信息。
   
-  - 如果发起方指定的补充签署人是企业微信签署人（ApproverSource=WEWORKAPP），则需要提供企业微信UserId进行补充；
-  
-  - 如果不指定，则使用姓名和手机号进行补充。
+  注：` 如果发起方指定的补充签署人是企业微信签署人（ApproverSource=WEWORKAPP），则需要提供企业微信UserId进行补充； 如果不指定，则使用姓名和手机号进行补充。`
      */
     Approvers: Array<FillApproverInfo>;
     /**
@@ -4481,9 +4606,9 @@ export interface CreateFlowApproversRequest {
     /**
      * 签署人信息补充方式
   
-  <ul><li>**0**: 添加或签人候选人，或签支持一个节点传多个签署人，不传值默认或签。
+  <ul><li>**0**: <font color="red">或签合同</font>添加签署候选人，或签支持一个节点传多个签署人，不传值默认或签。
   注: `或签只支持企业签署方`</li>
-  <li>**1**: 表示往未指定签署人的节点，添加一个明确的签署人，支持企业或个人签署方。</li></ul>
+  <li>**1**: <font color="red">动态签署人合同</font>的添加签署候选人，支持企业或个人签署方。</li></ul>
      */
     FillApproverType?: number;
     /**
@@ -4757,10 +4882,15 @@ export interface FlowCreateApprover {
      * 您可以指定签署方签署合同的认证校验方式，可传递以下值：
   <ul><li>**1**：人脸认证，需进行人脸识别成功后才能签署合同；</li>
   <li>**2**：签署密码，需输入与用户在腾讯电子签设置的密码一致才能校验成功进行合同签署；</li>
-  <li>**3**：运营商三要素，需到运营商处比对手机号实名信息（名字、手机号、证件号）校验一致才能成功进行合同签署。（如果是港澳台客户，建议不要选择这个）</li></ul>
+  <li>**3**：运营商三要素，需到运营商处比对手机号实名信息（名字、手机号、证件号）校验一致才能成功进行合同签署。（如果是港澳台客户，建议不要选择这个）</li>
+  <li>**5**：设备指纹识别，需要对比手机机主预留的指纹信息，校验一致才能成功进行合同签署。（iOS系统暂不支持该校验方式）</li>
+  <li>**6**：设备面容识别，需要对比手机机主预留的人脸信息，校验一致才能成功进行合同签署。（Android系统暂不支持该校验方式）</li></ul>
+  
   注：
   <ul><li>默认情况下，认证校验方式为人脸认证和签署密码两种形式；</li>
-  <li>您可以传递多种值，表示可用多种认证校验方式。</li></ul>
+  <li>您可以传递多种值，表示可用多种认证校验方式。</li>
+  <li>校验方式不允许只包含设备指纹识别和设备面容识别，至少需要再增加一种其他校验方式。</li>
+  <li>设备指纹识别和设备面容识别只支持小程序使用，其他端暂不支持。</li></ul>
   
   注:
   `此参数仅针对文件发起设置生效,模板发起合同签署流程, 请以模板配置为主`
@@ -4790,40 +4920,25 @@ export interface FlowCreateApprover {
     Intention?: Intention;
 }
 /**
- * CreateOrganizationGroupInvitationLink返回参数结构体
+ * 签署方在使用个人印章签署控件（SIGN_SIGNATURE） 时可使用的签署方式
  */
-export interface CreateOrganizationGroupInvitationLinkResponse {
+export interface ApproverComponentLimitType {
     /**
-     * 加入集团二维码链接，子企业的管理员可以直接扫码进入。
-  注意:1. 该链接有效期时间为ExpireTime，同时需要注意保密，不要外泄给无关用户。2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     * 签署方经办人在模板中配置的参与方ID，与控件绑定，是控件的归属方，ID为32位字符串。
      */
-    Link?: string;
+    RecipientId: string;
     /**
-     * 到期时间（以秒为单位的时间戳）
-     */
-    ExpireTime?: number;
-    /**
-     * 加入集团短链接。
-  注意:
-  1. 该链接有效期时间为ExpireTime，同时需要注意保密，不要外泄给无关用户。
-  2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。
-  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
-     */
-    JumpUrl?: string;
-    /**
-     * 腾讯电子签小程序加入集团链接。
+     * 签署方经办人控件类型是个人印章签署控件（SIGN_SIGNATURE） 时，可选的签名方式，可多选
   
-  <li>小程序和APP集成使用</li>
-  <li>得到的链接类似于`pages/guide?shortKey=yDw***k1xFc5`, 用法可以参考：<a href="https://qian.tencent.com/developers/company/openwxminiprogram" target="_blank">跳转电子签小程序</a></li>
-  
-  
-  注： <font color="red">生成的链路后面不能再增加参数</font>
+  签名方式：
+  <ul>
+  <li>HANDWRITE-手写签名</li>
+  <li>ESIGN-个人印章类型</li>
+  <li>OCR_ESIGN-AI智能识别手写签名</li>
+  <li>SYSTEM_ESIGN-系统签名</li>
+  </ul>
      */
-    MiniAppPath?: string;
-    /**
-     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-     */
-    RequestId?: string;
+    Values: Array<string>;
 }
 /**
  * 授权企业列表（目前仅用于“企业自动签 -> 合作企业授权”）
@@ -6001,9 +6116,18 @@ export interface Recipient {
   <ul><li> 1 :人脸认证</li>
   <li> 2 :签署密码</li>
   <li> 3 :运营商三要素认证</li>
-  <li> 4 :UKey认证</li></ul>
+  <li> 4 :UKey认证</li>
+  <li> 5 :设备指纹识别</li>
+  <li> 6 :设备面容识别</li></ul>
      */
     ApproverSignTypes?: Array<number | bigint>;
+    /**
+     * 签署方是否可以转他人处理
+  
+  <ul><li> **false** : ( 默认)可以转他人处理</li>
+  <li> **true** :不可以转他人处理</li></ul>
+     */
+    NoTransfer?: boolean;
 }
 /**
  * DescribeFlowEvidenceReport请求参数结构体
@@ -6215,13 +6339,18 @@ export interface ApproverInfo {
      * 您可以指定签署方签署合同的认证校验方式，可传递以下值：
   <ul><li>**1**：人脸认证，需进行人脸识别成功后才能签署合同；</li>
   <li>**2**：签署密码，需输入与用户在腾讯电子签设置的密码一致才能校验成功进行合同签署；</li>
-  <li>**3**：运营商三要素，需到运营商处比对手机号实名信息（名字、手机号、证件号）校验一致才能成功进行合同签署。（如果是港澳台客户，建议不要选择这个）</li></ul>
+  <li>**3**：运营商三要素，需到运营商处比对手机号实名信息（名字、手机号、证件号）校验一致才能成功进行合同签署。（如果是港澳台客户，建议不要选择这个）</li>
+  <li>**5**：设备指纹识别，需要对比手机机主预留的指纹信息，校验一致才能成功进行合同签署。（iOS系统暂不支持该校验方式）</li>
+  <li>**6**：设备面容识别，需要对比手机机主预留的人脸信息，校验一致才能成功进行合同签署。（Android系统暂不支持该校验方式）</li></ul>
   
-  默认为1(人脸认证 ),2(签署密码),3(运营商三要素)
+  
+  默认为1(人脸认证 ),2(签署密码),3(运营商三要素),5(设备指纹识别),6(设备面容识别)
   
   注：
   1. 用<font color='red'>模板创建合同场景</font>, 签署人的认证方式需要在配置模板的时候指定, <font color='red'>在创建合同重新指定无效</font>
-  3. 运营商三要素认证方式对手机号运营商及前缀有限制,可以参考[运营商支持列表类](https://qian.tencent.com/developers/company/mobile_support)得到具体的支持说明
+  2. 运营商三要素认证方式对手机号运营商及前缀有限制,可以参考[运营商支持列表类](https://qian.tencent.com/developers/company/mobile_support)得到具体的支持说明
+  3. 校验方式不允许只包含<font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>，至少需要再增加一种其他校验方式。
+  4. <font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>只支持小程序使用，其他端暂不支持。
      */
     ApproverSignTypes?: Array<number | bigint>;
     /**
@@ -6428,6 +6557,33 @@ export interface CreateOrganizationBatchSignUrlResponse {
     RequestId?: string;
 }
 /**
+ * UnbindEmployeeUserIdWithClientOpenId请求参数结构体
+ */
+export interface UnbindEmployeeUserIdWithClientOpenIdRequest {
+    /**
+     * 执行本接口操作的员工信息。使用此接口时，必须填写UserId。
+  注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
+     */
+    Operator: UserInfo;
+    /**
+     * 员工在腾讯电子签平台的唯一身份标识，为32位字符串。
+  
+  通过<a href="https://qian.tencent.com/developers/companyApis/staffs/DescribeIntegrationEmployees" target="_blank">DescribeIntegrationEmployees</a>接口获取，也可登录腾讯电子签控制台查看
+  ![image](https://qcloudimg.tencent-cloud.cn/raw/97cfffabb0caa61df16999cd395d7850.png)
+     */
+    UserId: string;
+    /**
+     * 员工在贵司业务系统中的唯一身份标识，用于与腾讯电子签账号进行映射，确保在同一企业内不会出现重复。
+  该标识最大长度为64位字符串，仅支持包含26个英文字母和数字0-9的字符。
+     */
+    OpenId: string;
+    /**
+     * 代理企业和员工的信息。
+  在集团企业代理子企业操作的场景中，需设置此参数。在此情境下，ProxyOrganizationId（子企业的组织ID）为必填项。
+     */
+    Agent?: Agent;
+}
+/**
  * 模板中文件的信息结构
  */
 export interface FileInfo {
@@ -6516,20 +6672,13 @@ export interface CreateUserVerifyUrlRequest {
     /**
      * 要跳转的链接类型
   
-  - HTTP：
-  跳转电子签小程序的http_url,短信通知或者H5跳转适合此类型 ，此时返回长链 (默认类型)
-  
-  - HTTP_SHORT_URL：
-  跳转电子签小程序的http_url,短信通知或者H5跳转适合此类型，此时返回短链
-  
-  - APP：
-  第三方APP或小程序跳转电子签小程序的path, APP或者小程序跳转适合此类型
-  
-  - H5：
-  跳转电子签H5实名页面的长链
-  
-  - H5_SHORT_URL：
-  跳转电子签H5实名页面的短链
+  <ul>
+  <li><strong>HTTP</strong>：适用于短信通知或H5跳转的电子签小程序HTTP长链接</li>
+  <li><strong>HTTP_SHORT_URL</strong>：适用于短信通知或H5跳转的电子签小程序HTTP短链接</li>
+  <li><strong>APP</strong>：（默认类型）适用于第三方APP或小程序跳转的电子签小程序路径</li>
+  <li><strong>H5</strong>：适用于跳转至电子签H5实名页面的长链接</li>
+  <li><strong>H5_SHORT_URL</strong>：适用于跳转至电子签H5实名页面的短链接</li>
+  </ul>
   
   注：如果不传递，默认值是 <font color="red"> APP </font>
      */
@@ -6554,14 +6703,6 @@ export interface CreateUserVerifyUrlRequest {
  */
 export interface CreatePartnerAutoSignAuthUrlRequest {
     /**
-     * 被授企业id
-     */
-    AuthorizedOrganizationId?: string;
-    /**
-     * 指定印章类型，指定后只能选择该类型的印章进行授权支持以下印章类型：- OFFICIAL : 企业公章- CONTRACT : 合同专用章- FINANCE : 财务专用章- PERSONNEL : 人事专用章
-     */
-    SealTypes?: Array<string>;
-    /**
      * 代理企业和员工的信息。<br/>在集团企业代理子企业操作的场景中，需设置此参数。在此情境下，ProxyOrganizationId（子企业的组织ID）为必填项。
      */
     Agent?: Agent;
@@ -6569,6 +6710,24 @@ export interface CreatePartnerAutoSignAuthUrlRequest {
      * 执行本接口操作的员工信息。<br/>注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
      */
     Operator?: UserInfo;
+    /**
+     * 被授企业id/授权方企业id，和AuthorizedOrganizationName二选一传入
+     */
+    AuthorizedOrganizationId?: string;
+    /**
+     * 被授企业名称/授权方企业名称，和AuthorizedOrganizationId二选一传入
+     */
+    AuthorizedOrganizationName?: string;
+    /**
+     * 指定印章类型，指定后只能选择该类型的印章进行授权支持以下印章类型：- OFFICIAL : 企业公章- CONTRACT : 合同专用章- FINANCE : 财务专用章- PERSONNEL : 人事专用章
+     */
+    SealTypes?: Array<string>;
+    /**
+     * 他方授权给我方：
+  - false：我方授权他方，AuthorizedOrganizationName代表【被授权方】企业名称
+  - true：他方授权我方，AuthorizedOrganizationName代表【授权方】企业名称
+     */
+    AuthToMe?: boolean;
 }
 /**
  * 创建员工的失败数据
@@ -6915,24 +7074,13 @@ export interface DeleteIntegrationDepartmentRequest {
     ReceiveDeptId?: string;
 }
 /**
- * 用户自定义合同类型， 自定义合同类型的管理可以[点击查看在控制台位置的截图](https://qcloudimg.tencent-cloud.cn/raw/85a9b2ebce07b0cd6d75d5327d538235.png)
+ * CancelUserAutoSignEnableUrl返回参数结构体
  */
-export interface UserFlowType {
+export interface CancelUserAutoSignEnableUrlResponse {
     /**
-     * 合同类型ID
-  注意：此字段可能返回 null，表示取不到有效值。
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
-    UserFlowTypeId?: string;
-    /**
-     * 合同类型名称
-  注意：此字段可能返回 null，表示取不到有效值。
-     */
-    Name?: string;
-    /**
-     * 合同类型说明
-  注意：此字段可能返回 null，表示取不到有效值。
-     */
-    Description?: string;
+    RequestId?: string;
 }
 /**
  * ModifyApplicationCallbackInfo请求参数结构体
@@ -8007,25 +8155,23 @@ export interface DescribeBillUsageDetailResponse {
  */
 export interface CreateUserMobileChangeUrlResponse {
     /**
-     * 腾讯电子签小程序的实名认证链接。
-  如果没有传递，默认值是 HTTP。 链接的有效期均是 7 天。
+     * 腾讯电子签小程序的实名认证链接。 如果没有传递，默认值是 HTTP。 链接的有效期均是 7 天。
   
-  - 如果EndPoint是APP，
-  得到的链接类似于pages/guide/index?to=MOBILE_CHANGE_INTENTION&shortKey=yDCZHUyOcExAlcOvNod0, 用法可以参考描述中的"跳转到小程序的实现"
+  <b>1.如果EndPoint是APP</b>，
+  得到的链接类似于<a href="">pages/guide/index?to=MOBILE_CHANGE_INTENTION&shortKey=yDCZHUyOcExAlcOvNod0</a>, 用法可以参考描述中的"跳转到小程序的实现"
   
-  - 如果EndPoint是HTTP，
-  得到的链接类似于https://res.ess.tencent.cn/cdn/h5-activity/jump-mp.html?to=MOBILE_CHANGE_INTENTION&shortKey=yDCZHUyOcChrfpaswT0d，点击后会跳转到腾讯电子签小程序进行签署
+  <b>2.如果EndPoint是HTTP</b>，
+  得到的链接类似于<a href="">https://res.ess.tencent.cn/cdn/h5-activity/jump-mp.html?to=MOBILE_CHANGE_INTENTION&shortKey=yDCZHUyOcChrfpaswT0d</a>，点击后会跳转到腾讯电子签小程序进行签署
   
-  - 如果EndPoint是HTTP_SHORT_URL，
-  得到的链接类似于https://essurl.cn/2n**42Nd，点击后会跳转到腾讯电子签小程序进行签署
+  <b>3.如果EndPoint是HTTP_SHORT_URL</b>，
+  得到的链接类似于<a href="">https://essurl.cn/2n**42Nd</a>，点击后会跳转到腾讯电子签小程序进行签署
   
+  注： <font color="red">生成的链路后面不能再增加参数</font>
   
-  注： 生成的链路后面不能再增加参数
-  示例值：https://essurl.cn/2n**42Nd
      */
     Url?: string;
     /**
-     * 链接失效期限如下：
+     * 链接失效期限，为Unix时间戳（单位秒），有如下规则：
   
   <ul>
   <li>如果指定更换绑定手机号的用户(指定用户ID或姓名等信息)，则设定的链接失效期限为7天后。</li>
@@ -8494,6 +8640,26 @@ export interface RelieveInfo {
     OtherDeals?: string;
 }
 /**
+ * 用户自定义合同类型， 自定义合同类型的管理可以[点击查看在控制台位置的截图](https://qcloudimg.tencent-cloud.cn/raw/85a9b2ebce07b0cd6d75d5327d538235.png)
+ */
+export interface UserFlowType {
+    /**
+     * 合同类型ID
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    UserFlowTypeId?: string;
+    /**
+     * 合同类型名称
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Name?: string;
+    /**
+     * 合同类型说明
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Description?: string;
+}
+/**
  * 个性化参数
  */
 export interface EmbedUrlOption {
@@ -8511,6 +8677,49 @@ export interface EmbedUrlOption {
   <li> <b>false</b> :（默认）不允许在模板预览页展示控件</li></ul>
      */
     ShowTemplateComponent?: boolean;
+}
+/**
+ * CreateBatchOrganizationAuthorizationUrl请求参数结构体
+ */
+export interface CreateBatchOrganizationAuthorizationUrlRequest {
+    /**
+     * 执行本接口操作的员工信息。
+  注: `在调用此接口时，请确保指定的员工已获得所需的接口调用权限，并具备接口传入的相应资源的数据权限。`
+     */
+    Operator: UserInfo;
+    /**
+     * 组织机构超管姓名。 在注册流程中，必须是超管本人进行操作。
+  此参数需要跟[创建企业批量认证链接](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks)中 AdminName 保持一致。
+     */
+    AdminName: string;
+    /**
+     * 组织机构超管手机号。 在注册流程中，必须是超管本人进行操作。此参数需要跟[创建企业批量认证链接](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks)中 Admin Mobile保持一致。
+     */
+    AdminMobile: string;
+    /**
+     * 代理相关应用信息，如集团主企业代子企业操作的场景中ProxyOrganizationId必填
+     */
+    Agent?: Agent;
+    /**
+     * 企业批量认证链接的子任务 SubTaskId，该 SubTaskId 是通过接口 查询企业批量认证链接 DescribeBatchOrganizationRegistrationUrls 获得。此参数需与超管个人三要素（AdminName，AdminMobile，AdminIdCardNumber）配合使用。若 SubTaskId 不属于传入的超级管理员，将进行筛选。
+     */
+    SubTaskIds?: Array<string>;
+    /**
+     * 组织机构超管证件类型支持以下类型
+  - ID_CARD : 居民身份证 (默认值)
+  -  HONGKONG_AND_MACAO : 港澳居民来往内地通行证
+  - HONGKONG_MACAO_AND_TAIWAN : 港澳台居民居住证(格式同居民身份证)
+  此参数需要跟[创建企业批量认证链接](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks)中 AdminIdCardType保持一致。
+     */
+    AdminIdCardType?: string;
+    /**
+     * 组织机构超管证件号。 在注册流程中，必须是超管本人进行操作。此参数需要跟[创建企业批量认证链接](https://qian.tencent.com/developers/companyApis/organizations/CreateBatchOrganizationRegistrationTasks)中 AdminIdCardNumber保持一致。
+     */
+    AdminIdCardNumber?: string;
+    /**
+     * 要跳转的链接类型<ul><li> **HTTP**：跳转电子签小程序的http_url, 短信通知或者H5跳转适合此类型  ，此时返回长链 (默认类型)</li><li>**HTTP_SHORT_URL**：跳转电子签小程序的http_url, 短信通知或者H5跳转适合此类型，此时返回短链</li><li>**APP**： 第三方APP或小程序跳转电子签小程序的path,  APP或者小程序跳转适合此类型</li><li>**QR_CODE**： 跳转电子签小程序的http_url的二维码形式,  可以在页面展示适合此类型</li></ul>
+     */
+    Endpoint?: string;
 }
 /**
  * CreateBatchCancelFlowUrl请求参数结构体
@@ -8705,35 +8914,33 @@ export interface DescribeExtendedServiceAuthInfosResponse {
     RequestId?: string;
 }
 /**
- * DescribeIntegrationDepartments请求参数结构体
+ * CreateBatchOrganizationAuthorizationUrl返回参数结构体
  */
-export interface DescribeIntegrationDepartmentsRequest {
+export interface CreateBatchOrganizationAuthorizationUrlResponse {
     /**
-     * 执行本接口操作的员工信息。
-  注: `在调用此接口时，请确保指定的员工已获得组织架构管理权限，并具备接口传入的相应资源的数据权限。`
+     * 批量企业注册链接-单链接包含多条认证流，根据Endpoint的不同设置，返回不同的链接地址。失效时间：7天
+  跳转链接, 链接的有效期根据企业,员工状态和终端等有区别, 可以参考下表
+  <table> <thead> <tr> <th>Endpoint</th> <th>示例</th> <th>链接有效期限</th> </tr> </thead>  <tbody>
+   <tr> <td>HTTP</td> <td>https://res.ess.tencent.cn/cdn/h5-activity-dev/jump-mp.html?to=AUTHORIZATION_ENTERPRISE_FOR_BATCH_SUBMIT&shortKey=yDCHHURDfBxSB2rj2Bfa</td> <td>7天</td> </tr>
+  <tr> <td>HTTP_SHORT_URL</td> <td>https://test.essurl.cn/8gDKUBAWK8</td> <td>7天</td> </tr>
+  <tr> <td>APP</td> <td>pages/guide/index?to=AUTHORIZATION_ENTERPRISE_FOR_BATCH_SUBMIT&shortKey=yDCHpURDfR6iEkdpsDde</td> <td>7天</td> </tr><tr> <td>QR_CODE</td> <td>https://dyn.test.ess.tencent.cn/imgs/qrcode_urls/authorization_enterprise_for_batch_submit/yDCHHUUckpbdauq9UEjnoFDCCumAMmv1.png</td> <td>7天</td> </tr> </tbody> </table>
+  注：
+  `1.创建的链接应避免被转义，如：&被转义为\u0026；如使用Postman请求后，请选择响应类型为 JSON，否则链接将被转义`
+  
      */
-    Operator: UserInfo;
+    AuthUrl?: string;
     /**
-     * 查询类型，支持以下类型：
-  <ul><li>**0**：查询单个部门节点列表，不包含子节点部门信息</li>
-  <li>**1**：查询单个部门节点级一级子节点部门信息列表</li></ul>
+     * 认证流认证失败信息
      */
-    QueryType: number;
+    ErrorMessages?: Array<string>;
     /**
-     * 代理企业和员工的信息。
-  在集团企业代理子企业操作的场景中，需设置此参数。在此情境下，ProxyOrganizationId（子企业的组织ID）为必填项。
+     * 链接过期时间，为 7 天后，创建时间，格式为Unix标准时间戳（秒）。
      */
-    Agent?: Agent;
+    ExpireTime?: number;
     /**
-     * 查询的部门ID。
-  注：`如果同时指定了DeptId与DeptOpenId参数，系统将优先使用DeptId参数进行查询。当二者都未指定时，系统将返回根节点部门数据。`
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
-    DeptId?: string;
-    /**
-     * 查询的客户系统部门ID。
-  注：`如果同时指定了DeptId与DeptOpenId参数，系统将优先使用DeptId参数进行查询。当二者都未指定时，系统将返回根节点部门数据。`
-     */
-    DeptOpenId?: string;
+    RequestId?: string;
 }
 /**
  * DescribeFlowInfo返回参数结构体
@@ -8983,25 +9190,40 @@ export interface DescribeOrganizationGroupOrganizationsResponse {
     RequestId?: string;
 }
 /**
- * 签署方在使用个人印章签署控件（SIGN_SIGNATURE） 时可使用的签署方式
+ * CreateOrganizationGroupInvitationLink返回参数结构体
  */
-export interface ApproverComponentLimitType {
+export interface CreateOrganizationGroupInvitationLinkResponse {
     /**
-     * 签署方经办人在模板中配置的参与方ID，与控件绑定，是控件的归属方，ID为32位字符串。
+     * 加入集团二维码链接，子企业的管理员可以直接扫码进入。
+  注意:1. 该链接有效期时间为ExpireTime，同时需要注意保密，不要外泄给无关用户。2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
      */
-    RecipientId: string;
+    Link?: string;
     /**
-     * 签署方经办人控件类型是个人印章签署控件（SIGN_SIGNATURE） 时，可选的签名方式，可多选
+     * 到期时间（以秒为单位的时间戳）
+     */
+    ExpireTime?: number;
+    /**
+     * 加入集团短链接。
+  注意:
+  1. 该链接有效期时间为ExpireTime，同时需要注意保密，不要外泄给无关用户。
+  2. 该链接不支持小程序嵌入，仅支持<b>移动端浏览器</b>打开。
+  3. <font color="red">生成的链路后面不能再增加参数</font>（会出现覆盖链接中已有参数导致错误）
+     */
+    JumpUrl?: string;
+    /**
+     * 腾讯电子签小程序加入集团链接。
   
-  签名方式：
-  <ul>
-  <li>HANDWRITE-手写签名</li>
-  <li>ESIGN-个人印章类型</li>
-  <li>OCR_ESIGN-AI智能识别手写签名</li>
-  <li>SYSTEM_ESIGN-系统签名</li>
-  </ul>
+  <li>小程序和APP集成使用</li>
+  <li>得到的链接类似于`pages/guide?shortKey=yDw***k1xFc5`, 用法可以参考：<a href="https://qian.tencent.com/developers/company/openwxminiprogram" target="_blank">跳转电子签小程序</a></li>
+  
+  
+  注： <font color="red">生成的链路后面不能再增加参数</font>
      */
-    Values: Array<string>;
+    MiniAppPath?: string;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
 }
 /**
  * 抄送信息

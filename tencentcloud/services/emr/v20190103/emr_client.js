@@ -64,16 +64,22 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeImpalaQueries", req, cb);
     }
     /**
-     * 修改YARN资源调度的资源配置
+     * 获取资源调度中的队列信息
      */
-    async ModifyResourceScheduleConfig(req, cb) {
-        return this.request("ModifyResourceScheduleConfig", req, cb);
+    async DescribeYarnQueue(req, cb) {
+        return this.request("DescribeYarnQueue", req, cb);
     }
     /**
-     * 集群续费询价。
+     * 修改资源调度中队列信息
      */
-    async InquirePriceRenewEmr(req, cb) {
-        return this.request("InquirePriceRenewEmr", req, cb);
+    async ModifyYarnQueueV2(req, cb) {
+        return this.request("ModifyYarnQueueV2", req, cb);
+    }
+    /**
+     * yarn资源调度-部署生效
+     */
+    async DeployYarnConf(req, cb) {
+        return this.request("DeployYarnConf", req, cb);
     }
     /**
      * 查询EMR任务运行详情状态
@@ -118,22 +124,40 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeHBaseTableOverview", req, cb);
     }
     /**
+     * 查询服务进程信息
+     */
+    async DescribeServiceNodeInfos(req, cb) {
+        return this.request("DescribeServiceNodeInfos", req, cb);
+    }
+    /**
      * 查询集群实例信息
      */
     async DescribeInstances(req, cb) {
         return this.request("DescribeInstances", req, cb);
     }
     /**
-     * 创建流程作业
+     * 部署生效。已废弃，请使用`DeployYarnConf`接口进行部署生效
      */
-    async RunJobFlow(req, cb) {
-        return this.request("RunJobFlow", req, cb);
+    async ModifyYarnDeploy(req, cb) {
+        return this.request("ModifyYarnDeploy", req, cb);
+    }
+    /**
+     * 缩容Task节点
+     */
+    async TerminateTasks(req, cb) {
+        return this.request("TerminateTasks", req, cb);
     }
     /**
      * 销毁集群节点
      */
     async TerminateClusterNodes(req, cb) {
         return this.request("TerminateClusterNodes", req, cb);
+    }
+    /**
+     * 修改YARN资源调度的资源配置
+     */
+    async ResetYarnConfig(req, cb) {
+        return this.request("ResetYarnConfig", req, cb);
     }
     /**
      * 该接口支持安装了OpenLdap组件的集群。
@@ -149,11 +173,38 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DeleteUserManagerUserList", req, cb);
     }
     /**
+     * 本接口（TerminateSLInstance）用于销毁 Lite HBase 实例
+     */
+    async TerminateSLInstance(req, cb) {
+        return this.request("TerminateSLInstance", req, cb);
+    }
+    /**
      * 该接口支持安装了OpenLdap组件的集群。
 新增用户列表（用户管理）。
      */
     async AddUsersForUserManager(req, cb) {
         return this.request("AddUsersForUserManager", req, cb);
+    }
+    /**
+     * 前提：预付费集群
+资源级别开启或关闭自动续费
+     */
+    async ModifyAutoRenewFlag(req, cb) {
+        return this.request("ModifyAutoRenewFlag", req, cb);
+    }
+    /**
+     * 本接口（CreateSLInstance）用于创建 Lite HBase 实例
+- 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回创建实例的 InstaceId 和请求的 RequestID。
+- 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+     */
+    async CreateSLInstance(req, cb) {
+        return this.request("CreateSLInstance", req, cb);
+    }
+    /**
+     * 本接口（DescribeSLInstanceList）用于查询 Lite HBase 实例列表详细信息
+     */
+    async DescribeSLInstanceList(req, cb) {
+        return this.request("DescribeSLInstanceList", req, cb);
     }
     /**
      * 修改自动扩缩容规则
@@ -180,22 +231,36 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeInstanceRenewNodes", req, cb);
     }
     /**
-     * 修改了yarn的资源调度器，点击部署生效
+     * 用于启停服务 重启服务等功能
+     */
+    async StartStopServiceOrMonitor(req, cb) {
+        return this.request("StartStopServiceOrMonitor", req, cb);
+    }
+    /**
+     * 修改了yarn的资源调度器，点击部署生效。
      */
     async ModifyResourceScheduler(req, cb) {
         return this.request("ModifyResourceScheduler", req, cb);
     }
     /**
-     * EMR同步TKE中POD状态
+     * YARN资源调度-变更详情
      */
-    async SyncPodState(req, cb) {
-        return this.request("SyncPodState", req, cb);
+    async DescribeResourceScheduleDiffDetail(req, cb) {
+        return this.request("DescribeResourceScheduleDiffDetail", req, cb);
     }
     /**
-     * 用于启停服务 重启服务等功能
+     * 本接口（DescribeSLInstance）用于查询 Lite HBase 实例基本信息
      */
-    async StartStopServiceOrMonitor(req, cb) {
-        return this.request("StartStopServiceOrMonitor", req, cb);
+    async DescribeSLInstance(req, cb) {
+        return this.request("DescribeSLInstance", req, cb);
+    }
+    /**
+     * 本接口（ModifySLInstance）用于修改Lite HBase 实例节点数。
+- 接口调用成功，会创建Lite HBase实例，创建实例请求成功会返回请求的 RequestID。
+- 接口为异步接口，接口返回时操作并未立即完成，实例操作结果可以通过调用 DescribeInstancesList 查看当前实例的 StatusDesc 状态。
+     */
+    async ModifySLInstance(req, cb) {
+        return this.request("ModifySLInstance", req, cb);
     }
     /**
      * 创建EMR集群实例
@@ -216,6 +281,18 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("AddMetricScaleStrategy", req, cb);
     }
     /**
+     * 查看yarn资源调度的调度历史。废弃，请使用流程中心查看历史记录。
+     */
+    async DescribeYarnScheduleHistory(req, cb) {
+        return this.request("DescribeYarnScheduleHistory", req, cb);
+    }
+    /**
+     * 修改YARN资源调度的资源配置。已废弃，请使用`ModifyYarnQueueV2`来修改队列配置
+     */
+    async ModifyResourceScheduleConfig(req, cb) {
+        return this.request("ModifyResourceScheduleConfig", req, cb);
+    }
+    /**
      * 查询流程任务
      */
     async DescribeJobFlow(req, cb) {
@@ -234,10 +311,16 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeEmrOverviewMetrics", req, cb);
     }
     /**
-     * 缩容Task节点
+     * EMR同步TKE中POD状态
      */
-    async TerminateTasks(req, cb) {
-        return this.request("TerminateTasks", req, cb);
+    async SyncPodState(req, cb) {
+        return this.request("SyncPodState", req, cb);
+    }
+    /**
+     * 集群续费询价。
+     */
+    async InquirePriceRenewEmr(req, cb) {
+        return this.request("InquirePriceRenewEmr", req, cb);
     }
     /**
      * 销毁EMR实例。此接口仅支持弹性MapReduce正式计费版本。
@@ -252,7 +335,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeAutoScaleStrategies", req, cb);
     }
     /**
-     * 查询YARN资源调度数据信息
+     * 查询YARN资源调度数据信息。已废弃，请使用`DescribeYarnQueue`去查询队列信息。
      */
     async DescribeResourceSchedule(req, cb) {
         return this.request("DescribeResourceSchedule", req, cb);
@@ -270,13 +353,19 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeClusterNodes", req, cb);
     }
     /**
+     * 获取trino查询结果
+     */
+    async DescribeTrinoQueryInfo(req, cb) {
+        return this.request("DescribeTrinoQueryInfo", req, cb);
+    }
+    /**
      * 查询集群列表
      */
     async DescribeInstancesList(req, cb) {
         return this.request("DescribeInstancesList", req, cb);
     }
     /**
-     * 刷新YARN的动态资源池
+     * 刷新YARN的动态资源池。已废弃，请使用`DeployYarnConf`
      */
     async ModifyResourcePools(req, cb) {
         return this.request("ModifyResourcePools", req, cb);
@@ -292,6 +381,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async ScaleOutCluster(req, cb) {
         return this.request("ScaleOutCluster", req, cb);
+    }
+    /**
+     * 创建流程作业
+     */
+    async RunJobFlow(req, cb) {
+        return this.request("RunJobFlow", req, cb);
     }
 }
 exports.Client = Client;

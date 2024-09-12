@@ -46,6 +46,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeHostCdnInstanceList", req, cb);
     }
     /**
+     * 检查证书域名验证
+     */
+    async CheckCertificateDomainVerification(req, cb) {
+        return this.request("CheckCertificateDomainVerification", req, cb);
+    }
+    /**
      * 查询证书tke云资源部署实例列表
      */
     async DescribeHostTkeInstanceList(req, cb) {
@@ -370,7 +376,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeManagers", req, cb);
     }
     /**
-     * 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+     * 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
      */
     async DescribeCertificateBindResourceTaskDetail(req, cb) {
         return this.request("DescribeCertificateBindResourceTaskDetail", req, cb);

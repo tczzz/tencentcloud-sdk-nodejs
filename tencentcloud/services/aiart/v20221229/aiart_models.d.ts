@@ -17,15 +17,15 @@ export interface SubmitDrawPortraitJobResponse {
  */
 export interface LogoParam {
     /**
-     * 水印url
+     * 水印 Url
      */
     LogoUrl?: string;
     /**
-     * 水印base64，url和base64二选一传入
+     * 水印 Base64，Url 和 Base64 二选一传入，如果都提供以 Url 为准
      */
     LogoImage?: string;
     /**
-     * 水印图片位于融合结果图中的坐标，将按照坐标对标识图片进行位置和大小的拉伸匹配
+     * 水印图片位于生成结果图中的坐标，将按照坐标对标识图片进行位置和大小的拉伸匹配
      */
     LogoRect?: LogoRect;
 }
@@ -36,15 +36,15 @@ export interface ImageToImageRequest {
     /**
      * 输入图 Base64 数据。
   算法将根据输入的图片，结合文本描述智能生成与之相关的图像。
-  Base64 和 Url 必须提供一个，如果都提供以 Base64 为准。
-  图片限制：单边分辨率小于5000且大于50，转成 Base64 字符串后小于 8MB。
+  Base64 和 Url 必须提供一个，如果都提供以 Url 为准。
+  图片限制：单边分辨率小于5000且大于50，转成 Base64 字符串后小于 8MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
      */
     InputImage?: string;
     /**
      * 输入图 Url。
   算法将根据输入的图片，结合文本描述智能生成与之相关的图像。
-  Base64 和 Url 必须提供一个，如果都提供以 Base64 为准。
-  图片限制：单边分辨率小于5000且大于50，转成 Base64 字符串后小于8MB。
+  Base64 和 Url 必须提供一个，如果都提供以 Url 为准。
+  图片限制：单边分辨率小于5000且大于50，转成 Base64 字符串后小于 8MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
      */
     InputUrl?: string;
     /**
@@ -94,6 +94,18 @@ export interface ImageToImageRequest {
      * 返回图像方式（base64 或 url) ，二选一，默认为 base64。url 有效期为1小时。
      */
     RspImgType?: string;
+    /**
+     * 画质增强开关，默认关闭。
+  1：开启
+  0：关闭
+  开启后将增强图像的画质清晰度，生成耗时有所增加。
+     */
+    EnhanceImage?: number;
+    /**
+     * 细节优化的面部数量上限，支持0 ~ 6，默认为0。
+  若上传大于0的值，将以此为上限对每张图片中面积占比较小的面部进行细节修复，生成耗时根据实际优化的面部个数有所增加。
+     */
+    RestoreFace?: number;
 }
 /**
  * QueryTextToImageProJob返回参数结构体
@@ -185,9 +197,7 @@ export interface ResultConfig {
     /**
      * 生成图分辨率
   
-  智能文生图支持生成以下分辨率的图片：768:768（1:1）、768:1024（3:4）、1024:768（4:3）、1024:1024（1:1）、720:1280（9:16）、1280:720（16:9）、768:1280（3:5）、1280:768（5:3）、1080:1920（9:16）、1920:1080（16:9），不传默认使用768:768。
-  
-  智能图生图支持生成以下分辨率的图片：origin（与输入图分辨率一致，长边最高为2000，超出将做等比例缩小）、768:768（1:1）、768:1024（3:4）、1024:768（4:3），不传默认使用origin，如果指定生成的长宽比与输入图长宽比差异过大可能导致图片内容被裁剪。
+  图像风格化（图生图）支持生成以下分辨率的图片：origin（与输入图分辨率一致，长边最高为2000，超出将做等比例缩小）、768:768（1:1）、768:1024（3:4）、1024:768（4:3），不传默认使用origin，如果指定生成的长宽比与输入图长宽比差异过大可能导致图片内容被裁剪。
      */
     Resolution?: string;
 }
@@ -211,17 +221,22 @@ export interface ReplaceBackgroundRequest {
      */
     ProductUrl: string;
     /**
+     * 对新背景的文本描述。
+  最多支持256个 utf-8 字符，支持中、英文。
+     */
+    Prompt: string;
+    /**
+     * 商品图中的商品主体名称。
+  建议说明商品主体，否则影响生成效果。
+     */
+    Product?: string;
+    /**
      * 商品 Mask 图 Url，要求背景透明，保留商品主体。
   如果不传，将自动使用内置的商品分割算法得到 Mask。
   支持自定义上传 Mask，如果该参数不为空，则以实际上传的数据为准。
   图片限制：Mask 图必须和商品原图分辨率一致，转成 Base64 字符串后小于 6MB，格式仅支持 png。
      */
     MaskUrl?: string;
-    /**
-     * 对新背景的文本描述。
-  最多支持256个 utf-8 字符，支持中、英文。
-     */
-    Prompt?: string;
     /**
      * 替换背景后生成的商品图分辨率。
   支持生成单边分辨率大于500且小于4000、长宽比在2:5 ~ 5:2之间的图片，不传默认生成1280:1280。
@@ -392,6 +407,46 @@ export interface SubmitTrainPortraitModelJobRequest {
     ModelId: string;
 }
 /**
+ * SketchToImage请求参数结构体
+ */
+export interface SketchToImageRequest {
+    /**
+     * 用于线稿生图的文本描述。
+  最多支持200个 utf-8 字符。
+  建议格式：线稿中的主体对象+画面场景+配色/材质/元素/风格等
+     */
+    Prompt: string;
+    /**
+     * 线稿图 Base64 数据。
+  Base64 和 Url 必须提供一个，如果都提供以Url 为准。
+  图片限制：黑白线稿图片，单边分辨率小于5000且大于512（分辨率过小会导致效果受损），转成 Base64 字符串后小于 6MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
+     */
+    InputImage?: string;
+    /**
+     * 线稿图 Url。
+  Base64 和 Url 必须提供一个，如果都提供以Url 为准。
+  图片限制：黑白线稿图片，单边分辨率小于5000且大于512（分辨率过小会导致效果受损），转成 Base64 字符串后小于 6MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
+     */
+    InputUrl?: string;
+    /**
+     * 为生成结果图添加标识的开关，默认为1。
+  1：添加标识。
+  0：不添加标识。
+  其他数值：默认按1处理。
+  建议您使用显著标识来提示结果图使用了 AI 绘画技术，是 AI 生成的图片。
+     */
+    LogoAdd?: number;
+    /**
+     * 标识内容设置。
+  默认在生成结果图右下角添加“图片由 AI 生成”字样，您可根据自身需要替换为其他的标识图片。
+     */
+    LogoParam?: LogoParam;
+    /**
+     * 返回图像方式（base64 或 url) ，二选一，默认为 base64。url 有效期为1小时。生成图分辨率较大时建议选择 url，使用 base64 可能因图片过大导致返回失败。
+     */
+    RspImgType?: string;
+}
+/**
  * TextToImage请求参数结构体
  */
 export interface TextToImageRequest {
@@ -449,15 +504,13 @@ export interface GenerateAvatarRequest {
     Style: string;
     /**
      * 输入图 Base64 数据。
-  算法将根据输入的图片，结合文本描述智能生成与之相关的图像。
-  Base64 和 Url 必须提供一个，如果都提供以 Base64 为准。
+  Base64 和 Url 必须提供一个，如果都提供以 Url 为准。
   图片限制：单边分辨率小于5000，转成 Base64 字符串后小于 6MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
      */
     InputImage?: string;
     /**
      * 输入图 Url。
-  算法将根据输入的图片，结合文本描述智能生成与之相关的图像。
-  Base64 和 Url 必须提供一个，如果都提供以 Base64 为准。
+  Base64 和 Url 必须提供一个，如果都提供以 Url 为准。
   图片限制：单边分辨率小于5000，转成 Base64 字符串后小于 6MB，格式支持 jpg、jpeg、png、bmp、tiff、webp。
      */
     InputUrl?: string;
@@ -573,6 +626,21 @@ export interface ImageToImageResponse {
     RequestId?: string;
 }
 /**
+ * SketchToImage返回参数结构体
+ */
+export interface SketchToImageResponse {
+    /**
+     * 根据入参 RspImgType 填入不同，返回不同的内容。
+  如果传入 base64 则返回生成图 Base64 编码。
+  如果传入 url 则返回的生成图 URL , 有效期1小时，请及时保存。
+     */
+    ResultImage?: string;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
  * ChangeClothes请求参数结构体
  */
 export interface ChangeClothesRequest {
@@ -609,6 +677,11 @@ export interface ChangeClothesRequest {
   建议您使用显著标识来提示结果图使用了 AI 绘画技术，是 AI 生成的图片。
      */
     LogoAdd?: number;
+    /**
+     * 标识内容设置。
+  默认在生成结果图右下角添加“图片由 AI 生成”字样，您可根据自身需要替换为其他的标识图片。
+     */
+    LogoParam?: LogoParam;
     /**
      * 返回图像方式（base64 或 url) ，二选一，默认为 base64。url 有效期为1小时。
   生成图分辨率较大时建议选择 url，使用 base64 可能因图片过大导致返回失败。

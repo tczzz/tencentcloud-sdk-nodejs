@@ -27,6 +27,7 @@ import {
   DescribeDBParametersRequest,
   DescribeAccountsRequest,
   DescribeRenewalPriceResponse,
+  ModifyBackupConfigsRequest,
   ModifyInstanceNetworkResponse,
   CreateDedicatedClusterDBInstanceResponse,
   ModifyInstanceVportResponse,
@@ -34,7 +35,7 @@ import {
   ModifyInstanceVipResponse,
   AssociateSecurityGroupsRequest,
   DescribeUpgradePriceRequest,
-  TerminateDedicatedDBInstanceResponse,
+  NewBackupConfig,
   FlushBinlogResponse,
   UpgradeHourDBInstanceResponse,
   DescribeDBSecurityGroupsResponse,
@@ -74,7 +75,7 @@ import {
   CopyAccountPrivilegesResponse,
   DCNReplicaStatus,
   CloneAccountRequest,
-  DescribeDatabaseObjectsRequest,
+  DescribePriceRequest,
   SlowLogData,
   ParamModifyResult,
   DescribeDBInstancesRequest,
@@ -90,12 +91,13 @@ import {
   ViewPrivileges,
   ResetAccountPasswordResponse,
   DescribeDBInstanceDetailResponse,
-  DescribePriceRequest,
+  DescribeDatabaseObjectsRequest,
   CreateDBInstanceResponse,
   ModifyRealServerAccessStrategyRequest,
   ZonesInfo,
   DescribeBackupTimeRequest,
   DescribeSaleInfoResponse,
+  TerminateDedicatedDBInstanceResponse,
   ModifyDBEncryptAttributesResponse,
   DescribeDBEncryptAttributesResponse,
   UpgradeDedicatedDBInstanceRequest,
@@ -105,12 +107,14 @@ import {
   DescribeDBEncryptAttributesRequest,
   Deal,
   GrantAccountPrivilegesRequest,
+  DescribeBinlogTimeRequest,
   CreateDedicatedClusterDBInstanceRequest,
   SwitchDBInstanceHARequest,
   DBParamValue,
   SpecConfigInfo,
   TmpInstance,
   ModifyDBParametersRequest,
+  DescribeBackupConfigsRequest,
   ModifyDBInstanceSecurityGroupsRequest,
   DescribeDcnDetailRequest,
   DescribeFileDownloadUrlResponse,
@@ -124,6 +128,8 @@ import {
   DescribeDatabaseObjectsResponse,
   ModifyDBInstanceNameRequest,
   DeleteAccountRequest,
+  DescribeBinlogTimeResponse,
+  DescribeBackupConfigsResponse,
   UpgradeHourDBInstanceRequest,
   TableColumn,
   CreateTmpInstancesResponse,
@@ -137,6 +143,7 @@ import {
   DescribePriceResponse,
   InitDBInstancesRequest,
   ModifyAccountPrivilegesResponse,
+  BackupConfig,
   ModifyBackupTimeResponse,
   Database,
   GrantAccountPrivilegesResponse,
@@ -166,6 +173,7 @@ import {
   DescribeFlowRequest,
   DCNReplicaConfig,
   ModifyAccountPrivilegesRequest,
+  ModifyBackupConfigsResponse,
   DatabaseProcedure,
   DescribeDBTmpInstancesResponse,
   ModifyDBSyncModeRequest,
@@ -274,6 +282,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: ModifyBackupTimeResponse) => void
   ): Promise<ModifyBackupTimeResponse> {
     return this.request("ModifyBackupTime", req, cb)
+  }
+
+  /**
+   * 本接口（ModifyInstanceVport）用于修改实例VPORT
+   */
+  async ModifyInstanceVport(
+    req: ModifyInstanceVportRequest,
+    cb?: (error: string, rep: ModifyInstanceVportResponse) => void
+  ): Promise<ModifyInstanceVportResponse> {
+    return this.request("ModifyInstanceVport", req, cb)
   }
 
   /**
@@ -645,6 +663,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口(UpgradeDedicatedDBInstance)用于扩容独享云数据库实例。
+   */
+  async UpgradeDedicatedDBInstance(
+    req: UpgradeDedicatedDBInstanceRequest,
+    cb?: (error: string, rep: UpgradeDedicatedDBInstanceResponse) => void
+  ): Promise<UpgradeDedicatedDBInstanceResponse> {
+    return this.request("UpgradeDedicatedDBInstance", req, cb)
+  }
+
+  /**
    * 本接口（CreateDBInstance）用于创建包年包月的MariaDB云数据库实例，可通过传入实例规格、数据库版本号、购买时长和数量等信息创建云数据库实例。
    */
   async CreateDBInstance(
@@ -822,23 +850,23 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（ModifyInstanceVport）用于修改实例VPORT
+   * 本接口（DescribeBinlogTime）用于查询可回档时间范围。
    */
-  async ModifyInstanceVport(
-    req: ModifyInstanceVportRequest,
-    cb?: (error: string, rep: ModifyInstanceVportResponse) => void
-  ): Promise<ModifyInstanceVportResponse> {
-    return this.request("ModifyInstanceVport", req, cb)
+  async DescribeBinlogTime(
+    req: DescribeBinlogTimeRequest,
+    cb?: (error: string, rep: DescribeBinlogTimeResponse) => void
+  ): Promise<DescribeBinlogTimeResponse> {
+    return this.request("DescribeBinlogTime", req, cb)
   }
 
   /**
-   * 本接口(UpgradeDedicatedDBInstance)用于扩容独享云数据库实例。
+   * 本接口（TerminateDedicatedDBInstance）用于销毁已隔离的独享云数据库实例。
    */
-  async UpgradeDedicatedDBInstance(
-    req: UpgradeDedicatedDBInstanceRequest,
-    cb?: (error: string, rep: UpgradeDedicatedDBInstanceResponse) => void
-  ): Promise<UpgradeDedicatedDBInstanceResponse> {
-    return this.request("UpgradeDedicatedDBInstance", req, cb)
+  async TerminateDedicatedDBInstance(
+    req: TerminateDedicatedDBInstanceRequest,
+    cb?: (error: string, rep: TerminateDedicatedDBInstanceResponse) => void
+  ): Promise<TerminateDedicatedDBInstanceResponse> {
+    return this.request("TerminateDedicatedDBInstance", req, cb)
   }
 
   /**
@@ -882,13 +910,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（TerminateDedicatedDBInstance）用于销毁已隔离的独享云数据库实例。
+   * 本接口(DescribeBackupConfigs)用于查询数据库备份配置信息。
    */
-  async TerminateDedicatedDBInstance(
-    req: TerminateDedicatedDBInstanceRequest,
-    cb?: (error: string, rep: TerminateDedicatedDBInstanceResponse) => void
-  ): Promise<TerminateDedicatedDBInstanceResponse> {
-    return this.request("TerminateDedicatedDBInstance", req, cb)
+  async DescribeBackupConfigs(
+    req: DescribeBackupConfigsRequest,
+    cb?: (error: string, rep: DescribeBackupConfigsResponse) => void
+  ): Promise<DescribeBackupConfigsResponse> {
+    return this.request("DescribeBackupConfigs", req, cb)
   }
 
   /**
@@ -909,6 +937,18 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: UpgradeDBInstanceResponse) => void
   ): Promise<UpgradeDBInstanceResponse> {
     return this.request("UpgradeDBInstance", req, cb)
+  }
+
+  /**
+     * 本接口(ModifyBackupConfigs)用于修改数据库备份配置信息。
+
+1. 修改数据库超期备份配置，目前按年、按月、按日只支持一种，存在互斥关系，如当前策略按年备份，如果传入按月备份策略将会覆盖当前的按年备份策略，务必注意。
+     */
+  async ModifyBackupConfigs(
+    req: ModifyBackupConfigsRequest,
+    cb?: (error: string, rep: ModifyBackupConfigsResponse) => void
+  ): Promise<ModifyBackupConfigsResponse> {
+    return this.request("ModifyBackupConfigs", req, cb)
   }
 
   /**

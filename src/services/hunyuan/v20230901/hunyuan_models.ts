@@ -20,7 +20,7 @@
  */
 export interface ChatCompletionsRequest {
   /**
-   * 模型名称，可选值包括 hunyuan-lite、hunyuan-standard、hunyuan-standard-256K、hunyuan-pro、 hunyuan-code、 hunyuan-role、 hunyuan-functioncall、 hunyuan-vision。
+   * 模型名称，可选值包括 hunyuan-lite、hunyuan-standard、hunyuan-standard-256K、hunyuan-pro、 hunyuan-code、 hunyuan-role、 hunyuan-functioncall、 hunyuan-vision、 hunyuan-turbo。
 各模型介绍请阅读 [产品概述](https://cloud.tencent.com/document/product/1729/104753) 中的说明。
 
 注意：
@@ -64,16 +64,14 @@ export interface ChatCompletionsRequest {
   StreamModeration?: boolean
   /**
    * 说明：
-1. 影响输出文本的多样性，取值越大，生成文本的多样性越强。
-2. 取值区间为 [0.0, 1.0]，未传值时使用各模型推荐值。
-3. 非必要不建议使用，不合理的取值会影响效果。
+1. 影响输出文本的多样性。模型已有默认参数，不传值时使用各模型推荐值，不推荐用户修改。
+2. 取值区间为 [0.0, 1.0]。取值越大，生成文本的多样性越强。
    */
   TopP?: number
   /**
    * 说明：
-1. 较高的数值会使输出更加随机，而较低的数值会使其更加集中和确定。
-2. 取值区间为 [0.0, 2.0]，未传值时使用各模型推荐值。
-3. 非必要不建议使用，不合理的取值会影响效果。
+1. 影响模型输出多样性，模型已有默认参数，不传值时使用各模型推荐值，不推荐用户修改。
+2. 取值区间为 [0.0, 2.0]。较高的数值会使输出更加多样化和不可预测，而较低的数值会使其更加集中和确定。
    */
   Temperature?: number
   /**
@@ -105,6 +103,36 @@ export interface ChatCompletionsRequest {
    * 默认是false，在值为true且命中搜索时，接口会返回SearchInfo
    */
   SearchInfo?: boolean
+  /**
+   * 搜索引文角标开关。
+说明：
+1. 配合EnableEnhancement和SearchInfo参数使用。打开后，回答中命中搜索的结果会在片段后增加角标标志，对应SearchInfo列表中的链接。
+2. false：开关关闭，true：开关打开。
+3. 未传值时默认开关关闭（false）。
+   */
+  Citation?: boolean
+  /**
+   * 是否开启极速版搜索，默认false，不开启；在开启且命中搜索时，会启用极速版搜索，流式输出首字返回更快。
+   */
+  EnableSpeedSearch?: boolean
+}
+
+/**
+ * logo参数
+ */
+export interface LogoParam {
+  /**
+   * 水印url
+   */
+  LogoUrl?: string
+  /**
+   * 水印base64，url和base64二选一传入
+   */
+  LogoImage?: string
+  /**
+   * 水印图片位于融合结果图中的坐标，将按照坐标对标识图片进行位置和大小的拉伸匹配
+   */
+  LogoRect?: LogoRect
 }
 
 /**
@@ -129,6 +157,16 @@ export interface ImageUrl {
 }
 
 /**
+ * ActivateService请求参数结构体
+ */
+export interface ActivateServiceRequest {
+  /**
+   * 开通之后，是否关闭后付费；默认为0，不关闭；1为关闭
+   */
+  PayMode?: number
+}
+
+/**
  * 可以传入多种类型的内容，如图片或文本。当前只支持传入单张图片，传入多张图片时，以第一个图片为准。
  */
 export interface Content {
@@ -145,7 +183,8 @@ export interface Content {
    */
   Text?: string
   /**
-   * 当 Type 为 image_url 时使用，表示具体的图片内容
+   * 图片的url，当 Type 为 image_url 时使用，表示具体的图片内容
+如"https://example.com/1.png" 或 图片的base64（注意 "data:image/jpeg;base64," 为必要部分）："data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAA......"
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ImageUrl?: ImageUrl
@@ -173,6 +212,24 @@ export interface SubmitHunyuanImageJobRequest {
    */
   Resolution?: string
   /**
+   * 图片生成数量。
+支持1 ~ 4张，默认生成1张。
+   */
+  Num?: number
+  /**
+   * 随机种子，默认随机。
+不传：随机种子生成。
+正数：固定种子生成。
+   */
+  Seed?: number
+  /**
+   * prompt 扩写开关。1为开启，0为关闭，不传默认开启。
+开启扩写后，将自动扩写原始输入的 prompt 并使用扩写后的 prompt 生成图片，返回生成图片结果时将一并返回扩写后的 prompt 文本。
+如果关闭扩写，将直接使用原始输入的 prompt 生成图片。
+建议开启，在多数场景下可提升生成图片效果、丰富生成图片细节。
+   */
+  Revise?: number
+  /**
    * 为生成结果图添加显式水印标识的开关，默认为1。  
 1：添加。  
 0：不添加。  
@@ -181,12 +238,10 @@ export interface SubmitHunyuanImageJobRequest {
    */
   LogoAdd?: number
   /**
-   * prompt 扩写开关。1为开启，0为关闭，不传默认开启。
-开启扩写后，将自动扩写原始输入的 prompt 并使用扩写后的 prompt 生成图片，返回生成图片结果时将一并返回扩写后的 prompt 文本。
-如果关闭扩写，将直接使用原始输入的 prompt 生成图片。
-建议开启，在多数场景下可提升生成图片效果、丰富生成图片细节。
+   * 标识内容设置。
+默认在生成结果图右下角添加“图片由 AI 生成”字样，您可根据自身需要替换为其他的标识图片。
    */
-  Revise?: number
+  LogoParam?: LogoParam
 }
 
 /**
@@ -205,6 +260,65 @@ export interface Usage {
    * 总 Token 数量。
    */
   TotalTokens?: number
+}
+
+/**
+ * SubmitHunyuanImageChatJob返回参数结构体
+ */
+export interface SubmitHunyuanImageChatJobResponse {
+  /**
+   * 任务 ID。
+   */
+  JobId?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * QueryHunyuanImageChatJob请求参数结构体
+ */
+export interface QueryHunyuanImageChatJobRequest {
+  /**
+   * 任务 ID。
+   */
+  JobId?: string
+}
+
+/**
+ * SubmitHunyuanImageChatJob请求参数结构体
+ */
+export interface SubmitHunyuanImageChatJobRequest {
+  /**
+   * 本轮对话的文本描述。
+提交一个任务请求对应发起一轮生图对话，每轮对话中可输入一条 Prompt，生成一张图像，支持通过多轮输入 Prompt 来不断调整图像内容。
+推荐使用中文，最多可传1024个 utf-8 字符。
+输入示例：
+<li> 第一轮对话：一颗红色的苹果 </li>
+<li> 第二轮对话：将苹果改为绿色 </li>
+<li> 第三轮对话：苹果放在桌子上 </li>
+   */
+  Prompt: string
+  /**
+   * 上传上一轮对话的 ChatId，本轮对话将在指定的上一轮对话结果基础上继续生成图像。
+如果不传代表新建一个对话组，重新开启一轮新的对话。
+一个对话组中，最多支持进行100轮对话。
+   */
+  ChatId?: string
+  /**
+   * 为生成结果图添加显式水印标识的开关，默认为1。  
+1：添加。  
+0：不添加。  
+其他数值：默认按1处理。  
+建议您使用显著标识来提示结果图使用了 AI 绘画技术，是 AI 生成的图片。
+   */
+  LogoAdd?: number
+  /**
+   * 标识内容设置。
+默认在生成结果图右下角添加“图片由 AI 生成”字样，您可根据自身需要替换为其他的标识图片。
+   */
+  LogoParam?: LogoParam
 }
 
 /**
@@ -257,8 +371,10 @@ export interface SearchResult {
  */
 export interface Choice {
   /**
-   * 结束标志位，可能为 stop 或 sensitive。
-stop 表示输出正常结束，sensitive 只在开启流式输出审核时会出现，表示安全审核未通过。
+   * 结束标志位，可能为 stop、 sensitive或者tool_calls。
+stop 表示输出正常结束。
+sensitive 只在开启流式输出审核时会出现，表示安全审核未通过。
+tool_calls 标识函数调用。
    */
   FinishReason?: string
   /**
@@ -289,6 +405,55 @@ export interface GetTokenCountResponse {
    * 切分后的列表
    */
   Tokens?: Array<string>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * QueryHunyuanImageChatJob返回参数结构体
+ */
+export interface QueryHunyuanImageChatJobResponse {
+  /**
+   * 当前任务状态码：
+1：等待中、2：运行中、4：处理失败、5：处理完成。
+   */
+  JobStatusCode?: string
+  /**
+   * 当前任务状态：排队中、处理中、处理失败或者处理完成。
+
+   */
+  JobStatusMsg?: string
+  /**
+   * 任务处理失败错误码。
+
+   */
+  JobErrorCode?: string
+  /**
+   * 任务处理失败错误信息。
+
+   */
+  JobErrorMsg?: string
+  /**
+   * 本轮对话的 ChatId，ChatId 用于唯一标识一轮对话。
+一个对话组中，最多支持进行100轮对话。
+每轮对话数据有效期为7天，到期后 ChatId 失效，有效期内的历史对话数据可通过 History 查询，如有长期使用需求请及时保存输入输出数据。
+   */
+  ChatId?: string
+  /**
+   * 生成图 URL 列表，有效期7天，请及时保存。
+   */
+  ResultImage?: Array<string>
+  /**
+   * 结果 detail 数组，Success 代表成功。
+
+   */
+  ResultDetails?: Array<string>
+  /**
+   * 本轮对话前置的历史对话数据（不含生成图）。
+   */
+  History?: Array<History>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -335,15 +500,31 @@ export interface ToolFunction {
 }
 
 /**
- * TextToImageLite返回参数结构体
+ * 返回的内容（流式返回）
  */
-export interface TextToImageLiteResponse {
+export interface Delta {
   /**
-   * 根据入参 RspImgType 填入不同，返回不同的内容。
-如果传入 base64 则返回生成图 Base64 编码。
-如果传入 url 则返回的生成图 URL , 有效期1小时，请及时保存。
+   * 角色名称。
    */
-  ResultImage?: string
+  Role?: string
+  /**
+   * 内容详情。
+   */
+  Content?: string
+  /**
+   * 模型生成的工具调用，仅 hunyuan-functioncall 模型支持
+说明：
+对于每一次的输出值应该以Id为标识对Type、Name、Arguments字段进行合并。
+
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ToolCalls?: Array<ToolCall>
+}
+
+/**
+ * SetPayMode返回参数结构体
+ */
+export interface SetPayModeResponse {
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -383,25 +564,35 @@ export interface ToolCallFunction {
 }
 
 /**
- * 返回的内容（流式返回）
+ * SetPayMode请求参数结构体
  */
-export interface Delta {
+export interface SetPayModeRequest {
   /**
-   * 角色名称。
+   * 设置后付费状态，0：后付费；1：预付费
    */
-  Role?: string
-  /**
-   * 内容详情。
-   */
-  Content?: string
-  /**
-   * 模型生成的工具调用，仅 hunyuan-functioncall 模型支持
-说明：
-对于每一次的输出值应该以Id为标识对Type、Name、Arguments字段进行合并。
+  PayMode: number
+}
 
-注意：此字段可能返回 null，表示取不到有效值。
+/**
+ * 输入框
+ */
+export interface LogoRect {
+  /**
+   * 左上角X坐标
    */
-  ToolCalls?: Array<ToolCall>
+  X?: number
+  /**
+   * 左上角Y坐标
+   */
+  Y?: number
+  /**
+   * 方框宽度
+   */
+  Width?: number
+  /**
+   * 方框高度
+   */
+  Height?: number
 }
 
 /**
@@ -439,6 +630,11 @@ export interface TextToImageLiteRequest {
    */
   LogoAdd?: number
   /**
+   * 标识内容设置。
+默认在生成结果图右下角添加“图片由 AI 生成”字样，您可根据自身需要替换为其他的标识图片。
+   */
+  LogoParam?: LogoParam
+  /**
    * 返回图像方式（base64 或 url) ，二选一，默认为 base64。url 有效期为1小时。
    */
   RspImgType?: string
@@ -452,6 +648,16 @@ export interface SubmitHunyuanImageJobResponse {
    * 任务 ID。
    */
   JobId?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * ActivateService返回参数结构体
+ */
+export interface ActivateServiceResponse {
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -500,6 +706,32 @@ export interface QueryHunyuanImageJobResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 混元生图多轮对话历史记录。
+ */
+export interface History {
+  /**
+   * 对话的 ID，用于唯一标识一轮对话
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ChatId?: string
+  /**
+   * 原始输入的 Prompt 文本
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Prompt?: string
+  /**
+   * 扩写后的 Prompt 文本
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RevisedPrompt?: string
+  /**
+   * 生成图的随机种子
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Seed?: number
 }
 
 /**
@@ -559,6 +791,22 @@ export interface GetTokenCountRequest {
 }
 
 /**
+ * TextToImageLite返回参数结构体
+ */
+export interface TextToImageLiteResponse {
+  /**
+   * 根据入参 RspImgType 填入不同，返回不同的内容。
+如果传入 base64 则返回生成图 Base64 编码。
+如果传入 url 则返回的生成图 URL , 有效期1小时，请及时保存。
+   */
+  ResultImage?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * 会话内容
  */
 export interface Message {
@@ -581,7 +829,7 @@ export interface Message {
    */
   ToolCallId?: string
   /**
-   * 模型生成的工具调用，仅 hunyuan-functioncall 模型支持
+   * 模型生成的工具调用，仅 hunyuan-pro 或者 hunyuan-functioncall 模型支持
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ToolCalls?: Array<ToolCall>
@@ -605,7 +853,7 @@ export interface ChatCompletionsResponse {
    */
   Note?: string
   /**
-   * 本轮对话的 ID。
+   * 本次请求的 RequestId。
    */
   Id?: string
   /**

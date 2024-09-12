@@ -243,11 +243,11 @@ export interface LayerVersionInfo {
     /**
      * 版本号
      */
-    LayerVersion: number;
+    LayerVersion?: number;
     /**
      * 层名称
      */
-    LayerName: string;
+    LayerName?: string;
     /**
      * 层的具体版本当前状态，状态值[参考此处](https://cloud.tencent.com/document/product/583/47175#.E5.B1.82.EF.BC.88layer.EF.BC.89.E7.8A.B6.E6.80.81)
      */
@@ -257,6 +257,11 @@ export interface LayerVersionInfo {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     Stamp?: string;
+    /**
+     * 返回层绑定的标签信息
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Tags?: Array<Tag>;
 }
 /**
  * PutProvisionedConcurrencyConfig返回参数结构体
@@ -1309,7 +1314,7 @@ export interface CreateTriggerRequest {
      */
     TriggerName: string;
     /**
-     * 触发器类型，目前支持 cos 、cmq、 timer、 ckafka、apigw类型。创建函数 URL 请在此填写 http，请参考[创建函数 URL ](https://cloud.tencent.com/document/product/583/100227#33bbbda4-9131-48a6-ac37-ac62ffe01424)。创建 cls 触发器请参考[CLS 创建投递 SCF 任务](https://cloud.tencent.com/document/product/614/61096)。
+     * 触发器类型，目前支持 cos 、cls 、 timer、 ckafka、http类型。创建函数 URL 请使用 http 类型，参考[创建函数 URL ](https://cloud.tencent.com/document/product/583/100227#33bbbda4-9131-48a6-ac37-ac62ffe01424)。创建 cls 触发器请参考[CLS 创建投递 SCF 任务](https://cloud.tencent.com/document/product/614/61096)。
      */
     Type: string;
     /**
@@ -1321,7 +1326,7 @@ export interface CreateTriggerRequest {
      */
     Namespace?: string;
     /**
-     * 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
+     * 触发器所生效的版本或别名，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布，默认为 $LATEST。
      */
     Qualifier?: string;
     /**
@@ -2066,6 +2071,10 @@ export interface PublishLayerVersionRequest {
      * 层的软件许可证
      */
     LicenseInfo?: string;
+    /**
+     * 层Tag 参数，以键值对数组形式传入
+     */
+    Tags?: Array<Tag>;
 }
 /**
  * CreateNamespace请求参数结构体
@@ -2767,15 +2776,15 @@ export interface UpdateTriggerStatusRequest {
      */
     TriggerName: string;
     /**
-     * 触发器类型
+     * 触发器类型，触发器类型，目前只支持 timer、 cos  、 ckafka三种类型
      */
     Type: string;
     /**
-     * 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
+     * 触发器在创建时所指向的触发别名或版本，默认值为$LATEST
      */
     Qualifier?: string;
     /**
-     * 函数的命名空间
+     * 函数所在的命名空间，默认值为default
      */
     Namespace?: string;
     /**
@@ -3343,10 +3352,12 @@ export interface ImageConfig {
      */
     ContainerImageAccelerate?: boolean;
     /**
-     * 镜像函数端口设置
-  默认值: 9000
-  -1: 无端口镜像函数
-  其他: 取值范围 0 ~ 65535
+     * 镜像函数端口设置，可指定镜像类型
+  Web Server镜像：9000
+  Job 镜像：-1
+  注意：此字段可能返回 null，表示取不到有效值。
+  默认值：9000
+  示例值：9000
   注意：此字段可能返回 null，表示取不到有效值。
      */
     ImagePort?: number;
@@ -3386,7 +3397,7 @@ export interface DeleteTriggerRequest {
      */
     TriggerName: string;
     /**
-     * 要删除的触发器类型，目前支持 cos 、cmq、 timer、ckafka 类型
+     * 要删除的触发器类型，目前只支持  timer、ckafka 、apigw 、cls 、cos 、cmq 、http 类型
      */
     Type: string;
     /**
@@ -3398,8 +3409,7 @@ export interface DeleteTriggerRequest {
      */
     TriggerDesc?: string;
     /**
-     * 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
-  如果删除的触发器类型为 APIGW 触发器,该字段为必填参数
+     * 要删除的触发器实际所指向的版本或别名，默认值为 $LATEST
      */
     Qualifier?: string;
 }
@@ -3513,7 +3523,7 @@ export interface UpdateTriggerRequest {
      */
     TriggerName: string;
     /**
-     * 触发器类型
+     * 触发器类型，目前只支持timer、ckafka、http三种类型
      */
     Type: string;
     /**
@@ -3521,11 +3531,11 @@ export interface UpdateTriggerRequest {
      */
     Enable?: string;
     /**
-     * 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
+     * 触发器创建时所指向的函数版本或别名，默认为 $LATEST
      */
     Qualifier?: string;
     /**
-     * 函数的命名空间
+     * 函数的命名空间，默认值为default
      */
     Namespace?: string;
     /**

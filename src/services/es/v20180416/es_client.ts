@@ -33,9 +33,10 @@ import {
   CreateInstanceResponse,
   DescribeInstanceLogsRequest,
   DeleteLogstashPipelinesResponse,
+  DescribeSpaceKibanaToolsRequest,
   TagInfo,
   KeyValue,
-  UpdateDiagnoseSettingsResponse,
+  MetricMapByIndexId,
   UpdateLogstashPipelineDescResponse,
   DescribeInstancesResponse,
   DescribeInstanceLogsResponse,
@@ -46,7 +47,7 @@ import {
   LogstashBindedES,
   UpdateDiagnoseSettingsRequest,
   DeleteServerlessInstanceResponse,
-  VpcInfo,
+  InstallInstanceModelResponse,
   DescribeInstanceOperationsResponse,
   LogstashPipeline,
   UpdateRequestTargetNodeTypesResponse,
@@ -58,6 +59,7 @@ import {
   ServerlessSpace,
   SubTaskDetail,
   CheckMigrateIndexMetaDataResponse,
+  MetricAllData,
   EsConfigSetInfo,
   GetRequestTargetNodeTypesResponse,
   Operation,
@@ -82,6 +84,7 @@ import {
   UpdateLogstashInstanceRequest,
   UpdateRequestTargetNodeTypesRequest,
   DescribeLogstashInstancesResponse,
+  InstallInstanceModelRequest,
   DiDataSinkServerless,
   DeleteInstanceResponse,
   SettingDetail,
@@ -89,6 +92,7 @@ import {
   CreateIndexRequest,
   LogstashPipelineInfo,
   UpdatePluginsRequest,
+  UpdateDiagnoseSettingsResponse,
   DescribeServerlessSpaceUserRequest,
   Dimension,
   DescribeServerlessSpacesResponse,
@@ -170,6 +174,7 @@ import {
   UpdateLogstashPipelineDescRequest,
   UpdateServerlessInstanceRequest,
   NodeView,
+  DescribeSpaceKibanaToolsResponse,
   ModifyEsVipSecurityGroupResponse,
   UpdateInstanceRequest,
   CreateServerlessInstanceResponse,
@@ -184,6 +189,7 @@ import {
   DescribeServerlessMetricsResponse,
   StopLogstashPipelinesResponse,
   DescribeServerlessInstancesRequest,
+  VpcInfo,
   KibanaNodeInfo,
   StartLogstashPipelinesResponse,
   GetDiagnoseSettingsRequest,
@@ -266,6 +272,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DescribeServerlessSpacesResponse) => void
   ): Promise<DescribeServerlessSpacesResponse> {
     return this.request("DescribeServerlessSpaces", req, cb)
+  }
+
+  /**
+   * ES集群安装模型接口
+   */
+  async InstallInstanceModel(
+    req: InstallInstanceModelRequest,
+    cb?: (error: string, rep: InstallInstanceModelResponse) => void
+  ): Promise<InstallInstanceModelResponse> {
+    return this.request("InstallInstanceModel", req, cb)
   }
 
   /**
@@ -511,8 +527,9 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 获取serverless实例对应指标，获取space维度时不需要传入indexid，获取index时不需要传入spaceid
-   */
+     * 获取serverless实例对应指标，获取space维度时不需要传入indexid，获取index时不需要传入spaceid
+获取一段时间时间范围内的指标数据
+     */
   async DescribeServerlessMetrics(
     req: DescribeServerlessMetricsRequest,
     cb?: (error: string, rep: DescribeServerlessMetricsResponse) => void
@@ -528,6 +545,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DescribeInstanceOperationsResponse) => void
   ): Promise<DescribeInstanceOperationsResponse> {
     return this.request("DescribeInstanceOperations", req, cb)
+  }
+
+  /**
+   * space维度的kibana获取登录token
+   */
+  async DescribeSpaceKibanaTools(
+    req: DescribeSpaceKibanaToolsRequest,
+    cb?: (error: string, rep: DescribeSpaceKibanaToolsResponse) => void
+  ): Promise<DescribeSpaceKibanaToolsResponse> {
+    return this.request("DescribeSpaceKibanaTools", req, cb)
   }
 
   /**

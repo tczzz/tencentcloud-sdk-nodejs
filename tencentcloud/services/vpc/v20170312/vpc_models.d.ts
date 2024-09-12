@@ -464,7 +464,7 @@ export interface SslVpnClient {
  */
 export interface SourceIpTranslationNatRule {
     /**
-     * 资源ID，如果ResourceType为USERDEFINED，可以为空
+     * 资源ID，如果ResourceType为USERDEFINED，可以为空字符串
      */
     ResourceId: string;
     /**
@@ -599,15 +599,15 @@ export interface ServiceTemplateGroup {
     /**
      * 协议端口模板集合实例ID，例如：ppmg-2klmrefu。
      */
-    ServiceTemplateGroupId: string;
+    ServiceTemplateGroupId?: string;
     /**
      * 协议端口模板集合名称。
      */
-    ServiceTemplateGroupName: string;
+    ServiceTemplateGroupName?: string;
     /**
      * 协议端口模板实例ID。
      */
-    ServiceTemplateIdSet: Array<string>;
+    ServiceTemplateIdSet?: Array<string>;
     /**
      * 创建时间。
      */
@@ -615,7 +615,12 @@ export interface ServiceTemplateGroup {
     /**
      * 协议端口模板实例信息。
      */
-    ServiceTemplateSet: Array<ServiceTemplate>;
+    ServiceTemplateSet?: Array<ServiceTemplate>;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * CreateDhcpIp返回参数结构体
@@ -1097,6 +1102,16 @@ export interface CcnRouteTableInputPolicy {
      * 策略描述。
      */
     Description: string;
+    /**
+     * as-path操作
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    OperateAsPath?: string;
+    /**
+     * as-path操作模式
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AsPathOperateMode?: string;
 }
 /**
  * CreateVpc返回参数结构体
@@ -1183,15 +1198,15 @@ export interface AddressTemplate {
     /**
      * IP地址模板名称。
      */
-    AddressTemplateName: string;
+    AddressTemplateName?: string;
     /**
      * IP地址模板实例唯一ID。
      */
-    AddressTemplateId: string;
+    AddressTemplateId?: string;
     /**
      * IP地址信息。
      */
-    AddressSet: Array<string>;
+    AddressSet?: Array<string>;
     /**
      * 创建时间。
      */
@@ -1199,7 +1214,12 @@ export interface AddressTemplate {
     /**
      * 带备注的IP地址信息。
      */
-    AddressExtraSet: Array<AddressInfo>;
+    AddressExtraSet?: Array<AddressInfo>;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * DeleteHaVip返回参数结构体
@@ -1509,6 +1529,10 @@ export interface CreateVpnGatewaySslServerRequest {
      * SAML-DATA，开启SSO时传。
      */
     SamlData?: string;
+    /**
+     * 指定绑定的标签列表
+     */
+    Tags?: Array<Tag>;
 }
 /**
  * CreateVpcEndPoint请求参数结构体
@@ -2013,15 +2037,15 @@ export interface ServiceTemplate {
     /**
      * 协议端口实例ID，例如：ppm-f5n1f8da。
      */
-    ServiceTemplateId: string;
+    ServiceTemplateId?: string;
     /**
      * 模板名称。
      */
-    ServiceTemplateName: string;
+    ServiceTemplateName?: string;
     /**
      * 协议端口信息。
      */
-    ServiceSet: Array<string>;
+    ServiceSet?: Array<string>;
     /**
      * 创建时间。
      */
@@ -2029,7 +2053,12 @@ export interface ServiceTemplate {
     /**
      * 带备注的协议端口信息。
      */
-    ServiceExtraSet: Array<ServicesInfo>;
+    ServiceExtraSet?: Array<ServicesInfo>;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * DescribeCcnAttachedInstances请求参数结构体
@@ -3215,7 +3244,7 @@ export interface NetworkAclEntry {
      */
     Protocol?: string;
     /**
-     * 端口(all, 单个port,  range)。当Protocol为ALL或ICMP时，不能指定Port。
+     * 端口(all, 单个port,  range)。当Protocol为ALL或ICMP时，不能指定Port。使用-指定端口范围，如：10-20。
      */
     Port?: string;
     /**
@@ -4302,51 +4331,61 @@ export interface CcnRoute {
     /**
      * 目的端
      */
-    DestinationCidrBlock: string;
+    DestinationCidrBlock?: string;
     /**
      * 下一跳类型（关联实例类型），所有类型：VPC、DIRECTCONNECT
      */
-    InstanceType: string;
+    InstanceType?: string;
     /**
      * 下一跳（关联实例）
      */
-    InstanceId: string;
+    InstanceId?: string;
     /**
      * 下一跳名称（关联实例名称）
      */
-    InstanceName: string;
+    InstanceName?: string;
     /**
      * 下一跳所属地域（关联实例所属地域）
      */
-    InstanceRegion: string;
+    InstanceRegion?: string;
     /**
      * 更新时间
      */
-    UpdateTime: string;
+    UpdateTime?: string;
     /**
      * 路由是否启用
      */
-    Enabled: boolean;
+    Enabled?: boolean;
     /**
      * 关联实例所属UIN（根账号）
      */
-    InstanceUin: string;
+    InstanceUin?: string;
     /**
      * 路由的扩展状态
      */
-    ExtraState: string;
+    ExtraState?: string;
     /**
      * 是否动态路由
      */
-    IsBgp: boolean;
+    IsBgp?: boolean;
     /**
      * 路由优先级
      */
-    RoutePriority: number;
+    RoutePriority?: number;
     /**
      * 下一跳扩展名称（关联实例的扩展名称）
      */
-    InstanceExtraName: string;
+    InstanceExtraName?: string;
+    /**
+     * 实例类型
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AliasType?: string;
+    /**
+     * 实例id
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AliasInstanceId?: string;
 }
 /**
  * ModifyIpv6AddressesAttribute返回参数结构体
@@ -6088,6 +6127,10 @@ export interface AssignIpv6AddressesRequest {
      * 自动分配`IPv6`地址个数，内网IP地址个数总和不能超过配额数。与入参`Ipv6Addresses`合并计算配额。与Ipv6Addresses必填一个。
      */
     Ipv6AddressCount?: number;
+    /**
+     * 用于保证请求幂等性的字符串。该字符串由客户生成，需保证不同请求之间唯一，最大值不超过64个ASCII字符。若不指定该参数，则无法保证请求的幂等性。
+     */
+    ClientToken?: string;
 }
 /**
  * CreateServiceTemplateGroup返回参数结构体
@@ -6175,6 +6218,11 @@ export interface NetDetect {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     CreateTime?: string;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * 修改VPN状态参数
@@ -7546,6 +7594,11 @@ export interface EndPoint {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     ServiceName?: string;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * RemoveIp6Rules返回参数结构体
@@ -7872,6 +7925,11 @@ export interface EndPointService {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     BusinessIpType?: number;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * DescribeVpcResourceDashboard返回参数结构体
@@ -8691,15 +8749,15 @@ export interface AddressTemplateGroup {
     /**
      * IP地址模板集合名称。
      */
-    AddressTemplateGroupName: string;
+    AddressTemplateGroupName?: string;
     /**
      * IP地址模板集合实例ID，例如：ipmg-dih8xdbq。
      */
-    AddressTemplateGroupId: string;
+    AddressTemplateGroupId?: string;
     /**
      * IP地址模板ID。
      */
-    AddressTemplateIdSet: Array<string>;
+    AddressTemplateIdSet?: Array<string>;
     /**
      * 创建时间。
      */
@@ -8707,7 +8765,12 @@ export interface AddressTemplateGroup {
     /**
      * IP地址模板实例。
      */
-    AddressTemplateSet: Array<AddressTemplateItem>;
+    AddressTemplateSet?: Array<AddressTemplateItem>;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * DownloadCustomerGatewayConfiguration请求参数结构体
@@ -8804,6 +8867,11 @@ export interface HaVip {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     FlushedTime?: string;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * DeleteTemplateMember请求参数结构体
@@ -8838,27 +8906,36 @@ export interface LocalGateway {
     /**
      * CDC实例ID
      */
-    CdcId: string;
+    CdcId?: string;
     /**
      * VPC实例ID
      */
-    VpcId: string;
+    VpcId?: string;
     /**
-     * 本地网关实例ID
+     * 本地网关实例ID（计划弃用）
      */
-    UniqLocalGwId: string;
+    UniqLocalGwId?: string;
     /**
      * 本地网关名称
      */
-    LocalGatewayName: string;
+    LocalGatewayName?: string;
     /**
      * 本地网关IP地址
      */
-    LocalGwIp: string;
+    LocalGwIp?: string;
     /**
      * 本地网关创建时间
      */
-    CreateTime: string;
+    CreateTime?: string;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
+    /**
+     * 本地网关实例ID（计划起用）
+     */
+    LocalGatewayId?: string;
 }
 /**
  * RejectAttachCcnInstances返回参数结构体
@@ -9346,6 +9423,26 @@ export interface AllocateAddressesRequest {
     ClientToken?: string;
 }
 /**
+ * 私网NAT网关跨域信息
+ */
+export interface PrivateNatCrossDomainInfo {
+    /**
+     * 跨域私网NAT关联的云联网ID
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CcnId?: string;
+    /**
+     * 跨域私网NAT本端Vpc
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    LocalVpcId?: string;
+    /**
+     * 跨域私网NAT对端Vpc
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    PeerVpcId?: string;
+}
+/**
  * DescribeDhcpIps返回参数结构体
  */
 export interface DescribeDhcpIpsResponse {
@@ -9546,6 +9643,10 @@ export interface CreateVpnGatewaySslClientRequest {
      * SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
      */
     SslVpnClientNames?: Array<string>;
+    /**
+     * 指定绑定的标签列表
+     */
+    Tags?: Array<Tag>;
 }
 /**
  * UnlockCcns请求参数结构体
@@ -10258,6 +10359,31 @@ export interface PrivateNatGateway {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     TagSet?: Array<Tag>;
+    /**
+     * 专线网关唯一`ID`
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DirectConnectGatewayIds?: Array<string>;
+    /**
+     * 私网网关类型
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    NatType?: string;
+    /**
+     * 私网NAT跨域信息
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CrossDomainInfo?: PrivateNatCrossDomainInfo;
+    /**
+     * 是否VPC型私网网关
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    VpcType?: boolean;
+    /**
+     * 跨域私网NAT关联的云联网ID
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CcnId?: string;
 }
 /**
  * DescribeVpnGatewayRoutes返回参数结构体
@@ -11377,6 +11503,10 @@ export interface ModifyVpnGatewayAttributeRequest {
      * BGP ASN。ASN取值范围为1- 4294967295，默认值64551，其中139341、45090和58835不可用。
      */
     BgpAsn?: number;
+    /**
+     * 服务端最大连接数个数。
+     */
+    MaxConnection?: number;
 }
 /**
  * CreateNatGateway请求参数结构体
@@ -11785,6 +11915,11 @@ export interface SnapshotPolicy {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     CreateTime?: string;
+    /**
+     * 标签键值对。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TagSet?: Array<Tag>;
 }
 /**
  * UnassignPrivateIpAddresses返回参数结构体
@@ -12302,6 +12437,7 @@ export interface CreateBandwidthPackageRequest {
   <li>FIXED_PREPAID_BY_MONTH: 包月预付费计费</li>
   <li>ENHANCED95_POSTPAID_BY_MONTH: 按月后付费增强型95计费</li>
   <li>PEAK_BANDWIDTH_POSTPAID_BY_DAY: 后付费日结按带宽计费</li>
+  <li>PRIMARY_TRAFFIC_POSTPAID_BY_HOUR: 后付费按主流量计费</li>
   
      */
     ChargeType?: string;
@@ -12763,6 +12899,46 @@ export interface CCN {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     RouteBroadcastPolicyFlag?: boolean;
+    /**
+     * 是否开启等价路由功能。`False` 未开启，`True` 开启。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    RouteECMPFlag?: boolean;
+    /**
+     * 是否开启路由重叠功能。`False` 未开启，`True` 开启。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    RouteOverlapFlag?: boolean;
+    /**
+     * 是否开启QOS。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    TrafficMarkingPolicyFlag?: boolean;
+    /**
+     * 是否开启路由表选择策略。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    RouteSelectPolicyFlag?: boolean;
+    /**
+     * 是否开启二层云联网通道。
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DirectConnectAccelerateChannelFlag?: boolean;
+    /**
+     * 是否支持ipv6路由表
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Ipv6Flag?: string;
+    /**
+     * 是否支持路由表聚合策略
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    MrtbAggregatePolicyFlag?: boolean;
+    /**
+     * 是否支持策略值
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    MrtbPolicyValueFlag?: boolean;
 }
 /**
  * 网络ACL五元组Entry
@@ -13137,6 +13313,26 @@ export interface CcnRouteTableBroadcastPolicy {
      * 策略描述
      */
     Description: string;
+    /**
+     * as-path操作
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    OperateAsPath?: string;
+    /**
+     * as-path操作模式
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AsPathOperateMode?: string;
+    /**
+     * community操作
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    OperateCommunitySet?: Array<string>;
+    /**
+     * community操作模式
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    CommunityOperateMode?: string;
 }
 /**
  * DeleteSubnet请求参数结构体
@@ -15802,6 +15998,10 @@ export interface CreateSecurityGroupWithPoliciesRequest {
      * 安全组规则集合。
      */
     SecurityGroupPolicySet?: SecurityGroupPolicySet;
+    /**
+     * 指定绑定的标签列表，例如：[{"Key": "city", "Value": "shanghai"}]。
+     */
+    Tags?: Array<Tag>;
 }
 /**
  * ReleaseAddresses请求参数结构体
@@ -15886,7 +16086,7 @@ export interface NotifyRoutesResponse {
  */
 export interface Route {
     /**
-     * 目的网段，取值不能在私有网络网段内，例如：112.20.51.0/24。
+     * 创建IPv4目的网段，取值不能在私有网络网段内，例如：112.20.51.0/24。
      */
     DestinationCidrBlock: string;
     /**
@@ -15896,10 +16096,13 @@ export interface Route {
   DIRECTCONNECT：专线网关；
   PEERCONNECTION：对等连接；
   HAVIP：高可用虚拟IP；
-  NAT：NAT网关;
+  NAT：公网NAT网关;
   NORMAL_CVM：普通云服务器；
   EIP：云服务器的公网IP；
-  LOCAL_GATEWAY：本地网关。
+  LOCAL_GATEWAY：CDC本地网关；
+  INTRANAT：私网NAT网关；
+  USER_CCN；云联网（自定义路由）。
+  
      */
     GatewayType: string;
     /**
@@ -15935,7 +16138,7 @@ export interface Route {
      */
     RouteTableId?: string;
     /**
-     * 目的IPv6网段，取值不能在私有网络网段内，例如：2402:4e00:1000:810b::/64。
+     * 创建IPv6目的网段，取值不能在私有网络网段内，例如：2402:4e00:1000:810b::/64。
   注意：此字段可能返回 null，表示取不到有效值。
      */
     DestinationIpv6CidrBlock?: string;
@@ -15944,7 +16147,7 @@ export interface Route {
      */
     RouteItemId?: string;
     /**
-     * 路由策略是否发布到云联网。
+     * 路由策略是否发布到云联网。该字段仅做出参使用，作为入参字段时此参数不生效。
   注意：此字段可能返回 null，表示取不到有效值。
      */
     PublishedToVbc?: boolean;

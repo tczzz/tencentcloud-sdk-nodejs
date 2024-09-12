@@ -117,9 +117,8 @@ export class Client extends AbstractClient {
   }
 
   /**
-     * 查询物理专线接入点
-
-     */
+   * 查询物理专线接入点。
+   */
   async DescribeAccessPoints(
     req: DescribeAccessPointsRequest,
     cb?: (error: string, rep: DescribeAccessPointsResponse) => void
@@ -148,7 +147,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（DescribeDirectConnectTunnelExtra）用于查询专用通道扩展信息
+   * 查询专用通道扩展信息。
    */
   async DescribeDirectConnectTunnelExtra(
     req: DescribeDirectConnectTunnelExtraRequest,
@@ -158,9 +157,8 @@ export class Client extends AbstractClient {
   }
 
   /**
-     * 删除物理专线。
-只能删除处于已连接状态的物理专线。
-     */
+   * 删除物理专线。只能删除处于已连接状态的物理专线。
+   */
   async DeleteDirectConnect(
     req: DeleteDirectConnectRequest,
     cb?: (error: string, rep: DeleteDirectConnectResponse) => void
@@ -169,7 +167,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 接受专用通道申请
+   * 接受专用通道申请。
    */
   async AcceptDirectConnectTunnel(
     req: AcceptDirectConnectTunnelRequest,
@@ -189,7 +187,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 删除专用通道
+   * 删除专用通道。
    */
   async DeleteDirectConnectTunnel(
     req: DeleteDirectConnectTunnelRequest,
@@ -262,7 +260,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 拒绝专用通道申请
+   * 拒绝专用通道申请。
    */
   async RejectDirectConnectTunnel(
     req: RejectDirectConnectTunnelRequest,
@@ -292,7 +290,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 修改专用通道属性
+   * 修改专用通道属性。
    */
   async ModifyDirectConnectTunnelAttribute(
     req: ModifyDirectConnectTunnelAttributeRequest,

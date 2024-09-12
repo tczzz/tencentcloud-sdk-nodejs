@@ -46,6 +46,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeExports", req, cb);
     }
     /**
+     * 本接口用于获取告警策略执行详情
+     */
+    async GetAlarmLog(req, cb) {
+        return this.request("GetAlarmLog", req, cb);
+    }
+    /**
      * 本接口用于创建索引
      */
     async CreateIndex(req, cb) {
@@ -340,10 +346,16 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DeleteMachineGroupInfo", req, cb);
     }
     /**
-     * 本接口用于获取告警策略执行详情
+     * 批量查询控制台分享列表
      */
-    async GetAlarmLog(req, cb) {
-        return this.request("GetAlarmLog", req, cb);
+    async DescribeConsoleSharingList(req, cb) {
+        return this.request("DescribeConsoleSharingList", req, cb);
+    }
+    /**
+     * 创建控制台分享
+     */
+    async CreateConsoleSharing(req, cb) {
+        return this.request("CreateConsoleSharing", req, cb);
     }
     /**
      * 本接口用于获取日志集信息列表。
@@ -463,6 +475,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("SplitPartition", req, cb);
     }
     /**
+     * 删除控制台分享
+     */
+    async DeleteConsoleSharing(req, cb) {
+        return this.request("DeleteConsoleSharing", req, cb);
+    }
+    /**
      * 获取机器组信息列表
      */
     async DescribeMachineGroups(req, cb) {
@@ -481,7 +499,7 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ModifyTopic", req, cb);
     }
     /**
-     *  本接口用于获取仪表盘订阅列表，支持分页
+     * 本接口用于获取仪表盘订阅列表，支持分页
      */
     async DescribeDashboardSubscribes(req, cb) {
         return this.request("DescribeDashboardSubscribes", req, cb);
@@ -529,6 +547,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeShippers", req, cb);
     }
     /**
+     * 修改控制台分享，目前仅允许修改有效期
+     */
+    async ModifyConsoleSharing(req, cb) {
+        return this.request("ModifyConsoleSharing", req, cb);
+    }
+    /**
      * 本接口用于获取仪表盘
      */
     async DescribeDashboards(req, cb) {
@@ -557,18 +581,6 @@ class Client extends abstract_client_1.AbstractClient {
 ## 功能描述
 
 本接口用于将日志写入到指定的日志主题。
-
-日志服务提供以下两种模式：
-
-#### 负载均衡模式
-
-系统根据当前日志主题下所有可读写的分区，遵循负载均衡原则自动分配写入的目标分区。该模式适合消费不保序的场景。
-
-#### 哈希路由模式
-
-系统根据携带的哈希值（X-CLS-HashKey）将数据写入到符合范围要求的目标分区。例如，可以将某个日志源端通过 hashkey 与某个主题分区强绑定，这样可以保证数据在该分区上写入和消费是严格保序的。
-
-                 
 
 #### 输入参数(pb二进制流，位于body中)
 

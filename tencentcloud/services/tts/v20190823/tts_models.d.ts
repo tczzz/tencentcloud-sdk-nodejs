@@ -175,7 +175,7 @@ export interface CreateTtsTaskRequest {
      */
     VoiceoverDialogueSplit?: boolean;
     /**
-     * 控制合成音频的情感，仅支持多情感音色使用。取值: neutral(中性)、sad(悲伤)、happy(高兴)、angry(生气)、fear(恐惧)、news(新闻)、story(故事)、radio(广播)、poetry(诗歌)、call(客服)、撒娇(sajiao)、厌恶(disgusted)、震惊(amaze)、平静(peaceful)、兴奋(exciting)、傲娇(aojiao)、解说(jieshuo)
+     * 控制合成音频的情感，仅支持多情感音色使用。取值: neutral(中性)、sad(悲伤)、happy(高兴)、angry(生气)、fear(恐惧)、news(新闻)、story(故事)、radio(广播)、poetry(诗歌)、call(客服)、sajiao(撒娇)、disgusted(厌恶)、amaze(震惊)、peaceful(平静)、exciting(兴奋)、aojiao(傲娇)、jieshuo(解说)
      */
     EmotionCategory?: string;
     /**
@@ -214,6 +214,7 @@ export interface TextToVoiceRequest {
     ModelType?: number;
     /**
      * 音色 ID，包括标准音色与精品音色，精品音色拟真度更高，价格不同于标准音色，请参见[购买指南](https://cloud.tencent.com/document/product/1073/34112)。完整的音色 ID 列表请参见[音色列表](https://cloud.tencent.com/document/product/1073/92668)。
+  若使用一句话版声音复刻，请填入固定值“200000000”
      */
     VoiceType?: number;
     /**
@@ -240,7 +241,7 @@ export interface TextToVoiceRequest {
      */
     SegmentRate?: number;
     /**
-     * 控制合成音频的情感，仅支持多情感音色使用。取值: neutral(中性)、sad(悲伤)、happy(高兴)、angry(生气)、fear(恐惧)、news(新闻)、story(故事)、radio(广播)、poetry(诗歌)、call(客服)、撒娇(sajiao)、厌恶(disgusted)、震惊(amaze)、平静(peaceful)、兴奋(exciting)、傲娇(aojiao)、解说(jieshuo)
+     * 控制合成音频的情感，仅支持多情感音色使用。取值: neutral(中性)、sad(悲伤)、happy(高兴)、angry(生气)、fear(恐惧)、news(新闻)、story(故事)、radio(广播)、poetry(诗歌)、call(客服)、sajiao(撒娇)、disgusted(厌恶)、amaze(震惊)、peaceful(平静)、exciting(兴奋)、aojiao(傲娇)、jieshuo(解说)
   示例值：neutral
      */
     EmotionCategory?: string;
@@ -249,7 +250,7 @@ export interface TextToVoiceRequest {
      */
     EmotionIntensity?: number;
     /**
-     * 预留参数，暂未使用
+     * 一句话版声音复刻音色ID，使用一句话版声音复刻音色时需填写。
      */
     FastVoiceType?: string;
 }

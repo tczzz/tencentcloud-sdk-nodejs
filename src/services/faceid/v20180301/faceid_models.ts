@@ -842,14 +842,22 @@ Base64编码后的大小不超过8M，支持mp4、avi、flv格式。
 视频时长最大支持20s，建议时长2～5s。
 建议视频分辨率为480x640，帧率在25fps~30fps之间。
    */
-  FaceInput: string
+  FaceInput?: string
   /**
    * 传入的类型
 1- 传入的是图片类型
 2- 传入的是视频类型
 其他 - 返回错误码InvalidParameter
    */
-  FaceInputType: number
+  FaceInputType?: number
+  /**
+   * 是否需要对请求信息进行全包体加密； 支持的加密算法:AES-256-CBC、SM4-GCM； 有加密需求的用户可使用此参数，详情请点击左侧链接。
+   */
+  Encryption?: Encryption
+  /**
+   * 加密后的密文； 加密前的数据格式如下:{"FaceInput":"AAAAA","FaceInputType":1}
+   */
+  EncryptedBody?: string
 }
 
 /**
@@ -1467,6 +1475,10 @@ export interface CheckIdCardInformationResponse {
    */
   Encryption?: Encryption
   /**
+   * 加密后的数据
+   */
+  EncryptedBody?: string
+  /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
@@ -1623,6 +1635,7 @@ export interface BankCard4EVerificationResponse {
 '-5': '手机号码不合法'
 '-18': '验证中心服务繁忙'
 '-19': '验证次数超限，请次日重试'
+'-20': '该证件号暂不支持核验，当前仅支持二代身份证'
    */
   Result?: string
   /**
@@ -1645,7 +1658,7 @@ export interface Encryption {
    */
   EncryptList: Array<string>
   /**
-   * 有加密需求的用户，接入传入kms的CiphertextBlob，关于数据加密可查阅<a href="https://cloud.tencent.com/document/product/1007/47180">数据加密</a> 文档。
+   * 加密后的对称密钥，关于密钥的生成和使用请查阅<a href="https://cloud.tencent.com/document/product/1007/47180">数据加密</a> 文档。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   CiphertextBlob: string
@@ -1814,6 +1827,14 @@ Config = {"CopyWarn":true,"ReshootWarn":true}
 其中敏感信息包括：Response.IdNum、Response.Name
    */
   IsEncrypt?: boolean
+  /**
+   * 是否需要对响应体加密
+   */
+  IsEncryptResponse?: boolean
+  /**
+   * 是否需要对返回中的敏感信息进行加密,需指定加密算法Algorithm、CBC加密的初始向量、加密后的对称密钥。
+   */
+  Encryption?: Encryption
 }
 
 /**
@@ -1947,6 +1968,7 @@ export interface BankCardVerificationResponse {
 '-4': '银行卡号码有误'
 '-17': '验证中心服务繁忙'
 '-18': '验证次数超限，请次日重试'
+'-19': '该证件号暂不支持核验，当前仅支持二代身份证'	
    */
   Result?: string
   /**

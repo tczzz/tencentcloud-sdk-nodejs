@@ -923,38 +923,29 @@ export interface ChannelCreatePrepareFlowResponse {
 }
 
 /**
- * 主题配置
+ * CreateBatchInitOrganizationUrl返回参数结构体
  */
-export interface WebThemeConfig {
+export interface CreateBatchInitOrganizationUrlResponse {
   /**
-   * 是否显示页面底部电子签logo，取值如下：
-<ul><li> **true**：页面底部显示电子签logo</li>
-<li> **false**：页面底部不显示电子签logo（默认）</li></ul>
+   * 小程序路径
    */
-  DisplaySignBrandLogo?: boolean
+  MiniAppPath?: string
   /**
-   * 主题颜色：
-支持十六进制颜色值以及RGB格式颜色值，例如：#D54941，rgb(213, 73, 65)
-<br/>
+   * 操作长链
    */
-  WebEmbedThemeColor?: string
+  OperateLongUrl?: string
   /**
-   * 企业认证页背景图（base64图片）
-
+   * 操作短链
    */
-  AuthenticateBackground?: string
+  OperateShortUrl?: string
   /**
-   * 隐藏企业认证页面导航栏，取值如下：
-<ul><li> **true**：隐藏企业认证页面导航栏</li>
-<li> **false**：显示企业认证页面导航栏（默认）</li></ul>
+   * 操作二维码
    */
-  HideAuthenticateNavigationBar?: boolean
+  QRCodeUrl?: string
   /**
-   * 隐藏企业认证顶部logo，取值如下：
-<ul><li> **true**：隐藏企业认证顶部logo</li>
-<li> **false**：显示企业认证顶部logo（默认）</li></ul>
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  HideAuthenticateTopLogo?: boolean
+  RequestId?: string
 }
 
 /**
@@ -1046,7 +1037,8 @@ export interface FlowFileInfo {
    */
   FlowType?: string
   /**
-   * 签署流程回调地址，长度不超过255个字符
+   * 已废弃，请使用【应用号配置】中的回调地址统一接收消息
+   * @deprecated
    */
   CallbackUrl?: string
   /**
@@ -1164,17 +1156,17 @@ export interface BaseFlowInfo {
    */
   FlowName: string
   /**
-   * 合同流程的类别分类（可自定义名称，如销售合同/入职合同等），最大长度为200个字符，仅限中文、字母、数字和下划线组成。
-   */
-  FlowType: string
-  /**
-   * 合同流程描述信息(可自定义此描述)，最大长度1000个字符。
-   */
-  FlowDescription: string
-  /**
    * 合同流程的签署截止时间，格式为Unix标准时间戳（秒），如果在签署截止时间前未完成签署，则合同状态会变为已过期，导致合同作废。
    */
   Deadline: number
+  /**
+   * 合同流程的类别分类（可自定义名称，如销售合同/入职合同等），最大长度为200个字符，仅限中文、字母、数字和下划线组成。
+   */
+  FlowType?: string
+  /**
+   * 合同流程描述信息(可自定义此描述)，最大长度1000个字符。
+   */
+  FlowDescription?: string
   /**
    * 合同流程的签署顺序类型：
    **false**：(默认)有序签署, 本合同多个参与人需要依次签署
@@ -1845,12 +1837,8 @@ export interface ChannelCreateFlowByFilesRequest {
    */
   Deadline?: number
   /**
-   * 执行结果的回调URL，长度不超过255个字符，该URL仅支持HTTP或HTTPS协议，建议采用HTTPS协议以保证数据传输的安全性。
-腾讯电子签服务器将通过POST方式，application/json格式通知执行结果，请确保外网可以正常访问该URL。
-回调的相关说明可参考开发者中心的<a href="https://qian.tencent.com/developers/partner/callback_data_types" target="_blank">回调通知</a>模块。
-
-注:
-`如果不传递回调地址， 则默认是配置应用号时候使用的回调地址`
+   * 该字段已废弃，请使用【应用号配置】中的回调地址
+   * @deprecated
    */
   CallbackUrl?: string
   /**
@@ -2675,9 +2663,18 @@ false-否
 <ul><li> 1 :人脸认证</li>
 <li> 2 :签署密码</li>
 <li> 3 :运营商三要素认证</li>
-<li> 4 :UKey认证</li></ul>
+<li> 4 :UKey认证</li>
+<li> 5 :设备指纹识别</li>
+<li> 6 :设备面容识别</li></ul>
    */
   ApproverSignTypes?: Array<number | bigint>
+  /**
+   * 签署方是否可以转他人处理
+
+<ul><li> **false** : ( 默认)可以转他人处理</li>
+<li> **true** :不可以转他人处理</li></ul>
+   */
+  NoTransfer?: boolean
 }
 
 /**
@@ -2733,7 +2730,8 @@ export interface AutoSignConfig {
    */
   SealImgCallback?: boolean
   /**
-   * 回调链接，如果渠道已经配置了，可以不传
+   * 该字段已废弃，请使用【应用号配置】中的回调地址统一接口消息
+   * @deprecated
    */
   CallbackUrl?: string
   /**
@@ -3546,13 +3544,17 @@ export interface CommonFlowApprover {
    * 签署人签署合同时的认证方式
 <ul><li> **1** :人脸认证</li>
 <li> **2** :签署密码</li>
-<li> **3** :运营商三要素</li></ul>
+<li> **3** :运营商三要素</li>
+<li> **5** :设备指纹识别</li>
+<li> **6** :设备面容识别</li></ul>
 
-默认为1(人脸认证 ),2(签署密码)
+默认为1(人脸认证 ),2(签署密码),3(运营商三要素),5(设备指纹识别),6(设备面容识别)
 
 注: 
 1. 用<font color='red'>模板创建合同场景</font>, 签署人的认证方式需要在配置模板的时候指定, <font color='red'>在创建合同重新指定无效</font>
 2. 运营商三要素认证方式对手机号运营商及前缀有限制,可以参考[运营商支持列表类](https://qian.tencent.com/developers/partner/mobile_support)得到具体的支持说明
+3. 校验方式不允许只包含<font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>，至少需要再增加一种其他校验方式。
+4. <font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>只支持小程序使用，其他端暂不支持。
    */
   ApproverSignTypes?: Array<number | bigint>
 }
@@ -3619,6 +3621,40 @@ export interface FillApproverInfo {
 }
 
 /**
+ * CreatePersonAuthCertificateImage返回参数结构体
+ */
+export interface CreatePersonAuthCertificateImageResponse {
+  /**
+   * 个人用户认证证书图片下载URL，`有效期为5分钟`，超过有效期后将无法再下载。
+   */
+  AuthCertUrl?: string
+  /**
+   * 个人用户认证证书的编号, 为20位数字组成的字符串,  由腾讯电子签下发此编号 。该编号会合成到个人用户证书证明图片。注: `个人用户认证证书的编号和证明图片绑定, 获取新的证明图片编号会变动`
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ImageCertId?: string
+  /**
+   * CA供应商下发给用户的证书编号，在证书到期后自动续期后此证书编号会发生变动，且不会合成到个人用户证书证明图片中。注意：`腾讯电子签接入多家CA供应商以提供容灾能力，不同CA下发的证书编号区别较大，但基本都是由数字和字母组成，长度在200以下。`
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SerialNumber?: string
+  /**
+   * CA证书颁发时间，格式为Unix标准时间戳（秒）   该时间格式化后会合成到个人用户证书证明图片
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValidFrom?: number
+  /**
+   * CA证书有效截止时间，格式为Unix标准时间戳（秒）该时间格式化后会合成到个人用户证书证明图片
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValidTo?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * 意愿核身点头确认模式结果详细数据
  */
 export interface IntentionActionResultDetail {
@@ -3638,7 +3674,9 @@ export interface CreateEmployeeQualificationSealQrCodeRequest {
    */
   Agent: Agent
   /**
-   * 提示信息，扫码后此信息会展示给扫描用户，用来提示用户授权操作的目的
+   * 提示信息，扫码后此信息会展示给扫描用户，用来提示用户授权操作的目的，会在授权界面下面的位置展示。
+
+![image](https://qcloudimg.tencent-cloud.cn/raw/8436ffd78c20605e6b133ff4bc4d2ac7.png)
    */
   HintText?: string
 }
@@ -3905,7 +3943,7 @@ export interface ChannelDescribeOrganizationSealsRequest {
    */
   SealId?: string
   /**
-   * 电子印章类型 , 可选类型如下: <ul><li>**OFFICIAL**: 公章</li><li>**CONTRACT**: 合同专用章;</li><li>**FINANCE**: 财务专用章;</li><li>**PERSONNEL**: 人事专用章</li><li>**INVOICE**: 发票专用章</li><<li>**EMPLOYEE_QUALIFICATION_SEAL**: 员工执业章</li></ul>注:  `为空时查询所有类型的印章。`
+   * 电子印章类型 , 可选类型如下: <ul><li>**OFFICIAL**: 公章</li><li>**CONTRACT**: 合同专用章;</li><li>**FINANCE**: 财务专用章;</li><li>**PERSONNEL**: 人事专用章</li><li>**INVOICE**: 发票专用章</li><li>**LEGAL_PERSON_SEAL**: 法定代表人章;</li><li>**EMPLOYEE_QUALIFICATION_SEAL**: 员工执业章</li></ul>注:  `1.为空时查询所有类型的印章。`
    */
   SealTypes?: Array<string>
   /**
@@ -4082,10 +4120,8 @@ export interface FlowInfo {
    */
   FormFields?: Array<FormField>
   /**
-   * 合同状态变动结的通知回调URL，该URL仅支持HTTP或HTTPS协议，建议采用HTTPS协议以保证数据传输的安全性，最大长度1000个字符。
-
-腾讯电子签服务器将通过POST方式，application/json格式通知执行结果，请确保外网可以正常访问该URL。
-回调的相关说明可参考开发者中心的<a href="https://qian.tencent.com/developers/partner/callback_data_types" target="_blank">回调通知</a>模块
+   * 该字段已废弃，请使用【应用号配置】中的回调地址统一接口消息
+   * @deprecated
    */
   CallbackUrl?: string
   /**
@@ -5069,13 +5105,17 @@ export interface FlowApproverInfo {
    * 签署人签署合同时的认证方式
 <ul><li> **1** :人脸认证</li>
 <li> **2** :签署密码</li>
-<li> **3** :运营商三要素（如果是港澳台客户，建议不要选择这个）</li></ul>
+<li> **3** :运营商三要素（如果是港澳台客户，建议不要选择这个）</li>
+<li>**5**：设备指纹识别，需要对比手机机主预留的指纹信息，校验一致才能成功进行合同签署。（iOS系统暂不支持该校验方式）</li>
+<li>**6**：设备面容识别，需要对比手机机主预留的人脸信息，校验一致才能成功进行合同签署。（Android系统暂不支持该校验方式）</li></ul>
 
-默认为1(人脸认证 ),2(签署密码),3(运营商三要素)
+默认为1(人脸认证 ),2(签署密码),3(运营商三要素),5(设备指纹识别),6(设备面容识别)
 
 注: 
 1. 用<font color='red'>模板创建合同场景</font>, 签署人的认证方式需要在配置模板的时候指定, <font color='red'>在创建合同重新指定无效</font>
 2. 运营商三要素认证方式对手机号运营商及前缀有限制,可以参考[运营商支持列表类](https://qian.tencent.com/developers/partner/mobile_support)得到具体的支持说明
+3. 校验方式不允许只包含<font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>，至少需要再增加一种其他校验方式。
+4. <font color='red'>设备指纹识别</font>和<font color='red'>设备面容识别</font>只支持小程序使用，其他端暂不支持。
    */
   ApproverSignTypes?: Array<number | bigint>
   /**
@@ -5381,6 +5421,17 @@ export interface ChannelDescribeBillUsageDetailResponse {
 }
 
 /**
+ * 意愿核身点头确认模式结果
+ */
+export interface IntentionActionResult {
+  /**
+   * 意愿核身结果详细数据，与每段点头确认过程一一对应
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Details?: Array<IntentionActionResultDetail>
+}
+
+/**
  * 此结构体(FlowDetailInfo)描述的是合同(流程)的详细信息
  */
 export interface FlowDetailInfo {
@@ -5439,6 +5490,32 @@ export interface FlowDetailInfo {
 <li>当NeedCreateReview为false，不需要发起前审核的合同</li></ul>
    */
   NeedCreateReview?: boolean
+}
+
+/**
+ * CreatePersonAuthCertificateImage请求参数结构体
+ */
+export interface CreatePersonAuthCertificateImageRequest {
+  /**
+   * 关于渠道应用的相关信息，包括渠道应用标识、第三方平台子客企业标识及第三方平台子客企业中的员工标识等内容，您可以参阅开发者中心所提供的 Agent 结构体以获取详细定义。
+   */
+  Agent: Agent
+  /**
+   * 个人用户名称
+   */
+  UserName: string
+  /**
+   * 证件类型，支持以下类型<ul><li> ID_CARD  : 居民身份证 (默认值)</li><li> HONGKONG_AND_MACAO  : 港澳居民来往内地通行证</li><li> HONGKONG_MACAO_AND_TAIWAN  : 港澳台居民居住证(格式同居民身份证)</li></ul>
+   */
+  IdCardType: string
+  /**
+   * 证件号码，应符合以下规则<ul><li>居民身份证号码应为18位字符串，由数字和大写字母X组成（如存在X，请大写）。</li><li>港澳居民来往内地通行证号码共11位。第1位为字母，“H”字头签发给香港居民，“M”字头签发给澳门居民；第2位至第11位为数字。</li><li>港澳台居民居住证号码编码规则与中国大陆身份证相同，应为18位字符串。</li></ul>
+   */
+  IdCardNumber: string
+  /**
+   * 自动签使用的场景值, 可以选择的场景值如下:<ul><li> **E_PRESCRIPTION_AUTO_SIGN** :  电子处方场景</li><li> **OTHER** :  通用场景</li></ul>注: `不传默认为处方单场景，即E_PRESCRIPTION_AUTO_SIGN`
+   */
+  SceneKey?: string
 }
 
 /**
@@ -5530,14 +5607,275 @@ export interface ChannelCreateRoleResponse {
 }
 
 /**
- * 意愿核身点头确认模式结果
+ * 电子文档的控件填充信息。按照控件类型进行相应的填充。
+
+当控件的 ComponentType='TEXT'时，FormField.ComponentValue填入文本内容
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "文本内容"
+}
+```
+当控件的 ComponentType='MULTI_LINE_TEXT'时，FormField.ComponentValue填入文本内容，支持自动换行。
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "多行文本内容"
+}
+```
+当控件的 ComponentType='CHECK_BOX'时，FormField.ComponentValue填入true或false文本
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "true"
+}
+```
+当控件的 ComponentType='FILL_IMAGE'时，FormField.ComponentValue填入图片的资源ID
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
+当控件的 ComponentType='ATTACHMENT'时，FormField.ComponentValue填入附件图片的资源ID列表，以逗号分隔，单个附件控件最多支持6个资源ID；
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx1,yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx2,yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx3"
+}
+```
+当控件的 ComponentType='SELECTOR'时，FormField.ComponentValue填入选择的选项内容；
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "选择的内容"
+}
+```
+当控件的 ComponentType='DATE'时，FormField.ComponentValue填入日期内容；
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "2023年01月01日"
+}
+```
+当控件的 ComponentType='DISTRICT'时，FormField.ComponentValue填入省市区内容；
+```
+FormField输入示例：
+{
+    "ComponentId": "componentId1",
+    "ComponentValue": "广东省深圳市福田区"
+}
+```
+【数据表格传参说明】
+当控件的 ComponentType='DYNAMIC_TABLE'时，FormField.ComponentValue需要传递json格式的字符串参数，用于确定表头&填充数据表格（支持内容的单元格合并）
+输入示例1：
+
+```
+{
+    "headers":[
+        {
+            "content":"head1"
+        },
+        {
+            "content":"head2"
+        },
+        {
+            "content":"head3"
+        }
+    ],
+    "rowCount":3,
+    "body":{
+        "cells":[
+            {
+                "rowStart":1,
+                "rowEnd":1,
+                "columnStart":1,
+                "columnEnd":1,
+                "content":"123"
+            },
+            {
+                "rowStart":2,
+                "rowEnd":3,
+                "columnStart":1,
+                "columnEnd":2,
+                "content":"456"
+            },
+            {
+                "rowStart":3,
+                "rowEnd":3,
+                "columnStart":3,
+                "columnEnd":3,
+                "content":"789"
+            }
+        ]
+    }
+}
+
+```
+
+输入示例2（表格表头宽度比例配置）：
+
+```
+{
+    "headers":[
+        {
+            "content":"head1",
+            "widthPercent": 30
+        },
+        {
+            "content":"head2",
+            "widthPercent": 30
+        },
+        {
+            "content":"head3",
+            "widthPercent": 40
+        }
+    ],
+    "rowCount":3,
+    "body":{
+        "cells":[
+            {
+                "rowStart":1,
+                "rowEnd":1,
+                "columnStart":1,
+                "columnEnd":1,
+                "content":"123"
+            },
+            {
+                "rowStart":2,
+                "rowEnd":3,
+                "columnStart":1,
+                "columnEnd":2,
+                "content":"456"
+            },
+            {
+                "rowStart":3,
+                "rowEnd":3,
+                "columnStart":3,
+                "columnEnd":3,
+                "content":"789"
+            }
+        ]
+    }
+}
+
+```
+
+
+输入示例3（表格设置字体加粗颜色）：
+
+```
+{
+    "headers":[
+        {
+            "content":"head1"
+        },
+        {
+            "content":"head2"
+        },
+        {
+            "content":"head3"
+        }
+    ],
+    "rowCount":3,
+    "body":{
+        "cells":[
+            {
+                "rowStart":1,
+                "rowEnd":1,
+                "columnStart":1,
+                "columnEnd":1,
+                "content":"123",
+                "style": {"color": "#b50000", "fontSize": 12,"bold": true,"align": "CENTER"}
+            },
+            {
+                "rowStart":2,
+                "rowEnd":3,
+                "columnStart":1,
+                "columnEnd":2,
+                "content":"456",
+                "style": {"color": "#b50000", "fontSize": 12,"bold": true,"align": "LEFT"}
+            },
+            {
+                "rowStart":3,
+                "rowEnd":3,
+                "columnStart":3,
+                "columnEnd":3,
+                "content":"789",
+                "style": {"color": "#b500bf", "fontSize": 12,"bold": false,"align": "RIGHT"}
+            }
+        ]
+    }
+}
+
+```
+
+表格参数说明
+
+| 名称                | 类型    | 描述                                              |
+| ------------------- | ------- | ------------------------------------------------- |
+| headers             | Array   | 表头：不超过10列，不支持单元格合并，字数不超过100 |
+| rowCount            | Integer | 表格内容最大行数                                  |
+| cells.N.rowStart    | Integer | 单元格坐标：行起始index                           |
+| cells.N.rowEnd      | Integer | 单元格坐标：行结束index                           |
+| cells.N.columnStart | Integer | 单元格坐标：列起始index                           |
+| cells.N.columnEnd   | Integer | 单元格坐标：列结束index                           |
+| cells.N.content     | String  | 单元格内容，字数不超过100                         |
+| cells.N.style         | String  | 单元格字体风格配置 ，风格配置的json字符串  如： {"font":"黑体","fontSize":12,"color":"#FFFFFF","bold":true,"align":"CENTER"}      |
+
+表格参数headers说明
+widthPercent Integer 表头单元格列占总表头的比例，例如1：30表示 此列占表头的30%，不填写时列宽度平均拆分；例如2：总2列，某一列填写40，剩余列可以为空，按照60计算。；例如3：总3列，某一列填写30，剩余2列可以为空，分别为(100-30)/2=35
+
+content String 表头单元格内容，字数不超过100
+
+style String 为字体风格设置 风格支持： font : 目前支持 黑体、宋体; fontSize： 6-72; color：000000-FFFFFF  字符串形如：  "#FFFFFF" 或者 "0xFFFFFF"; bold ： 是否加粗， true ： 加粗 false： 不加粗; align: 对其方式， 支持 LEFT / RIGHT / CENTER
  */
-export interface IntentionActionResult {
+export interface FormField {
   /**
-   * 意愿核身结果详细数据，与每段点头确认过程一一对应
+   * 控件填充值，ComponentType和传入值格式对应关系如下：
+<ul><li> <b>TEXT</b> : 文本内容</li>
+<li> <b>MULTI_LINE_TEXT</b> : 文本内容， 可以用  \n 来控制换行位置</li>
+<li> <b>CHECK_BOX</b> : true/false</li>
+<li> <b>FILL_IMAGE、ATTACHMENT</b> : 附件的FileId，需要通过UploadFiles接口上传获取</li>
+<li> <b>SELECTOR</b> : 选项值</li>
+<li> <b>DYNAMIC_TABLE</b>  - 传入json格式的表格内容，详见说明：[数据表格](https://qian.tencent.com/developers/partner/dynamic_table)</li>
+<li> <b>DATE</b> : 格式化：xxxx年xx月xx日（例如：2024年05月28日）</li>
+<li> <b>DISTRICT </b> : 省市区行政区控件，需填写ComponentValue为省市区行政区字符串内容</li>
+</ul>
+
+
+<b>控件值约束说明</b>：
+<table> <thead> <tr> <th>特殊控件</th> <th>填写约束</th> </tr> </thead> <tbody> <tr> <td>企业全称控件</td> <td>企业名称中文字符中文括号</td> </tr> <tr> <td>统一社会信用代码控件</td> <td>企业注册的统一社会信用代码</td> </tr> <tr> <td>法人名称控件</td> <td>最大50个字符，2到25个汉字或者1到50个字母</td> </tr> <tr> <td>签署意见控件</td> <td>签署意见最大长度为50字符</td> </tr> <tr> <td>签署人手机号控件</td> <td>国内手机号 13,14,15,16,17,18,19号段长度11位</td> </tr> <tr> <td>签署人身份证控件</td> <td>合法的身份证号码检查</td> </tr> <tr> <td>控件名称</td> <td>控件名称最大长度为20字符，不支持表情</td> </tr> <tr> <td>单行文本控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>多行文本控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>勾选框控件</td> <td>选择填字符串true，不选填字符串false</td> </tr> <tr> <td>选择器控件</td> <td>同单行文本控件约束，填写选择值中的字符串</td> </tr> <tr> <td>数字控件</td> <td>请输入有效的数字(可带小数点)</td> </tr> <tr> <td>日期控件</td> <td>格式：yyyy年mm月dd日</td> </tr> <tr> <td>附件控件</td> <td>JPG或PNG图片，上传数量限制，1到6个，最大6个附件，填写上传的资源ID</td> </tr> <tr> <td>图片控件</td> <td>JPG或PNG图片，填写上传的图片资源ID</td> </tr> <tr> <td>邮箱控件</td> <td>有效的邮箱地址, w3c标准</td> </tr> <tr> <td>地址控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>省市区控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>性别控件</td> <td>选择值中的字符串</td> </tr> <tr> <td>学历控件</td> <td>选择值中的字符串</td> </tr> </tbody> </table>
+
+   */
+  ComponentValue: string
+  /**
+   * 表单域或控件的ID，跟ComponentName二选一，不能全为空；
+CreateFlowsByTemplates 接口不使用此字段。
+
+<a href="https://dyn.ess.tencent.cn/guide/apivideo/channel_component_name.mp4" target="_blank">点击此处查看模板上控件ID的获取方式</a>
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Details?: Array<IntentionActionResultDetail>
+  ComponentId?: string
+  /**
+   * 控件的名字，跟ComponentId二选一，不能全为空
+
+<a href="https://dyn.ess.tencent.cn/guide/apivideo/channel_component_name.mp4" target="_blank">点击此处查看模板上控件名字的获取方式</a>
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ComponentName?: string
+  /**
+   * 是否锁定模板控件值，锁定后无法修改（用于嵌入式发起合同），true-锁定，false-不锁定
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  LockComponentValue?: boolean
 }
 
 /**
@@ -5918,6 +6256,10 @@ export interface CreatePartnerAutoSignAuthUrlRequest {
 - PERSONNEL : 人事专用章
    */
   SealTypes?: Array<string>
+  /**
+   * 他方授权给我方：- false：我方授权他方，AuthorizedOrganizationName代表【被授权方】企业名称- true：他方授权我方，AuthorizedOrganizationName代表【授权方】企业名称
+   */
+  AuthToMe?: boolean
 }
 
 /**
@@ -6221,6 +6563,41 @@ export interface ChannelDescribeFlowComponentsResponse {
 }
 
 /**
+ * 主题配置
+ */
+export interface WebThemeConfig {
+  /**
+   * 是否显示页面底部电子签logo，取值如下：
+<ul><li> **true**：页面底部显示电子签logo</li>
+<li> **false**：页面底部不显示电子签logo（默认）</li></ul>
+   */
+  DisplaySignBrandLogo?: boolean
+  /**
+   * 主题颜色：
+支持十六进制颜色值以及RGB格式颜色值，例如：#D54941，rgb(213, 73, 65)
+<br/>
+   */
+  WebEmbedThemeColor?: string
+  /**
+   * 企业认证页背景图（base64图片）
+
+   */
+  AuthenticateBackground?: string
+  /**
+   * 隐藏企业认证页面导航栏，取值如下：
+<ul><li> **true**：隐藏企业认证页面导航栏</li>
+<li> **false**：显示企业认证页面导航栏（默认）</li></ul>
+   */
+  HideAuthenticateNavigationBar?: boolean
+  /**
+   * 隐藏企业认证顶部logo，取值如下：
+<ul><li> **true**：隐藏企业认证顶部logo</li>
+<li> **false**：显示企业认证顶部logo（默认）</li></ul>
+   */
+  HideAuthenticateTopLogo?: boolean
+}
+
+/**
  * ChannelCreateFlowGroupByFiles返回参数结构体
  */
 export interface ChannelCreateFlowGroupByFilesResponse {
@@ -6347,11 +6724,13 @@ export interface ChannelDescribeUserAutoSignStatusResponse {
    */
   LicenseTo?: number
   /**
-   * 设置用户开通自动签时是否绑定个人自动签账号许可。
-
-<ul><li>**0**: 使用个人自动签账号许可进行开通，个人自动签账号许可有效期1年，注: `不可解绑释放更换他人`</li></ul>
+   * 设置用户开通自动签时是否绑定个人自动签账号许可。<ul><li>**0**: 使用个人自动签账号许可进行开通，个人自动签账号许可有效期1年，注: `不可解绑释放更换他人`</li><li>**1**: 不绑定自动签账号许可开通，后续使用合同份额进行合同发起</li></ul>
    */
   LicenseType?: number
+  /**
+   * 用户开通自动签指定使用的印章，为空则未设置印章，需重新进入开通链接设置印章。
+   */
+  SealId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -6914,275 +7293,23 @@ export interface ChannelCreateFlowGroupByTemplatesRequest {
 }
 
 /**
- * 电子文档的控件填充信息。按照控件类型进行相应的填充。
-
-当控件的 ComponentType='TEXT'时，FormField.ComponentValue填入文本内容
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "文本内容"
-}
-```
-当控件的 ComponentType='MULTI_LINE_TEXT'时，FormField.ComponentValue填入文本内容，支持自动换行。
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "多行文本内容"
-}
-```
-当控件的 ComponentType='CHECK_BOX'时，FormField.ComponentValue填入true或false文本
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "true"
-}
-```
-当控件的 ComponentType='FILL_IMAGE'时，FormField.ComponentValue填入图片的资源ID
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
-```
-当控件的 ComponentType='ATTACHMENT'时，FormField.ComponentValue填入附件图片的资源ID列表，以逗号分隔，单个附件控件最多支持6个资源ID；
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx1,yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx2,yDwhsxxxxxxxxxxxxxxxxxxxxxxxxxx3"
-}
-```
-当控件的 ComponentType='SELECTOR'时，FormField.ComponentValue填入选择的选项内容；
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "选择的内容"
-}
-```
-当控件的 ComponentType='DATE'时，FormField.ComponentValue填入日期内容；
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "2023年01月01日"
-}
-```
-当控件的 ComponentType='DISTRICT'时，FormField.ComponentValue填入省市区内容；
-```
-FormField输入示例：
-{
-    "ComponentId": "componentId1",
-    "ComponentValue": "广东省深圳市福田区"
-}
-```
-【数据表格传参说明】
-当控件的 ComponentType='DYNAMIC_TABLE'时，FormField.ComponentValue需要传递json格式的字符串参数，用于确定表头&填充数据表格（支持内容的单元格合并）
-输入示例1：
-
-```
-{
-    "headers":[
-        {
-            "content":"head1"
-        },
-        {
-            "content":"head2"
-        },
-        {
-            "content":"head3"
-        }
-    ],
-    "rowCount":3,
-    "body":{
-        "cells":[
-            {
-                "rowStart":1,
-                "rowEnd":1,
-                "columnStart":1,
-                "columnEnd":1,
-                "content":"123"
-            },
-            {
-                "rowStart":2,
-                "rowEnd":3,
-                "columnStart":1,
-                "columnEnd":2,
-                "content":"456"
-            },
-            {
-                "rowStart":3,
-                "rowEnd":3,
-                "columnStart":3,
-                "columnEnd":3,
-                "content":"789"
-            }
-        ]
-    }
-}
-
-```
-
-输入示例2（表格表头宽度比例配置）：
-
-```
-{
-    "headers":[
-        {
-            "content":"head1",
-            "widthPercent": 30
-        },
-        {
-            "content":"head2",
-            "widthPercent": 30
-        },
-        {
-            "content":"head3",
-            "widthPercent": 40
-        }
-    ],
-    "rowCount":3,
-    "body":{
-        "cells":[
-            {
-                "rowStart":1,
-                "rowEnd":1,
-                "columnStart":1,
-                "columnEnd":1,
-                "content":"123"
-            },
-            {
-                "rowStart":2,
-                "rowEnd":3,
-                "columnStart":1,
-                "columnEnd":2,
-                "content":"456"
-            },
-            {
-                "rowStart":3,
-                "rowEnd":3,
-                "columnStart":3,
-                "columnEnd":3,
-                "content":"789"
-            }
-        ]
-    }
-}
-
-```
-
-
-输入示例3（表格设置字体加粗颜色）：
-
-```
-{
-    "headers":[
-        {
-            "content":"head1"
-        },
-        {
-            "content":"head2"
-        },
-        {
-            "content":"head3"
-        }
-    ],
-    "rowCount":3,
-    "body":{
-        "cells":[
-            {
-                "rowStart":1,
-                "rowEnd":1,
-                "columnStart":1,
-                "columnEnd":1,
-                "content":"123",
-                "style": {"color": "#b50000", "fontSize": 12,"bold": true,"align": "CENTER"}
-            },
-            {
-                "rowStart":2,
-                "rowEnd":3,
-                "columnStart":1,
-                "columnEnd":2,
-                "content":"456",
-                "style": {"color": "#b50000", "fontSize": 12,"bold": true,"align": "LEFT"}
-            },
-            {
-                "rowStart":3,
-                "rowEnd":3,
-                "columnStart":3,
-                "columnEnd":3,
-                "content":"789",
-                "style": {"color": "#b500bf", "fontSize": 12,"bold": false,"align": "RIGHT"}
-            }
-        ]
-    }
-}
-
-```
-
-表格参数说明
-
-| 名称                | 类型    | 描述                                              |
-| ------------------- | ------- | ------------------------------------------------- |
-| headers             | Array   | 表头：不超过10列，不支持单元格合并，字数不超过100 |
-| rowCount            | Integer | 表格内容最大行数                                  |
-| cells.N.rowStart    | Integer | 单元格坐标：行起始index                           |
-| cells.N.rowEnd      | Integer | 单元格坐标：行结束index                           |
-| cells.N.columnStart | Integer | 单元格坐标：列起始index                           |
-| cells.N.columnEnd   | Integer | 单元格坐标：列结束index                           |
-| cells.N.content     | String  | 单元格内容，字数不超过100                         |
-| cells.N.style         | String  | 单元格字体风格配置 ，风格配置的json字符串  如： {"font":"黑体","fontSize":12,"color":"#FFFFFF","bold":true,"align":"CENTER"}      |
-
-表格参数headers说明
-widthPercent Integer 表头单元格列占总表头的比例，例如1：30表示 此列占表头的30%，不填写时列宽度平均拆分；例如2：总2列，某一列填写40，剩余列可以为空，按照60计算。；例如3：总3列，某一列填写30，剩余2列可以为空，分别为(100-30)/2=35
-
-content String 表头单元格内容，字数不超过100
-
-style String 为字体风格设置 风格支持： font : 目前支持 黑体、宋体; fontSize： 6-72; color：000000-FFFFFF  字符串形如：  "#FFFFFF" 或者 "0xFFFFFF"; bold ： 是否加粗， true ： 加粗 false： 不加粗; align: 对其方式， 支持 LEFT / RIGHT / CENTER
+ * CreateBatchInitOrganizationUrl请求参数结构体
  */
-export interface FormField {
+export interface CreateBatchInitOrganizationUrlRequest {
   /**
-   * 控件填充值，ComponentType和传入值格式对应关系如下：
-<ul><li> <b>TEXT</b> : 文本内容</li>
-<li> <b>MULTI_LINE_TEXT</b> : 文本内容， 可以用  \n 来控制换行位置</li>
-<li> <b>CHECK_BOX</b> : true/false</li>
-<li> <b>FILL_IMAGE、ATTACHMENT</b> : 附件的FileId，需要通过UploadFiles接口上传获取</li>
-<li> <b>SELECTOR</b> : 选项值</li>
-<li> <b>DYNAMIC_TABLE</b>  - 传入json格式的表格内容，详见说明：[数据表格](https://qian.tencent.com/developers/partner/dynamic_table)</li>
-<li> <b>DATE</b> : 格式化：xxxx年xx月xx日（例如：2024年05月28日）</li>
-<li> <b>DISTRICT </b> : 省市区行政区控件，需填写ComponentValue为省市区行政区字符串内容</li>
-</ul>
-
-
-<b>控件值约束说明</b>：
-<table> <thead> <tr> <th>特殊控件</th> <th>填写约束</th> </tr> </thead> <tbody> <tr> <td>企业全称控件</td> <td>企业名称中文字符中文括号</td> </tr> <tr> <td>统一社会信用代码控件</td> <td>企业注册的统一社会信用代码</td> </tr> <tr> <td>法人名称控件</td> <td>最大50个字符，2到25个汉字或者1到50个字母</td> </tr> <tr> <td>签署意见控件</td> <td>签署意见最大长度为50字符</td> </tr> <tr> <td>签署人手机号控件</td> <td>国内手机号 13,14,15,16,17,18,19号段长度11位</td> </tr> <tr> <td>签署人身份证控件</td> <td>合法的身份证号码检查</td> </tr> <tr> <td>控件名称</td> <td>控件名称最大长度为20字符，不支持表情</td> </tr> <tr> <td>单行文本控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>多行文本控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>勾选框控件</td> <td>选择填字符串true，不选填字符串false</td> </tr> <tr> <td>选择器控件</td> <td>同单行文本控件约束，填写选择值中的字符串</td> </tr> <tr> <td>数字控件</td> <td>请输入有效的数字(可带小数点)</td> </tr> <tr> <td>日期控件</td> <td>格式：yyyy年mm月dd日</td> </tr> <tr> <td>附件控件</td> <td>JPG或PNG图片，上传数量限制，1到6个，最大6个附件，填写上传的资源ID</td> </tr> <tr> <td>图片控件</td> <td>JPG或PNG图片，填写上传的图片资源ID</td> </tr> <tr> <td>邮箱控件</td> <td>有效的邮箱地址, w3c标准</td> </tr> <tr> <td>地址控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>省市区控件</td> <td>只允许输入中文，英文，数字，中英文标点符号，不支持表情</td> </tr> <tr> <td>性别控件</td> <td>选择值中的字符串</td> </tr> <tr> <td>学历控件</td> <td>选择值中的字符串</td> </tr> </tbody> </table>
-
+   * 应用相关信息。 此接口Agent.AppId 必填。
    */
-  ComponentValue: string
+  Agent: Agent
   /**
-   * 表单域或控件的ID，跟ComponentName二选一，不能全为空；
-CreateFlowsByTemplates 接口不使用此字段。
-
-<a href="https://dyn.ess.tencent.cn/guide/apivideo/channel_component_name.mp4" target="_blank">点击此处查看模板上控件ID的获取方式</a>
-注意：此字段可能返回 null，表示取不到有效值。
+   * 初始化操作类型
+<ul><li>CREATE_SEAL : 创建印章</li>
+<li>OPEN_AUTO_SIGN :开通企业自动签署</li></ul>
    */
-  ComponentId?: string
+  OperateTypes: Array<string>
   /**
-   * 控件的名字，跟ComponentId二选一，不能全为空
-
-<a href="https://dyn.ess.tencent.cn/guide/apivideo/channel_component_name.mp4" target="_blank">点击此处查看模板上控件名字的获取方式</a>
-注意：此字段可能返回 null，表示取不到有效值。
+   * 批量操作的企业列表在第三方平台的企业Id列表，即ProxyOrganizationOpenId列表,最大支持50个
    */
-  ComponentName?: string
-  /**
-   * 是否锁定模板控件值，锁定后无法修改（用于嵌入式发起合同），true-锁定，false-不锁定
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  LockComponentValue?: boolean
+  ProxyOrganizationOpenIds: Array<string>
 }
 
 /**
@@ -7591,7 +7718,7 @@ export interface CreateFlowsByTemplatesRequest {
  */
 export interface DescribeBatchOrganizationRegistrationUrlsResponse {
   /**
-   * 子企业注册认证的的链接列表
+   * 子企业注册认证的链接列表
    */
   OrganizationAuthUrls?: Array<OrganizationAuthUrl>
   /**
@@ -8146,7 +8273,9 @@ export interface ChannelCreateFlowSignUrlRequest {
    */
   FlowId: string
   /**
-   * 流程签署人列表，其中结构体的Name，Mobile和ApproverType必传，企业签署人则还需传OrganizationName、OpenId、OrganizationOpenId，其他可不传。
+   * 流程签署人列表，其中结构体的ApproverType必传。
+若为个人签署方或saas企业签署方，则Name，Mobile必传。OrganizationName 传对应企业名称。
+若为子客企业签署方则需传OpenId、OrganizationOpenId，其他可不传。
 
 注:
 `1. 签署人只能有手写签名、时间类型、印章类型的签署控件和内容填写控件，其他类型的签署控件暂时未支持。`

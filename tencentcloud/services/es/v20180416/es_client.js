@@ -64,6 +64,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeServerlessSpaces", req, cb);
     }
     /**
+     * ES集群安装模型接口
+     */
+    async InstallInstanceModel(req, cb) {
+        return this.request("InstallInstanceModel", req, cb);
+    }
+    /**
      * 获取索引列表
      */
     async DescribeIndexList(req, cb) {
@@ -215,6 +221,7 @@ class Client extends abstract_client_1.AbstractClient {
     }
     /**
      * 获取serverless实例对应指标，获取space维度时不需要传入indexid，获取index时不需要传入spaceid
+获取一段时间时间范围内的指标数据
      */
     async DescribeServerlessMetrics(req, cb) {
         return this.request("DescribeServerlessMetrics", req, cb);
@@ -224,6 +231,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async DescribeInstanceOperations(req, cb) {
         return this.request("DescribeInstanceOperations", req, cb);
+    }
+    /**
+     * space维度的kibana获取登录token
+     */
+    async DescribeSpaceKibanaTools(req, cb) {
+        return this.request("DescribeSpaceKibanaTools", req, cb);
     }
     /**
      * 用于获取Logstash实例管道列表

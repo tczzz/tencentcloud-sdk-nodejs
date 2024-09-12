@@ -20,17 +20,19 @@ import { ClientConfig } from "../../../common/interface"
 import {
   DescribeSpecInfoRequest,
   CreateDBInstanceRequest,
-  DescribeCurrentOpResponse,
+  CreateDBInstanceParamTplResponse,
   DescribeAccountUsersRequest,
-  SetInstanceMaintenanceResponse,
+  DescribeDBInstanceParamTplRequest,
   CreateBackupDBInstanceResponse,
-  FlushInstanceRouterConfigRequest,
+  DBInstancePrice,
   KillOpsRequest,
   InquirePriceRenewDBInstancesRequest,
   DescribeSlowLogsRequest,
   FlushInstanceRouterConfigResponse,
+  DescribeCurrentOpResponse,
   InstanceMultiParam,
   ModifyInstanceParamsResponse,
+  SetInstanceMaintenanceResponse,
   DescribeBackupRulesResponse,
   SlowLogPattern,
   AssignProjectResponse,
@@ -38,21 +40,25 @@ import {
   ModifyMongoDBParamType,
   OfflineIsolatedDBInstanceResponse,
   IsolateDBInstanceResponse,
+  CreateDBInstanceParamTplRequest,
   DescribeSecurityGroupRequest,
   RenameInstanceRequest,
   DescribeBackupRulesRequest,
   DescribeBackupDownloadTaskResponse,
   AddNodeList,
-  DBInstancePrice,
+  FlushInstanceRouterConfigRequest,
   DBInstanceInfo,
+  ParamType,
   SetAccountUserPrivilegeResponse,
   FlashbackDatabase,
   ModifyDBInstanceNetworkAddressRequest,
   CreateDBInstanceHourResponse,
+  DropDBInstanceParamTplResponse,
   EnableTransparentDataEncryptionRequest,
   DeleteAccountUserRequest,
   SpecItem,
   ModifyDBInstanceNetworkAddressResponse,
+  DropDBInstanceParamTplRequest,
   CreateAccountUserResponse,
   DescribeSlowLogPatternsResponse,
   BackupDownloadTaskStatus,
@@ -77,6 +83,7 @@ import {
   DescribeBackupDownloadTaskRequest,
   Operation,
   DescribeClientConnectionsResponse,
+  ModifyDBInstanceParamTplResponse,
   TerminateDBInstancesRequest,
   DescribeDBBackupsResponse,
   ModifyDBInstanceSecurityGroupResponse,
@@ -94,9 +101,12 @@ import {
   DescribeAsyncRequestInfoRequest,
   FBKeyValue,
   CreateBackupDownloadTaskRequest,
+  ParamTpl,
   InquirePriceModifyDBInstanceSpecResponse,
   SecurityGroupBound,
   DescribeDBInstanceNodePropertyResponse,
+  DescribeDBInstanceParamTplDetailResponse,
+  ModifyDBInstanceParamTplRequest,
   DescribeCurrentOpRequest,
   BackupDownloadTask,
   DescribeDBBackupsRequest,
@@ -132,9 +142,13 @@ import {
   KMSInfoDetail,
   InquirePriceCreateDBInstancesRequest,
   DescribeInstanceParamsResponse,
+  DescribeDBInstanceParamTplResponse,
   DescribeTransparentDataEncryptionStatusRequest,
   RemoveNodeList,
+  RestartNodesRequest,
   SetInstanceMaintenanceRequest,
+  RestartNodesResponse,
+  DescribeDBInstanceParamTplDetailRequest,
   InstanceDetail,
   ModifyDBInstanceSpecResponse,
   InstanceChargePrepaid,
@@ -168,6 +182,17 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DescribeDBInstanceNodePropertyResponse) => void
   ): Promise<DescribeDBInstanceNodePropertyResponse> {
     return this.request("DescribeDBInstanceNodeProperty", req, cb)
+  }
+
+  /**
+   * 本接口(DescribeDBInstanceParamTpl )用于查询当前账号下所有MongoDB数据库参数模板
+   **说明：DescribeDBInstanceParamTpl  API正在公测中，在此期间，该接口仅对公测用户开放**
+   */
+  async DescribeDBInstanceParamTpl(
+    req: DescribeDBInstanceParamTplRequest,
+    cb?: (error: string, rep: DescribeDBInstanceParamTplResponse) => void
+  ): Promise<DescribeDBInstanceParamTplResponse> {
+    return this.request("DescribeDBInstanceParamTpl", req, cb)
   }
 
   /**
@@ -281,6 +306,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口用于重启数据库节点。
+   */
+  async RestartNodes(
+    req: RestartNodesRequest,
+    cb?: (error: string, rep: RestartNodesResponse) => void
+  ): Promise<RestartNodesResponse> {
+    return this.request("RestartNodes", req, cb)
+  }
+
+  /**
    * 本接口（DescribeBackupRules）用于获取实例自动备份配置信息。
    */
   async DescribeBackupRules(
@@ -321,6 +356,17 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口(ModifyDBInstanceParamTpl )用于修改MongoDB云数据库实例的参数模板。
+   **说明：ModifyDBInstanceParamTpl  API正在公测中，在此期间，该接口仅对公测用户开放**
+   */
+  async ModifyDBInstanceParamTpl(
+    req: ModifyDBInstanceParamTplRequest,
+    cb?: (error: string, rep: ModifyDBInstanceParamTplResponse) => void
+  ): Promise<ModifyDBInstanceParamTplResponse> {
+    return this.request("ModifyDBInstanceParamTpl", req, cb)
+  }
+
+  /**
    * 本接口（CreateDBInstanceHour）用于创建按量计费的MongoDB云数据库实例。
    */
   async CreateDBInstanceHour(
@@ -328,6 +374,28 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: CreateDBInstanceHourResponse) => void
   ): Promise<CreateDBInstanceHourResponse> {
     return this.request("CreateDBInstanceHour", req, cb)
+  }
+
+  /**
+   * 本接口(CreateDBInstanceParamTpl)用于创建云数据库MongoDB实例的参数模板
+   **说明：CreateDBInstanceParamTpl API正在公测中，在此期间，该接口仅对公测用户开放**
+   */
+  async CreateDBInstanceParamTpl(
+    req: CreateDBInstanceParamTplRequest,
+    cb?: (error: string, rep: CreateDBInstanceParamTplResponse) => void
+  ): Promise<CreateDBInstanceParamTplResponse> {
+    return this.request("CreateDBInstanceParamTpl", req, cb)
+  }
+
+  /**
+   * 本接口(DropDBInstanceParamTpl )用于删除云数据库MongoDB实例的参数模板
+   **说明：DropDBInstanceParamTpl  API正在公测中，在此期间，该接口仅对公测用户开放**
+   */
+  async DropDBInstanceParamTpl(
+    req: DropDBInstanceParamTplRequest,
+    cb?: (error: string, rep: DropDBInstanceParamTplResponse) => void
+  ): Promise<DropDBInstanceParamTplResponse> {
+    return this.request("DropDBInstanceParamTpl", req, cb)
   }
 
   /**
@@ -520,6 +588,17 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: ModifyInstanceParamsResponse) => void
   ): Promise<ModifyInstanceParamsResponse> {
     return this.request("ModifyInstanceParams", req, cb)
+  }
+
+  /**
+   * 本接口(DescribeDBInstanceParamTplDetail )用于查询MongoDB云数据库实例的参数模板详情。
+   **说明：DescribeDBInstanceParamTplDetail  API正在公测中，在此期间，该接口仅对公测用户开放**
+   */
+  async DescribeDBInstanceParamTplDetail(
+    req: DescribeDBInstanceParamTplDetailRequest,
+    cb?: (error: string, rep: DescribeDBInstanceParamTplDetailResponse) => void
+  ): Promise<DescribeDBInstanceParamTplDetailResponse> {
+    return this.request("DescribeDBInstanceParamTplDetail", req, cb)
   }
 
   /**

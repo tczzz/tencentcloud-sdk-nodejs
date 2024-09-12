@@ -802,13 +802,17 @@ export interface DeleteUserQuotaRequest {
      */
     FileSystemId: string;
     /**
-     * 指定配额类型，包括Uid、Gid
+     * 指定配额类型，包括Uid、Gid、Dir
      */
     UserType: string;
     /**
      * UID/GID信息
      */
-    UserId: string;
+    UserId?: string;
+    /**
+     * 设置目录配额的目录的绝对路径
+     */
+    DirectoryPath?: string;
 }
 /**
  * DescribeAvailableZoneInfo返回参数结构体
@@ -1090,21 +1094,25 @@ export interface SetUserQuotaRequest {
      */
     FileSystemId: string;
     /**
-     * 指定配额类型，包括Uid、Gid
+     * 指定配额类型，包括Uid、Gid，Dir，分别代表用户配额，用户组配额，目录配额
      */
     UserType: string;
     /**
      * UID/GID信息
      */
-    UserId: string;
+    UserId?: string;
     /**
-     * 容量硬限制，单位GiB
+     * 容量硬限制，单位GiB。设置范围10-10000000。
      */
     CapacityHardLimit?: number;
     /**
-     * 文件硬限制，单位个
+     * 文件硬限制，单位个。设置范围1000-100000000
      */
     FileHardLimit?: number;
+    /**
+     * 需设置目录配额的目录绝对路径，不同目录不可存在包含关系
+     */
+    DirectoryPath?: string;
 }
 /**
  * CreateAutoSnapshotPolicy返回参数结构体
@@ -1179,7 +1187,7 @@ export interface CreateCfsSnapshotResponse {
  */
 export interface UserQuota {
     /**
-     * 指定配额类型，包括Uid、Gid
+     * 指定配额类型，包括Uid、Gid、Dir
      */
     UserType: string;
     /**
@@ -1208,6 +1216,16 @@ export interface UserQuota {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     FileUsed?: number;
+    /**
+     * 目录配额的目录绝对路径
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DirectoryPath?: string;
+    /**
+     * 配置规则状态，inavailable---配置中，available --已生效，deleting--删除中，deleted 已删除，failed--配置失败
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Status?: string;
 }
 /**
  * DeleteMountTarget请求参数结构体

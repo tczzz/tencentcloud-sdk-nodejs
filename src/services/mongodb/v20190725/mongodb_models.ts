@@ -174,20 +174,20 @@ export interface CreateDBInstanceRequest {
    * Hidden节点所属可用区。跨可用区部署实例，必须配置该参数。
    */
   HiddenZone?: string
+  /**
+   * 参数模板 ID。参数模板是一组 MongoDB 的参数并为预设置了参数值的集合，将一组有相同诉求的参数及值 存为模板，在创建实例时，可直接引用参数值到新实例。合理使用参数模板，可以提高MongoDB数据库的效率。模板列表从 DescribeDBInstanceParamTpl 接口获取，注意模板支持的版本及实例类型。
+   */
+  ParamTemplateId?: string
 }
 
 /**
- * DescribeCurrentOp返回参数结构体
+ * CreateDBInstanceParamTpl返回参数结构体
  */
-export interface DescribeCurrentOpResponse {
+export interface CreateDBInstanceParamTplResponse {
   /**
-   * 符合查询条件的操作总数
+   * 模板ID
    */
-  TotalCount: number
-  /**
-   * 当前操作列表
-   */
-  CurrentOps: Array<CurrentOp>
+  TplId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -205,13 +205,25 @@ export interface DescribeAccountUsersRequest {
 }
 
 /**
- * SetInstanceMaintenance返回参数结构体
+ * DescribeDBInstanceParamTpl请求参数结构体
  */
-export interface SetInstanceMaintenanceResponse {
+export interface DescribeDBInstanceParamTplRequest {
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 参数模板 ID 查询条件。
    */
-  RequestId?: string
+  TplIds?: Array<string>
+  /**
+   * 模板名称，查询条件。
+   */
+  TplNames?: Array<string>
+  /**
+   * 根据版本号插叙参数模板，具体支持的售卖版本请参照查询云数据库的售卖规格（DescribeSpecInfo）返回结果。参数与版本对应关系是：MONGO_36_WT：MongoDB 3.6 WiredTiger存储引擎版本，MONGO_40_WT：MongoDB 4.0 WiredTiger存储引擎版本，MONGO_42_WT：MongoDB 4.2 WiredTiger存储引擎版本。
+   */
+  MongoVersion?: Array<string>
+  /**
+   * 根据模板类型查询参数模板，支持DEFAULT（默认模板）和CUSTOMIZE（自定义模板）两种。
+   */
+  TplType?: string
 }
 
 /**
@@ -229,13 +241,22 @@ export interface CreateBackupDBInstanceResponse {
 }
 
 /**
- * FlushInstanceRouterConfig请求参数结构体
+ * 数据库实例价格
  */
-export interface FlushInstanceRouterConfigRequest {
+export interface DBInstancePrice {
   /**
-   * 实例ID
+   * 单价
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  InstanceId: string
+  UnitPrice: number
+  /**
+   * 原价
+   */
+  OriginalPrice: number
+  /**
+   * 折扣价
+   */
+  DiscountPrice: number
 }
 
 /**
@@ -311,6 +332,24 @@ export interface FlushInstanceRouterConfigResponse {
 }
 
 /**
+ * DescribeCurrentOp返回参数结构体
+ */
+export interface DescribeCurrentOpResponse {
+  /**
+   * 符合查询条件的操作总数
+   */
+  TotalCount: number
+  /**
+   * 当前操作列表
+   */
+  CurrentOps: Array<CurrentOp>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * 实例可修改参数Multi类型集合。
  */
 export interface InstanceMultiParam {
@@ -367,6 +406,16 @@ export interface ModifyInstanceParamsResponse {
    * 该参数暂时无意义(兼容前端保留)。
    */
   TaskId?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * SetInstanceMaintenance返回参数结构体
+ */
+export interface SetInstanceMaintenanceResponse {
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -506,6 +555,37 @@ export interface IsolateDBInstanceResponse {
 }
 
 /**
+ * CreateDBInstanceParamTpl请求参数结构体
+ */
+export interface CreateDBInstanceParamTplRequest {
+  /**
+   * 参数模板名称。
+   */
+  TplName: string
+  /**
+   * 版本号，该参数模板支持的售卖版本请参照查询云数据库的售卖规格（DescribeSpecInfo）返回结果。参数与版本对应关系是：MONGO_36_WT：MongoDB 3.6 WiredTiger存储引擎版本，MONGO_40_WT：MongoDB 4.0 WiredTiger存储引擎版本，MONGO_42_WT：MongoDB 4.2 WiredTiger存储引擎版本。当MirrorTplId为空时，该字段必填。
+   */
+  MongoVersion?: string
+  /**
+   * 实例类型，REPLSET-副本集，SHARD-分片集群，STANDALONE-单节点
+当MirrorTplId为空时，该字段必填。
+   */
+  ClusterType?: string
+  /**
+   * 模板描述信息。
+   */
+  TplDesc?: string
+  /**
+   * 模板参数，若为空，则以系统默认模板作为新版本参数。
+   */
+  Params?: Array<ParamType>
+  /**
+   * 镜像模板ID，若该字段不为空，则以该模板为镜像，克隆出一个新的模板。注意：MirrorTplId不为空时，MongoVersion及ClusterType将以MirrorTpl模板的版本及实例类型为准。
+   */
+  MirrorTplId?: string
+}
+
+/**
  * DescribeSecurityGroup请求参数结构体
  */
 export interface DescribeSecurityGroupRequest {
@@ -577,22 +657,13 @@ export interface AddNodeList {
 }
 
 /**
- * 数据库实例价格
+ * FlushInstanceRouterConfig请求参数结构体
  */
-export interface DBInstancePrice {
+export interface FlushInstanceRouterConfigRequest {
   /**
-   * 单价
-注意：此字段可能返回 null，表示取不到有效值。
+   * 实例ID
    */
-  UnitPrice: number
-  /**
-   * 原价
-   */
-  OriginalPrice: number
-  /**
-   * 折扣价
-   */
-  DiscountPrice: number
+  InstanceId: string
 }
 
 /**
@@ -607,6 +678,20 @@ export interface DBInstanceInfo {
    * 地域信息
    */
   Region: string
+}
+
+/**
+ * 数据库参数
+ */
+export interface ParamType {
+  /**
+   * 参数
+   */
+  Key: string
+  /**
+   * 参数值
+   */
+  Value: string
 }
 
 /**
@@ -686,6 +771,16 @@ export interface CreateDBInstanceHourResponse {
 }
 
 /**
+ * DropDBInstanceParamTpl返回参数结构体
+ */
+export interface DropDBInstanceParamTplResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * EnableTransparentDataEncryption请求参数结构体
  */
 export interface EnableTransparentDataEncryptionRequest {
@@ -727,89 +822,112 @@ export interface DeleteAccountUserRequest {
  */
 export interface SpecItem {
   /**
-   * 规格信息标识
+   * 规格信息标识。格式如：mongo.HIO10G.128g。由节点类型、规格类型、内存规格三部分组成。
+- 节点类型，如下所示。
+  - mongo：Mongod 节点。
+ - mongos：Mongos 节点。
+ - cfgstr：Configserver 节点。
+- 规格类型，如下所示。
+ - HIO10G：通用高HIO万兆型。
+ - HCD：云盘版类型。
+- 内存规格，如下所示：
+ - 支持4、8、16、32、64、128、240、512。
+ - 单位g：表示GB。128g则表示128GB。
    */
-  SpecCode: string
+  SpecCode?: string
   /**
-   * 规格有效标志，取值：0-停止售卖，1-开放售卖
+   * 售卖规格有效标志，取值范围如下：
+- 0：停止售卖，
+- 1：开放售卖。
    */
-  Status: number
+  Status?: number
   /**
-   * 计算资源规格，单位为CPU核心数
+   * 计算资源规格，CPU核数。
    */
-  Cpu: number
+  Cpu?: number
   /**
-   * 内存规格，单位为MB
+   * 内存规格，单位为：MB。
    */
-  Memory: number
+  Memory?: number
   /**
-   * 默认磁盘规格，单位MB
+   * 默认磁盘规格，单位为：MB。
    */
-  DefaultStorage: number
+  DefaultStorage?: number
   /**
-   * 最大磁盘规格，单位MB
+   * 最大磁盘规格，单位为：MB。
    */
-  MaxStorage: number
+  MaxStorage?: number
   /**
-   * 最小磁盘规格，单位MB
+   * 最小磁盘规格，单位为：MB。
    */
-  MinStorage: number
+  MinStorage?: number
   /**
-   * 可承载qps信息
+   * 指每秒最大请求次数，单位为：次/秒。
    */
-  Qps: number
+  Qps?: number
   /**
-   * 连接数限制
+   * 规格所支持的最大连接数限制。
    */
-  Conns: number
+  Conns?: number
   /**
-   * 实例mongodb版本信息
+   * 实例存储引擎版本信息。
+- MONGO_36_WT：MongoDB 3.6 WiredTiger存储引擎版本。
+- MONGO_40_WT：MongoDB 4.0 WiredTiger存储引擎版本。
+- MONGO_42_WT：MongoDB 4.2 WiredTiger存储引擎版本。
+- MONGO_44_WT：MongoDB 4.4 WiredTiger存储引擎版本。
+- MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
+- MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
    */
-  MongoVersionCode: string
+  MongoVersionCode?: string
   /**
-   * 实例mongodb版本号
+   * 实例版本对应的数字版本。
    */
-  MongoVersionValue: number
+  MongoVersionValue?: number
   /**
-   * 实例mongodb版本号（短）
+   * 实例版本信息。支持：3.6、4.2、4.4、5.0、6.0。
+
    */
-  Version: string
+  Version?: string
   /**
-   * 存储引擎
+   * 存储引擎。
    */
-  EngineName: string
+  EngineName?: string
   /**
-   * 集群类型，取值：1-分片集群，0-副本集集群
+   * 集群类型，取值如下：
+- 1：分片集群。
+- 0：副本集集群。
    */
-  ClusterType: number
+  ClusterType?: number
   /**
-   * 最小副本集从节点数
+   * 每个副本集最小节点数。
    */
-  MinNodeNum: number
+  MinNodeNum?: number
   /**
-   * 最大副本集从节点数
+   * 每个副本集最大节点数。
    */
-  MaxNodeNum: number
+  MaxNodeNum?: number
   /**
-   * 最小分片数
+   * 最小分片数。
    */
-  MinReplicateSetNum: number
+  MinReplicateSetNum?: number
   /**
-   * 最大分片数
+   * 最大分片数。
    */
-  MaxReplicateSetNum: number
+  MaxReplicateSetNum?: number
   /**
-   * 最小分片从节点数
+   * 每个分片最小节点数。
    */
-  MinReplicateSetNodeNum: number
+  MinReplicateSetNodeNum?: number
   /**
-   * 最大分片从节点数
+   * 每个分片最大节点数。
    */
-  MaxReplicateSetNodeNum: number
+  MaxReplicateSetNodeNum?: number
   /**
-   * 机器类型，取值：0-HIO，4-HIO10G
+   * 集群的规格类型，取值范围如下：
+- HIO10G：通用高HIO万兆型。
+- HCD：云盘版类型。
    */
-  MachineType: string
+  MachineType?: string
 }
 
 /**
@@ -824,6 +942,16 @@ export interface ModifyDBInstanceNetworkAddressResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * DropDBInstanceParamTpl请求参数结构体
+ */
+export interface DropDBInstanceParamTplRequest {
+  /**
+   * 参数模板 ID。
+   */
+  TplId: string
 }
 
 /**
@@ -1103,13 +1231,15 @@ export interface ModifyDBInstanceSpecRequest {
    */
   InstanceId: string
   /**
-   * 实例配置变更后的内存大小。- 单位：GB。- 内存和磁盘必须同时升配或同时降配，即 Memory 与 Volume 需同时配置变更。<br>注意：节点变更时，输入实例当前的内存配置。
+   * 实例配置变更后的内存大小。- 单位：GB。为空时，默认取实例当前的内存大小。<br>  注意：内存和磁盘必须同时升配或同时降配，即 Memory 与 Volume 需同时配置变更。
    */
-  Memory: number
+  Memory?: number
   /**
-   * 实例配置变更后的硬盘大小，单位：GB。<ul><li>内存和磁盘必须同时升配或同时降配，即 Memory 与 Volume 需同时配置变更。</li><li>降配时，变更后的磁盘容量必须大于已用磁盘容量的1.2倍。</li></ul>  注意：节点变更时，输入实例当前的硬盘配置。
+   * 实例配置变更后的硬盘大小，单位：GB。为空时，默认取当前实例的磁盘大小。
+- 内存和磁盘必须同时升配或同时降配，即 Memory 与 Volume 需同时配置变更。
+- 降配时，变更后的磁盘容量必须大于已用磁盘容量的1.2倍。
    */
-  Volume: number
+  Volume?: number
   /**
    * (已废弃) 请使用ResizeOplog独立接口完成。
 
@@ -1119,11 +1249,17 @@ export interface ModifyDBInstanceSpecRequest {
    */
   OplogSize?: number
   /**
-   * 实例变更后的节点数。- 变更节点类型包含：mongod节点 或 readonly 节点，mongos节点变更无需填写。变更节点类型，请查询参数**AddNodeList**或**RemoveNodeList**指定的类型。- 副本集节点数：取值范围请通过云数据库的售卖规格 [DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 接口返回的参数**MinNodeNum**与 **MaxNodeNum**获取。- 分片集群每个分片节点数：取值范围请通过云数据库的售卖规格 [DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 接口返回的参数**MinReplicateSetNodeNum**与**MaxReplicateSetNodeNum**获取。
+   * 实例变更后mongod的节点数（不包含readonly节点数）。
+- 变更mongod CPU与内存规格时，该参数可以不配置或者输入当前 mongod(不包含readonly) 节点数量。
+-  变更 mongos CPU与内存规格时，该参数可以不配置或者输入当前 mongod(不包含readonly) 节点数量。
+-  节点变更时(全部类型)，该参数可不配置或输入变更后的 mongod(不包含readonl) 节点数量。
+-  副本集节点数：请确认节点数量取值范围，通过云数据库的售卖规格 [DescribeSpecInfo ](https://cloud.tencent.com/document/product/240/38565)接口返回的参数 MinNodeNum 与 MaxNodeNum 获取。
+-  分片集群每个分片节点数：请确认节点数量取值范围，通过云数据库的售卖规格 [DescribeSpecInfo ](https://cloud.tencent.com/document/product/240/38565)接口返回的参数 MinReplicateSetNodeNum 与 MaxReplicateSetNodeNum 获取。
    */
   NodeNum?: number
   /**
-   * 实例变更后的分片数。<ul><li>取值范围请通过云数据库的售卖规格 [DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 接口返回的参数**MinReplicateSetNum**与**MaxReplicateSetNum**获取。</li><li>该参数只能增加不能减少。</li></ul>
+   * 实例变更后的分片数。
+- 取值范围请通过云数据库的售卖规格[DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 接口返回的参数**MinReplicateSetNum**与**MaxReplicateSetNum**获取。- 该参数只能增加不能减少。
    */
   ReplicateSetNum?: number
   /**
@@ -1134,7 +1270,7 @@ export interface ModifyDBInstanceSpecRequest {
    */
   InMaintenance?: number
   /**
-   * 分片实例配置变更后的mongos内存大小。- 单位：GB。
+   * 分片实例配置变更后的mongos内存大小。单位：GB。
    */
   MongosMemory?: string
   /**
@@ -1485,6 +1621,16 @@ export interface DescribeClientConnectionsResponse {
 }
 
 /**
+ * ModifyDBInstanceParamTpl返回参数结构体
+ */
+export interface ModifyDBInstanceParamTplResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * TerminateDBInstances请求参数结构体
  */
 export interface TerminateDBInstancesRequest {
@@ -1744,6 +1890,36 @@ export interface CreateBackupDownloadTaskRequest {
 }
 
 /**
+ * 数据库参数模板
+ */
+export interface ParamTpl {
+  /**
+   * 参数模板名称
+   */
+  TplName: string
+  /**
+   * 参数模板ID
+   */
+  TplId: string
+  /**
+   * 适用数据库版本
+   */
+  MongoVersion: string
+  /**
+   * 适用数据库类型
+   */
+  ClusterType: string
+  /**
+   * 参数模板描述
+   */
+  TplDesc: string
+  /**
+   * 模板类型，包括DEFAULT（默认模板）及CUSTOMIZE（定制模板）两种类型
+   */
+  TplType: string
+}
+
+/**
  * InquirePriceModifyDBInstanceSpec返回参数结构体
  */
 export interface InquirePriceModifyDBInstanceSpecResponse {
@@ -1812,6 +1988,78 @@ export interface DescribeDBInstanceNodePropertyResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * DescribeDBInstanceParamTplDetail返回参数结构体
+ */
+export interface DescribeDBInstanceParamTplDetailResponse {
+  /**
+   * 枚举类参数详情列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceEnumParams?: Array<InstanceEnumParam>
+  /**
+   * 整形参数详情列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceIntegerParams?: Array<InstanceIntegerParam>
+  /**
+   * 文本参数详情列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceTextParams?: Array<InstanceTextParam>
+  /**
+   * 多值参数详情列表。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceMultiParams?: Array<InstanceMultiParam>
+  /**
+   * 参数总个数。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TotalCount?: number
+  /**
+   * 模板适配实例版本。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  MongoVersion?: string
+  /**
+   * 模板适配集群类型，副本集或分片。。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ClusterType?: string
+  /**
+   * 参数模板名称。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TplName?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * ModifyDBInstanceParamTpl请求参数结构体
+ */
+export interface ModifyDBInstanceParamTplRequest {
+  /**
+   * 待修改的参数模板 ID，示例：tpl-jglr91vew。
+   */
+  TplId: string
+  /**
+   * 待修改参数模板名称，为空时，保持原有名称。
+   */
+  TplName?: string
+  /**
+   * 待修改参数模板描述，为空时，保持原有描述。
+   */
+  TplDesc?: string
+  /**
+   * 待修改参数名及参数值，为空时，各参数保持原有值，支持单条或批量修改。
+   */
+  Params?: Array<ParamType>
 }
 
 /**
@@ -2387,6 +2635,10 @@ export interface CreateDBInstanceHourRequest {
    * Hidden节点所属可用区。跨可用区部署实例，必须配置该参数。
    */
   HiddenZone?: string
+  /**
+   * 参数模板 ID。参数模板是一组 MongoDB 的参数并为预设置了参数值的集合，将一组有相同诉求的参数及值 存为模板，在创建实例时，可直接引用参数值到新实例。合理使用参数模板，可以提高MongoDB数据库的效率。模板列表从 DescribeDBInstanceParamTpl 接口获取，注意模板支持的版本。
+   */
+  ParamTemplateId?: string
 }
 
 /**
@@ -2565,7 +2817,7 @@ export interface DescribeSpecInfoResponse {
   /**
    * 实例售卖规格信息列表
    */
-  SpecInfoList: Array<SpecificationInfo>
+  SpecInfoList?: Array<SpecificationInfo>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2687,8 +2939,8 @@ export interface InquirePriceCreateDBInstancesRequest {
    */
   Zone: string
   /**
-   * 每个分片的主从节点数量。
-取值范围：请通过接口[DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567)查询，其返回的数据结构SpecItems中的参数MinNodeNum与MaxNodeNum分别对应其最小值与最大值。
+   * - 创建副本集实例，指每个副本集内主从节点数量。每个副本集所支持的的最大节点数与最小节点数，请通过接口 [DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 获取。
+- 创建分片集群实例，指每个分片的主从节点数量。每个分片所支持的最大节点数与最小节点数，请通过接口 [DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567) 获取。
    */
   NodeNum: number
   /**
@@ -2705,19 +2957,18 @@ export interface InquirePriceCreateDBInstancesRequest {
   Volume: number
   /**
    * 实例版本信息。具体支持的版本，请通过接口[DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567)查询，其返回的数据结构SpecItems中的参数MongoVersionCode为实例所支持的版本信息。版本信息与版本号对应关系如下：
-- MONGO_3_WT：MongoDB 3.2 WiredTiger存储引擎版本。
-- MONGO_3_ROCKS：MongoDB 3.2 RocksDB存储引擎版本。
 - MONGO_36_WT：MongoDB 3.6 WiredTiger存储引擎版本。
 - MONGO_40_WT：MongoDB 4.0 WiredTiger存储引擎版本。
 - MONGO_42_WT：MongoDB 4.2 WiredTiger存储引擎版本。
 - MONGO_44_WT：MongoDB 4.4 WiredTiger存储引擎版本。
 - MONGO_50_WT：MongoDB 5.0 WiredTiger存储引擎版本。
+- MONGO_60_WT：MongoDB 6.0 WiredTiger存储引擎版本。
    */
   MongoVersion: string
   /**
-   * 机器类型。
-- HIO：高IO型。
-- HIO10G：高IO万兆型。
+   * 产品规格类型。
+- HIO10G：通用高HIO万兆型。
+- HCD：云盘版。
    */
   MachineCode: string
   /**
@@ -2728,18 +2979,15 @@ export interface InquirePriceCreateDBInstancesRequest {
    * 实例类型。
 - REPLSET：副本集。
 - SHARD：分片集群。
-- STANDALONE：单节点。
    */
   ClusterType: string
   /**
-   * 副本集个数。
-- 创建副本集实例时，该参数固定设置为1。
-- 创建分片集群时，指分片数量，请通过接口[DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567)查询，其返回的数据结构SpecItems中的参数MinReplicateSetNum与MaxReplicateSetNum分别对应其最小值与最大值。
-- 若为单节点实例，该参数固定设置为0。
+   * - 创建副本集实例，指副本集数量，该参数只能为1。
+- 创建分片集群实例，指分片的数量。请通过接口[DescribeSpecInfo](https://cloud.tencent.com/document/product/240/38567)查询分片数量的取值范围，其返回的数据结构SpecItems中的参数MinReplicateSetNum与MaxReplicateSetNum分别对应其最小值与最大值。
    */
   ReplicateSetNum: number
   /**
-   * - 选择包年包月计费模式，即 <b>InstanceChargeType </b>设定为<b>PREPAID</b>时，需设定购买实例的时长。该参数取值可选：[1,2,3,4,5,6,7,8,9,10,11,12,24,36]；单位：月。
+   * - 选择包年包月计费模式，即 <b>InstanceChargeType </b>设定为<b>PREPAID</b>时，必须设置该参数，指定购买实例的购买时长。取值可选：[1,2,3,4,5,6,7,8,9,10,11,12,24,36]；单位：月。
 -选择按量计费，即 <b>InstanceChargeType</b> 设定为 **POSTPAID_BY_HOUR** 时，该参数仅可配置为 1。
    */
   Period?: number
@@ -2750,27 +2998,27 @@ export interface InquirePriceCreateDBInstancesRequest {
    */
   InstanceChargeType?: string
   /**
-   * 分片实例询价必填参数，指 Mongos CPU核数，取值范围为[1,16]。
+   * Mongos CPU 核数，支持1、2、4、8、16。购买分片集群时，必须填写。注意为空时取默认取值为2C。
    */
   MongosCpu?: number
   /**
-   * 分片实例询价必填参数，指 Mongos 内存，取值范围为[2,32]，单位：GB。
+   * Mongos 内存大小。-  购买分片集群时，必须填写。- 单位：GB，支持1核2GB、2核4GB、4核8GB、8核16GB、16核32GB。注意为空时取默认取值为4G。
    */
   MongosMemory?: number
   /**
-   * 分片实例询价必填参数，指 Mongos 个数，取值范围为[3,32]。
+   * 指 Mongos 个数，取值范围为[3,32]。若为分片集群实例询价，则该参数必须设置。注意为空时取默认取值为3个节点。
    */
   MongosNum?: number
   /**
-   * 分片实例询价必填参数，指 ConfigServer CPU核数，取值为1，单位：GB。
+   * 指 ConfigServer CPU核数，取值为1，单位：GB。若为分片集群实例询价，该参数必须设置。
    */
   ConfigServerCpu?: number
   /**
-   * 分片实例询价必填参数，指 ConfigServer 内存大小，取值为2，单位：GB。
+   * 指 ConfigServer 内存大小，取值为2，单位：GB。若为分片集群实例询价，则该参数必须设置。
    */
   ConfigServerMemory?: number
   /**
-   * 分片实例询价必填参数，指 ConfigServer 磁盘大小，取值为 20，单位：GB。
+   * 指 ConfigServer 磁盘大小，取值为 20，单位：GB。若为分片集群实例询价，则该参数必须设置。
    */
   ConfigServerVolume?: number
 }
@@ -2797,6 +3045,26 @@ export interface DescribeInstanceParamsResponse {
   InstanceMultiParam?: Array<InstanceMultiParam>
   /**
    * 当前实例支持修改的参数数量。
+   */
+  TotalCount?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * DescribeDBInstanceParamTpl返回参数结构体
+ */
+export interface DescribeDBInstanceParamTplResponse {
+  /**
+   * 参数模板列表信息。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ParamTpls?: Array<ParamTpl>
+  /**
+   * 参数模板总数。
+注意：此字段可能返回 null，表示取不到有效值。
    */
   TotalCount?: number
   /**
@@ -2842,6 +3110,20 @@ export interface RemoveNodeList {
 }
 
 /**
+ * RestartNodes请求参数结构体
+ */
+export interface RestartNodesRequest {
+  /**
+   * 实例ID，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同。
+   */
+  InstanceId: string
+  /**
+   * 节点Id。
+   */
+  NodeIds: Array<string>
+}
+
+/**
  * SetInstanceMaintenance请求参数结构体
  */
 export interface SetInstanceMaintenanceRequest {
@@ -2860,6 +3142,34 @@ export interface SetInstanceMaintenanceRequest {
 - 结束时间务必是基于开始时间向后的时间。
    */
   MaintenanceEnd: string
+}
+
+/**
+ * RestartNodes返回参数结构体
+ */
+export interface RestartNodesResponse {
+  /**
+   * 流程Id。
+   */
+  FlowId: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * DescribeDBInstanceParamTplDetail请求参数结构体
+ */
+export interface DescribeDBInstanceParamTplDetailRequest {
+  /**
+   * 参数模板 ID。
+   */
+  TplId: string
+  /**
+   * 参数名称，传入该值，则只会获取该字段的参数详情。为空时，返回全部参数。
+   */
+  ParamName?: string
 }
 
 /**

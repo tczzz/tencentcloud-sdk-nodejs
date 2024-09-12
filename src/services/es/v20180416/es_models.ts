@@ -299,6 +299,10 @@ export interface CreateServerlessSpaceV2Request {
    * 空间id
    */
   ZoneId?: number
+  /**
+   * 标签信息
+   */
+  TagList?: Array<TagInfo>
 }
 
 /**
@@ -443,6 +447,16 @@ export interface DeleteLogstashPipelinesResponse {
 }
 
 /**
+ * DescribeSpaceKibanaTools请求参数结构体
+ */
+export interface DescribeSpaceKibanaToolsRequest {
+  /**
+   * space的ID
+   */
+  SpaceId: string
+}
+
+/**
  * 实例标签信息
  */
 export interface TagInfo {
@@ -471,13 +485,17 @@ export interface KeyValue {
 }
 
 /**
- * UpdateDiagnoseSettings返回参数结构体
+ * 指标数据map
  */
-export interface UpdateDiagnoseSettingsResponse {
+export interface MetricMapByIndexId {
   /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   * 实例id
    */
-  RequestId?: string
+  IndexId?: string
+  /**
+   * 指标数据
+   */
+  MetricAllData?: MetricAllData
 }
 
 /**
@@ -732,34 +750,21 @@ export interface DeleteServerlessInstanceResponse {
 }
 
 /**
- * vpc信息
+ * InstallInstanceModel返回参数结构体
  */
-export interface VpcInfo {
+export interface InstallInstanceModelResponse {
   /**
-   * vpcId信息
-注意：此字段可能返回 null，表示取不到有效值。
+   * 发起异步流程的flowId
    */
-  VpcId?: string
+  FlowId?: string
   /**
-   * SubnetId信息
-注意：此字段可能返回 null，表示取不到有效值。
+   * 调用接口的错误信息
    */
-  SubnetId?: string
+  ErrMsg?: string
   /**
-   * VpcUid信息
-注意：此字段可能返回 null，表示取不到有效值。
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  VpcUid?: number
-  /**
-   * SubnetUid 信息
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  SubnetUid?: number
-  /**
-   * 可用ip数量
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  AvailableIpAddressCount?: number
+  RequestId?: string
 }
 
 /**
@@ -1059,6 +1064,11 @@ export interface ServerlessSpace {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ClusterType?: number
+  /**
+   * key:value
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TagList?: Array<TagInfo>
 }
 
 /**
@@ -1119,6 +1129,32 @@ export interface CheckMigrateIndexMetaDataResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 全部指标数据
+ */
+export interface MetricAllData {
+  /**
+   * 索引流量
+   */
+  IndexTraffic?: number
+  /**
+   * 存储大小
+   */
+  Storage?: number
+  /**
+   * 读请求次数
+   */
+  ReadReqTimes?: number
+  /**
+   * 写请求次数
+   */
+  WriteReqTimes?: number
+  /**
+   * 文档数量
+   */
+  DocCount?: number
 }
 
 /**
@@ -1389,9 +1425,17 @@ export interface DescribeServerlessMetricsRequest {
    */
   IndexId?: string
   /**
-   * 指标类型，暂时只支持Storage
+   * 指标类型，暂时只支持Storage(存储大小),AllMetric(所有存储指标：索引流量、存储大小、文档数量、读请求和写请求)
    */
   MetricType?: Array<string>
+  /**
+   * 时间长度类型DurationType(1: 3小时, 2: 昨天1天,3: 今日0点到现在)
+   */
+  DurationType?: number
+  /**
+   * 索引数据
+   */
+  BatchIndexList?: Array<string>
 }
 
 /**
@@ -1510,6 +1554,10 @@ export interface DescribeServerlessSpacesRequest {
    * 分页条数
    */
   Limit?: number
+  /**
+   * 标签信息
+   */
+  TagList?: Array<TagInfo>
 }
 
 /**
@@ -1683,6 +1731,20 @@ export interface DescribeLogstashInstancesResponse {
 }
 
 /**
+ * InstallInstanceModel请求参数结构体
+ */
+export interface InstallInstanceModelRequest {
+  /**
+   * 实例ID
+   */
+  InstanceId: string
+  /**
+   * 客户上传到自己cos的地址列表
+   */
+  UsrCosModelUrlList?: Array<string>
+}
+
+/**
  * 数据接入serverless目的端信息
  */
 export interface DiDataSinkServerless {
@@ -1851,6 +1913,16 @@ export interface UpdatePluginsRequest {
    * 0：系统插件
    */
   PluginType?: number
+}
+
+/**
+ * UpdateDiagnoseSettings返回参数结构体
+ */
+export interface UpdateDiagnoseSettingsResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -2889,6 +2961,14 @@ export interface CreateInstanceRequest {
    * 置放群组亲和度，范围[0,10]，0表示不开启
    */
   DisasterRecoverGroupAffinity?: number
+  /**
+   * 子产品ID枚举值： 开源版："sp_es_io2"， 基础版："sp_es_basic"，白金版："sp_es_platinum"，企业版："sp_es_enterprise"，CDC白金版："sp_es_cdc_platinum"，日志增强版："sp_es_enlogging"，tsearch："sp_tsearch_io2"，logstash："sp_es_logstash" ，可以为空，为空的时候后台取LicenseType映射该字段
+   */
+  SubProductCode?: string
+  /**
+   * 读写分离模式：0-不开启，1-本地读写分离，2-远端读写分离
+   */
+  ReadWriteMode?: number
 }
 
 /**
@@ -3402,6 +3482,21 @@ RENEW_FLAG_DEFAULT：不自动续费
 注意：此字段可能返回 null，表示取不到有效值。
    */
   DisasterRecoverGroupAffinity?: number
+  /**
+   * 子产品ID枚举值： 开源版："sp_es_io2"， 基础版："sp_es_basic"，白金版："sp_es_platinum"，企业版："sp_es_enterprise"，CDC白金版："sp_es_cdc_platinum"，日志增强版："sp_es_enlogging"，tsearch："sp_tsearch_io2"，logstash："sp_es_logstash" ，可以为空，为空的时候后台取LicenseType映射该字段
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SubProductCode?: string
+  /**
+   * 存算分离cos用量，单位M
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  CosBucketStorageSize?: number
+  /**
+   * 读写分离模式：0-不开启，1-本地读写分离，2-远端读写分离
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ReadWriteMode?: number
 }
 
 /**
@@ -3516,6 +3611,10 @@ export interface DescribeInstancesRequest {
    * Vpc列表 筛选项
    */
   VpcIds?: Array<string>
+  /**
+   * cdc集群id
+   */
+  CdcId?: string
 }
 
 /**
@@ -3708,6 +3807,11 @@ export interface ServerlessIndexMetaField {
    * 标签信息
    */
   TagList?: Array<TagInfo>
+  /**
+   * 3782478.47
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IndexTraffic?: number
 }
 
 /**
@@ -4430,6 +4534,24 @@ export interface NodeView {
 }
 
 /**
+ * DescribeSpaceKibanaTools返回参数结构体
+ */
+export interface DescribeSpaceKibanaToolsResponse {
+  /**
+   * 该token用于登录内嵌kibana
+   */
+  KibanaToken?: string
+  /**
+   * token的过期时间
+   */
+  ExpireTime?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * ModifyEsVipSecurityGroup返回参数结构体
  */
 export interface ModifyEsVipSecurityGroupResponse {
@@ -4624,6 +4746,10 @@ CLOSE 关闭
    * 分片迁移并发速度
    */
   ShardAllocationBytes?: number
+  /**
+   * 读写分离模式：-1-不开启，1-本地读写分离，2-远端读写分离
+   */
+  ReadWriteMode?: number
 }
 
 /**
@@ -4819,6 +4945,27 @@ export interface DescribeServerlessMetricsResponse {
    */
   Storage?: number
   /**
+   * IndexTraffic指标值，单位byte
+   */
+  IndexTraffic?: number
+  /**
+   * 读请求数，单位次数
+   */
+  ReadReqTimes?: number
+  /**
+   * 写请求数，单位次数
+   */
+  WriteReqTimes?: number
+  /**
+   * 文档数量，单位个数
+   */
+  DocCount?: number
+  /**
+   * 指标数据数据
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  MetricMapList?: Array<MetricMapByIndexId>
+  /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
@@ -4878,6 +5025,37 @@ export interface DescribeServerlessInstancesRequest {
    * 标签信息
    */
   TagList?: Array<TagInfo>
+}
+
+/**
+ * vpc信息
+ */
+export interface VpcInfo {
+  /**
+   * vpcId信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  VpcId?: string
+  /**
+   * SubnetId信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SubnetId?: string
+  /**
+   * VpcUid信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  VpcUid?: number
+  /**
+   * SubnetUid 信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SubnetUid?: number
+  /**
+   * 可用ip数量
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  AvailableIpAddressCount?: number
 }
 
 /**

@@ -45,6 +45,7 @@ import {
   ClbListener,
   COSInstanceList,
   DescribeCompaniesResponse,
+  UpdateRecordInfo,
   CheckCertificateChainResponse,
   DescribeHostCosInstanceListResponse,
   DvAuths,
@@ -93,6 +94,7 @@ import {
   DescribeCertificateBindResourceTaskDetailResponse,
   DeployCertificateRecordRetryResponse,
   DvAuthDetail,
+  CheckCertificateDomainVerificationRequest,
   CdnInstanceList,
   UpdateCertificateRecordRetryRequest,
   DdosInstanceDetail,
@@ -129,6 +131,7 @@ import {
   BatchDeleteFail,
   TkeSecretDetail,
   DescribeHostDeployRecordResponse,
+  CheckCertificateDomainVerificationResponse,
   Tags,
   DescribeDownloadCertificateUrlResponse,
   DescribeHostTkeInstanceListRequest,
@@ -181,7 +184,7 @@ import {
   ApplyCertificateRequest,
   CreateCertificateResponse,
   Error,
-  UpdateRecordInfo,
+  DomainValidationResult,
   DescribeHostApiGatewayInstanceListResponse,
   DescribeCertificateDetailResponse,
   DescribeCertificateBindResourceTaskResultResponse,
@@ -246,6 +249,16 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: DescribeHostCdnInstanceListResponse) => void
   ): Promise<DescribeHostCdnInstanceListResponse> {
     return this.request("DescribeHostCdnInstanceList", req, cb)
+  }
+
+  /**
+   * 检查证书域名验证
+   */
+  async CheckCertificateDomainVerification(
+    req: CheckCertificateDomainVerificationRequest,
+    cb?: (error: string, rep: CheckCertificateDomainVerificationResponse) => void
+  ): Promise<CheckCertificateDomainVerificationResponse> {
+    return this.request("CheckCertificateDomainVerification", req, cb)
   }
 
   /**
@@ -789,7 +802,7 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）
+   * 查询CreateCertificateBindResourceSyncTask任务结果， 返回证书关联云资源异步任务结果， 支持以下云资源：clb、cdn、waf、live、vod、ddos、tke、apigateway、tcb、teo（edgeOne）、cos
    */
   async DescribeCertificateBindResourceTaskDetail(
     req: DescribeCertificateBindResourceTaskDetailRequest,

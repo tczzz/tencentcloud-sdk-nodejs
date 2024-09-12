@@ -159,7 +159,6 @@ export interface OriginDetail {
   <li>COS：腾讯云 COS 对象存储源站；</li>
   <li>AWS_S3：AWS S3 对象存储源站；</li>
   <li>ORIGIN_GROUP：源站组类型源站；</li>
-  <li>VODEO：云点播-混合云版；</li>
   <li>VOD：云点播；</li>
   <li>SPACE：源站卸载，当前仅白名单开放；</li>
   <li>LB：负载均衡，当前仅白名单开放。</li>
@@ -172,7 +171,6 @@ export interface OriginDetail {
   <li>当 OriginType = AWS_S3，该参数为 S3 桶的访问域名；</li>
   <li>当 OriginType = ORIGIN_GROUP 时，该参数为源站组 ID；</li>
   <li>当 OriginType = VOD 时，该参数请填写云点播应用 ID ；</li>
-  <li>当 OriginType = VODEO 时，如果 VodeoDistributionRange = ALL，则该参数为 "all-buckets-in-vodeo-application"；如果 VodeoDistributionRange = Bucket，则该参数为对应存储桶域名。</li>
      */
     Origin?: string;
     /**
@@ -201,14 +199,17 @@ export interface OriginDetail {
     PrivateParameters?: Array<PrivateParameter>;
     /**
      * MO 子应用 ID
+     * @deprecated
      */
     VodeoSubAppId?: number;
     /**
      * MO 分发范围，取值有： <li>All：全部</li> <li>Bucket：存储桶</li>
+     * @deprecated
      */
     VodeoDistributionRange?: string;
     /**
      * MO 存储桶 ID，分发范围(DistributionRange)为存储桶(Bucket)时必填
+     * @deprecated
      */
     VodeoBucketId?: string;
 }
@@ -1201,8 +1202,7 @@ export interface DescribeDDoSAttackEventResponse {
  */
 export interface DescribePrefetchTasksRequest {
     /**
-     * 站点ID。
-  必填参数。
+     * 站点ID。该参数必填。
      */
     ZoneId?: string;
     /**
@@ -1222,7 +1222,7 @@ export interface DescribePrefetchTasksRequest {
      */
     Limit?: number;
     /**
-     * 过滤条件，Filters.Values的上限为20。详细的过滤条件如下：<li>job-id<br>   按照【<strong>任务ID</strong>】进行过滤。job-id形如：1379afjk91u32h，暂不支持多值。<br>   类型：String<br>   必选：否。<br>   模糊查询：不支持。</li><li>target<br>   按照【<strong>目标资源信息</strong>】进行过滤。target形如：http://www.qq.com/1.txt，暂不支持多值。<br>   类型：String<br>   必选：否。<br>   模糊查询：不支持。</li><li>domains<br>   按照【<strong>域名</strong>】进行过滤。domains形如：www.qq.com。<br>   类型：String<br>   必选：否。<br>   模糊查询：不支持。</li><li>statuses<br>   按照【<strong>任务状态</strong>】进行过滤。<br>   必选：否<br>   模糊查询：不支持。<br>   可选项：<br>   processing：处理中<br>   success：成功<br>   failed：失败<br>   timeout：超时</li>
+     * 过滤条件，Filters.Values 的上限为 20。详细的过滤条件如下：<li>job-id：按照任务 ID 进行过滤。job-id 形如：1379afjk91u32h，暂不支持多值，不支持模糊查询；</li><li>target：按照目标资源信息进行过滤。target 形如：http://www.qq.com/1.txt，暂不支持多值，不支持模糊查询；</li><li>domains：按照域名行过滤。domains 形如：www.qq.com，不支持模糊查询；</li><li>statuses：按照任务状态进行过滤，不支持模糊查询。可选项：<br>   processing：处理中<br>   success：成功<br>   failed：失败<br>   timeout：超时<br>   invalid：无效。即源站响应非 2xx 状态码，请检查源站服务。</li>
      */
     Filters?: Array<AdvancedFilter>;
 }
@@ -3192,7 +3192,6 @@ export interface Zone {
   <li> full：NS 接入；</li>
   <li> partial：CNAME 接入；</li>
   <li> noDomainAccess：无域名接入；</li>
-  <li> vodeo：开启 VODEO 后默认接入。</li>
      */
     Type?: string;
     /**
@@ -4124,13 +4123,13 @@ export interface DescribeEnvironmentsResponse {
  */
 export interface TimingDataItem {
     /**
-     * 返回数据对应时间点，采用unix秒级时间戳。
+     * 返回数据对应时间点，采用 unix 秒级时间戳。
      */
-    Timestamp: number;
+    Timestamp?: number;
     /**
      * 具体数值。
      */
-    Value: number;
+    Value?: number;
 }
 /**
  * RateLimit规则
@@ -5731,8 +5730,9 @@ export interface CreateZoneRequest {
     /**
      * 站点接入类型。该参数取值如下，不填写时默认为 partial：
   <li>partial：CNAME 接入；</li>
-  <li> full：NS 接入；</li>
-  <li>noDomainAccess：无域名接入。</li>
+  <li>full：NS 接入；</li>
+  <li>noDomainAccess：无域名接入；</li>
+  <li>dnsPodAccess：DNSPod 托管接入，该接入模式要求您的域名已托管在 DNSPod 内。</li>
      */
     Type?: string;
     /**
@@ -5830,8 +5830,9 @@ export interface ModifyZoneRequest {
     ZoneId: string;
     /**
      * 站点接入方式，取值有：
-  <li> full：NS 接入；</li>
-  <li> partial：CNAME 接入，如果站点当前是无域名接入，仅支持切换到CNAME接入。</li>不填写保持原有配置。
+  <li>full：NS 接入；</li>
+  <li>partial：CNAME 接入，如果站点当前是无域名接入，仅支持切换到 CNAME 接入；</li>
+  <li>dnsPodAccess：DNSPod 托管接入，该接入模式要求您的域名已托管在 DNSPod 内。</li>不填写保持原有配置。
      */
     Type?: string;
     /**
@@ -7479,16 +7480,19 @@ export interface OriginInfo {
     PrivateParameters?: Array<PrivateParameter>;
     /**
      * VODEO 子应用 ID。该参数当 OriginType = VODEO 时必填。
+     * @deprecated
      */
     VodeoSubAppId?: number;
     /**
      * VODEO 分发范围，该参数当 OriginType = VODEO 时必填。取值有：
   <li>All：当前应用下所有存储桶；</li>
   <li>Bucket：指定的某一个存储桶。</li>
+     * @deprecated
      */
     VodeoDistributionRange?: string;
     /**
      * VODEO 存储桶 ID，该参数当 OriginType = VODEO 且 VodeoDistributionRange = Bucket 时必填。
+     * @deprecated
      */
     VodeoBucketId?: string;
 }
@@ -9152,9 +9156,6 @@ export interface DescribeAccelerationDomainsRequest {
   <li>backup-origin： 按照备用源站地址进行过滤；</li>
   <li>domain-cname：按照 CNAME 进行过滤；</li>
   <li>share-cname：按照共享 CNAME 进行过滤；</li>
-  <li>vodeo-sub-app-id：按照【 vodeo 子应用 ID】进行过滤；</li>
-  <li>vodeo-distribution-range：按照【 vodeo 分发范围】进行过滤；</li>
-  <li>vodeo-bucket-id：按照【vodeo 存储桶 ID】进行过滤；</li>
      */
     Filters?: Array<AdvancedFilter>;
     /**
@@ -9214,8 +9215,8 @@ export interface DescribeTimingL4DataRequest {
     Interval?: string;
     /**
      * 过滤条件，详细的过滤条件Key值如下：
-  <li>ruleId<br>   按照【<strong>转发规则ID</strong>】进行过滤。</li>
-  <li>proxyId<br>   按照【<strong>四层代理实例ID</strong>】进行过滤。</li>
+  <li>ruleId：按照转发规则 ID 进行过滤。</li>
+  <li>proxyId：按照四层代理实例 ID 进行过滤。</li>
      */
     Filters?: Array<QueryCondition>;
     /**

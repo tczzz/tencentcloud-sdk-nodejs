@@ -75,16 +75,16 @@ export interface DescribePolicyGroupListResponse {
    * 策略组列表
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  GroupList: Array<DescribePolicyGroupListGroup>
+  GroupList?: Array<DescribePolicyGroupListGroup>
   /**
    * 策略组总数
    */
-  Total: number
+  Total?: number
   /**
    * 备注信息
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Warning: string
+  Warning?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -1835,24 +1835,19 @@ export interface UnBindingPolicyObjectResponse {
  */
 export interface DescribePrometheusRecordRulesRequest {
   /**
-   * 实例ID
-
-示例值：prom-343kafd34
+   * Prometheus 实例 ID
    */
   InstanceId: string
   /**
-   * 偏移量，默认为0。 示例值：1
+   * 偏移量，默认为0。
    */
   Offset?: number
   /**
    * 返回数量，默认为20，最大值为100。
-示例值：1
    */
   Limit?: number
   /**
-   * 仅支持按Name, Values字段过滤:
-- Name = Name
-  按照给定的预聚合名称列表匹配
+   * 仅支持按Name, Values字段过滤。
    */
   Filters?: Array<Filter>
 }
@@ -2597,7 +2592,7 @@ export interface CreateAlarmNoticeRequest {
    */
   UserNotices?: Array<UserNotice>
   /**
-   * 回调通知 最多3个
+   * 回调通知 最多6个
    */
   URLNotices?: Array<URLNotice>
   /**
@@ -3228,7 +3223,7 @@ export interface CreateAlarmPolicyRequest {
    */
   Module: string
   /**
-   * 策略名称，不超过20字符
+   * 策略名称，不超过60字符
    */
   PolicyName: string
   /**
@@ -3814,7 +3809,7 @@ export interface ModifyAlarmNoticeRequest {
    */
   UserNotices?: Array<UserNotice>
   /**
-   * 回调通知 最多3个
+   * 回调通知 最多6个
    */
   URLNotices?: Array<URLNotice>
   /**
@@ -3878,17 +3873,17 @@ export interface DescribeBasicAlarmListResponse {
    * 告警列表
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Alarms: Array<DescribeBasicAlarmListAlarms>
+  Alarms?: Array<DescribeBasicAlarmListAlarms>
   /**
    * 总数
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Total: number
+  Total?: number
   /**
    * 备注信息
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Warning: string
+  Warning?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5592,6 +5587,11 @@ export interface UserNotice {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   OnCallFormIDs?: Array<string>
+  /**
+   * 电话按键确认
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  VoiceConfirmKey?: string
 }
 
 /**
@@ -6895,7 +6895,8 @@ export interface DescribeAlarmHistoriesRequest {
    */
   EndTime?: number
   /**
-   * 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能监控；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测
+   * 根据监控类型过滤，不选默认查所有类型。"MT_QCE"=云产品监控，支持的枚举值有："MT_QCE"=云产品监控；"MT_TAW"=应用性能监控；"MT_RUM"=前端性能监控；"MT_PROBE"=云拨测，"MT_TRTC"=实时音视频，
+"MT_RUMAPP"=终端性能监控
    */
   MonitorTypes?: Array<string>
   /**
@@ -7525,12 +7526,12 @@ export interface DescribeConditionsTemplateListResponse {
   /**
    * 模板总数
    */
-  Total: number
+  Total?: number
   /**
    * 模板列表
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  TemplateGroupList: Array<TemplateGroup>
+  TemplateGroupList?: Array<TemplateGroup>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -9989,7 +9990,7 @@ export interface CreateAlarmNoticeResponse {
   /**
    * 告警通知模板ID
    */
-  NoticeId: string
+  NoticeId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */

@@ -259,6 +259,10 @@ export interface DescribeNotebookSessionsRequest {
      * 分页参数，默认0
      */
     Offset?: number;
+    /**
+     * 过滤类型，支持如下的过滤类型，传参Name应为以下其中一个, engine-generation - String（引擎时代： supersql：supersql引擎，native：标准引擎）：notebook-keyword - String（数据引擎名称或sessionid或sessionname的模糊搜索）
+     */
+    Filters?: Array<Filter>;
 }
 /**
  * SmartOptimizerLifecyclePolicy
@@ -279,6 +283,16 @@ export interface SmartOptimizerLifecyclePolicy {
   注意：此字段可能返回 null，表示取不到有效值。
      */
     DropTable?: boolean;
+    /**
+     * 过期字段
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    ExpiredField?: string;
+    /**
+     * 过期字段格式
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    ExpiredFieldFormat?: string;
 }
 /**
  * DescribeDMSDatabase返回参数结构体
@@ -787,7 +801,13 @@ export interface UpdateDataEngineRequest {
 /**
  * SmartOptimizerWrittenPolicy
  */
-export declare type SmartOptimizerWrittenPolicy = null;
+export interface SmartOptimizerWrittenPolicy {
+    /**
+     * none/enable/disable/default
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    WrittenEnable?: string;
+}
 /**
  * DescribeSparkAppJobs请求参数结构体
  */
@@ -900,29 +920,18 @@ export interface SmartOptimizerPolicy {
     Index?: SmartOptimizerIndexPolicy;
 }
 /**
- * SparkSQL批任务运行日志
+ * DescribeUserInfo返回参数结构体
  */
-export interface SparkSessionBatchLog {
+export interface DescribeUserInfoResponse {
     /**
-     * 日志步骤：BEG/CS/DS/DSS/DSF/FINF/RTO/CANCEL/CT/DT/DTS/DTF/FINT/EXCE
+     * 用户详细信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Step?: string;
+    UserInfo?: UserDetailInfo;
     /**
-     * 时间
-  注意：此字段可能返回 null，表示取不到有效值。
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
-    Time?: string;
-    /**
-     * 日志提示
-  注意：此字段可能返回 null，表示取不到有效值。
-     */
-    Message?: string;
-    /**
-     * 日志操作
-  注意：此字段可能返回 null，表示取不到有效值。
-     */
-    Operate?: Array<SparkSessionBatchLogOperate>;
+    RequestId?: string;
 }
 /**
  * ModifyUserType请求参数结构体
@@ -1046,6 +1055,15 @@ export interface DescribeDLCCatalogAccessResponse {
      * DLCCatalog授权列表
      */
     Rows?: Array<DLCCatalogAccess>;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
+ * DeleteTable返回参数结构体
+ */
+export interface DeleteTableResponse {
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -1419,7 +1437,7 @@ export interface ListTaskJobLogNameRequest {
  */
 export interface DescribeTaskResultRequest {
     /**
-     * 任务唯一ID
+     * 任务唯一ID，仅支持30天内的任务
      */
     TaskId: string;
     /**
@@ -2097,6 +2115,19 @@ export interface CheckDataEngineImageCanBeUpgradeRequest {
     DataEngineId: string;
 }
 /**
+ * QueryInternalTableWarehouse请求参数结构体
+ */
+export interface QueryInternalTableWarehouseRequest {
+    /**
+     * 库名
+     */
+    DatabaseName: string;
+    /**
+     * 表名
+     */
+    TableName: string;
+}
+/**
  * CreateResultDownload请求参数结构体
  */
 export interface CreateResultDownloadRequest {
@@ -2653,7 +2684,7 @@ export interface DescribeUserInfoRequest {
      */
     UserId?: string;
     /**
-     * 查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限
+     * 必传字段，查询的信息类型，Group：工作组 DataAuth：数据权限 EngineAuth:引擎权限 RowFilter：行级别权限
      */
     Type?: string;
     /**
@@ -4417,33 +4448,50 @@ export interface UpdateRowFilterRequest {
 export interface TColumn {
     /**
      * 字段名称
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Name: string;
     /**
      * 字段类型
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Type: string;
     /**
      * 字段描述
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Comment?: string;
     /**
      * 字段默认值
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Default?: string;
     /**
      * 字段是否是非空
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     NotNull?: boolean;
     /**
      * 表示整个 numeric 的长度,取值1-38
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Precision?: number;
     /**
      * 表示小数部分的长度
   Scale小于Precision
+  注意：此字段可能返回 null，表示取不到有效值。
      */
     Scale?: number;
+    /**
+     * 字段位置，小的在前
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Position?: number;
+    /**
+     * 是否为分区字段
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    IsPartition?: boolean;
 }
 /**
  * LakeFileSystem使用的临时token
@@ -4968,6 +5016,19 @@ export interface ReportHeartbeatMetaDataResponse {
     RequestId?: string;
 }
 /**
+ * QueryInternalTableWarehouse返回参数结构体
+ */
+export interface QueryInternalTableWarehouseResponse {
+    /**
+     * warehouse路径
+     */
+    WarehousePath: string;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
  * script实例。
  */
 export interface Script {
@@ -5227,6 +5288,26 @@ export interface LakeFsInfo {
      * 创建时候的时间戳
      */
     CreateTimeStamp?: number;
+    /**
+     * 是否是用户默认桶，0：默认桶，1：非默认桶
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    DefaultBucket?: number;
+    /**
+     * 托管存储short name
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    ShortName?: string;
+    /**
+     * 桶描述信息
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Description?: string;
+    /**
+     * 托管桶状态，当前取值为：creating、bind、readOnly、isolate
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Status?: string;
 }
 /**
  * QueryResult请求参数结构体
@@ -5318,6 +5399,23 @@ export interface DescribeUpdatableDataEnginesRequest {
      * 引擎配置操作命令，UpdateSparkSQLLakefsPath 更新托管表路径，UpdateSparkSQLResultPath 更新结果桶路径
      */
     DataEngineConfigCommand: string;
+    /**
+     * 是否使用托管存储作为结果存储
+     */
+    UseLakeFs?: boolean;
+    /**
+     * 用户自定义结果存储路径
+     */
+    CustomResultPath?: string;
+}
+/**
+ * DeleteTable请求参数结构体
+ */
+export interface DeleteTableRequest {
+    /**
+     * 表基本信息
+     */
+    TableBaseInfo: TableBaseInfo;
 }
 /**
  * DescribeStoreLocation请求参数结构体
@@ -5593,18 +5691,29 @@ export interface BindWorkGroupsToUserResponse {
     RequestId?: string;
 }
 /**
- * DescribeUserInfo返回参数结构体
+ * SparkSQL批任务运行日志
  */
-export interface DescribeUserInfoResponse {
+export interface SparkSessionBatchLog {
     /**
-     * 用户详细信息
+     * 日志步骤：BEG/CS/DS/DSS/DSF/FINF/RTO/CANCEL/CT/DT/DTS/DTF/FINT/EXCE
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    UserInfo: UserDetailInfo;
+    Step?: string;
     /**
-     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     * 时间
+  注意：此字段可能返回 null，表示取不到有效值。
      */
-    RequestId?: string;
+    Time?: string;
+    /**
+     * 日志提示
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Message?: string;
+    /**
+     * 日志操作
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    Operate?: Array<SparkSessionBatchLogOperate>;
 }
 /**
  * DeleteScript请求参数结构体
@@ -6092,6 +6201,10 @@ export declare type DescribeThirdPartyAccessUserRequest = null;
  * AssignMangedTableProperties返回参数结构体
  */
 export interface AssignMangedTablePropertiesResponse {
+    /**
+     * 分配的原生表表属性
+     */
+    Properties?: Array<Property>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -6780,47 +6893,52 @@ export interface UserDetailInfo {
      * 用户Id
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    UserId: string;
+    UserId?: string;
     /**
      * 返回的信息类型，Group：返回的当前用户的工作组信息；DataAuth：返回的当前用户的数据权限信息；EngineAuth：返回的当前用户的引擎权限信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    Type: string;
+    Type?: string;
     /**
      * 用户类型：ADMIN：管理员 COMMON：一般用户
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    UserType: string;
+    UserType?: string;
     /**
      * 用户描述信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    UserDescription: string;
+    UserDescription?: string;
     /**
      * 数据权限信息集合
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    DataPolicyInfo: Policys;
+    DataPolicyInfo?: Policys;
     /**
      * 引擎权限集合
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    EnginePolicyInfo: Policys;
+    EnginePolicyInfo?: Policys;
     /**
      * 绑定到该用户的工作组集合信息
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    WorkGroupInfo: WorkGroups;
+    WorkGroupInfo?: WorkGroups;
     /**
      * 用户别名
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    UserAlias: string;
+    UserAlias?: string;
     /**
      * 行过滤集合
   注意：此字段可能返回 null，表示取不到有效值。
      */
-    RowFilterInfo: Policys;
+    RowFilterInfo?: Policys;
+    /**
+     * 账号类型
+  注意：此字段可能返回 null，表示取不到有效值。
+     */
+    AccountType?: string;
 }
 /**
  * DescribeTaskResult返回参数结构体
@@ -9031,6 +9149,14 @@ export interface UpdateDataEngineConfigRequest {
      * 引擎配置命令，支持UpdateSparkSQLLakefsPath（更新原生表配置）、UpdateSparkSQLResultPath（更新结果路径配置）
      */
     DataEngineConfigCommand: string;
+    /**
+     * 是否使用lakefs作为结果存储
+     */
+    UseLakeFs?: boolean;
+    /**
+     * 用户自定义结果路径
+     */
+    CustomResultPath?: string;
 }
 /**
  * DropDMSTable请求参数结构体

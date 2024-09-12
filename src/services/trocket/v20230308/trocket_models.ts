@@ -225,6 +225,26 @@ export interface ConsumeGroupItem {
    * 备注
    */
   Remark?: string
+  /**
+   * 4.x的集群ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ClusterIdV4?: string
+  /**
+   * 4.x的命名空间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NamespaceV4?: string
+  /**
+   * 4.x的消费组名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ConsumerGroupV4?: string
+  /**
+   * 4.x的完整命名空间
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FullNamespaceV4?: string
 }
 
 /**
@@ -683,6 +703,28 @@ export interface ImportSourceClusterConsumerGroupsRequest {
 }
 
 /**
+ * DescribeConsumerLag请求参数结构体
+ */
+export interface DescribeConsumerLagRequest {
+  /**
+   * 实例ID
+   */
+  InstanceId: string
+  /**
+   * 消费组名称
+   */
+  ConsumerGroup?: string
+  /**
+   * 命名空间，4.x集群必填
+   */
+  Namespace?: string
+  /**
+   * 订阅主题，不为空则查询订阅了该主题的消费组的堆积
+   */
+  SubscribeTopic?: string
+}
+
+/**
  * 标签数据
  */
 export interface Tag {
@@ -887,16 +929,6 @@ export interface CreateConsumerGroupRequest {
    * 备注
    */
   Remark?: string
-}
-
-/**
- * ModifyMQTTTopic返回参数结构体
- */
-export interface ModifyMQTTTopicResponse {
-  /**
-   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
-   */
-  RequestId?: string
 }
 
 /**
@@ -1714,6 +1746,10 @@ export interface DescribeMQTTInstanceListRequest {
    * 查询结果限制数量
    */
   Limit?: number
+  /**
+   * 是否包含新控制台集群
+   */
+  IncludeNew?: boolean
 }
 
 /**
@@ -2094,7 +2130,7 @@ PLATINUM 铂金版
    */
   InstanceType: string
   /**
-   * 实例名称
+   * 集群名称
    */
   Name: string
   /**
@@ -2110,15 +2146,19 @@ PLATINUM 铂金版
    */
   TagList?: Array<Tag>
   /**
-   * 实例绑定的VPC信息
+   * 集群绑定的VPC信息，必填
    */
   VpcList?: Array<VpcInfo>
   /**
-   * 是否开启公网
+   * 是否开启公网，默认值为false表示不开启
    */
   EnablePublic?: boolean
   /**
-   * 公网带宽（单位：兆）
+   * 公网是否按流量计费，默认值为false表示不按流量计费
+   */
+  BillingFlow?: boolean
+  /**
+   * 公网带宽（单位：兆），默认值为0。如果开启公网，该字段必须为大于0的正整数
    */
   Bandwidth?: number
   /**
@@ -2130,15 +2170,15 @@ PLATINUM 铂金版
    */
   MessageRetention?: number
   /**
-   * 付费模式（0: 后付费；1: 预付费）
+   * 付费模式（0: 后付费；1: 预付费），默认值为0
    */
   PayMode?: number
   /**
-   * 是否自动续费（0: 不自动续费；1: 自动续费）
+   * 是否自动续费（0: 不自动续费；1: 自动续费），默认值为0
    */
   RenewFlag?: number
   /**
-   * 购买时长（单位：月）
+   * 购买时长（单位：月），默认值为1
    */
   TimeSpan?: number
   /**
@@ -2205,6 +2245,20 @@ export interface ModifyTopicResponse {
 }
 
 /**
+ * DescribeConsumerLag返回参数结构体
+ */
+export interface DescribeConsumerLagResponse {
+  /**
+   * 堆积数
+   */
+  ConsumerLag?: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
  * DescribeMQTTInsPublicEndpoints请求参数结构体
  */
 export interface DescribeMQTTInsPublicEndpointsRequest {
@@ -2239,24 +2293,9 @@ export interface Filter {
 }
 
 /**
- * DescribeMQTTInstanceCert返回参数结构体
+ * ModifyMQTTTopic返回参数结构体
  */
-export interface DescribeMQTTInstanceCertResponse {
-  /**
-   * 集群id
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  InstanceId?: string
-  /**
-   * 服务端证书id
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  SSLServerCertId?: string
-  /**
-   * CA证书id
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  SSLCaCertId?: string
+export interface ModifyMQTTTopicResponse {
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2661,6 +2700,26 @@ AlreadyExists 已存在
 注意：此字段可能返回 null，表示取不到有效值。
    */
   ImportStatus?: string
+  /**
+   * 4.x的命名空间，出参使用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NamespaceV4?: string
+  /**
+   * 4.x的消费组名，出参使用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  GroupNameV4?: string
+  /**
+   * 4.x的完整命名空间，出参使用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FullNamespaceV4?: string
+  /**
+   * 是否为顺序投递，5.0有效
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ConsumeMessageOrderly?: boolean
 }
 
 /**
@@ -2927,6 +2986,25 @@ export interface StatisticsReport {
 }
 
 /**
+ * IP规则
+ */
+export interface IpRule {
+  /**
+   * IP地址
+   */
+  Ip: string
+  /**
+   * 是否允许放行
+   */
+  Allow: boolean
+  /**
+   * 备注信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Remark: string
+}
+
+/**
  * 角色信息
  */
 export interface RoleItem {
@@ -3075,37 +3153,28 @@ export interface DeleteTopicResponse {
 }
 
 /**
- * DescribeMQTTMessageList请求参数结构体
+ * DescribeMQTTInstanceCert返回参数结构体
  */
-export interface DescribeMQTTMessageListRequest {
+export interface DescribeMQTTInstanceCertResponse {
   /**
-   * 实例ID
+   * 集群id
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  InstanceId: string
+  InstanceId?: string
   /**
-   * 主题
+   * 服务端证书id
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Topic: string
+  SSLServerCertId?: string
   /**
-   * 开始时间
+   * CA证书id
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  StartTime: number
+  SSLCaCertId?: string
   /**
-   * 结束时间
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  EndTime: number
-  /**
-   * 请求任务id
-   */
-  TaskRequestId: string
-  /**
-   * 查询起始位置
-   */
-  Offset?: number
-  /**
-   * 查询结果限制数量
-   */
-  Limit?: number
+  RequestId?: string
 }
 
 /**
@@ -3160,20 +3229,35 @@ export interface DescribeProductSKUsResponse {
 }
 
 /**
- * IP规则
+ * DescribeMQTTMessageList请求参数结构体
  */
-export interface IpRule {
+export interface DescribeMQTTMessageListRequest {
   /**
-   * IP地址
+   * 实例ID
    */
-  Ip: string
+  InstanceId: string
   /**
-   * 是否允许放行
+   * 主题
    */
-  Allow: boolean
+  Topic: string
   /**
-   * 备注信息
-注意：此字段可能返回 null，表示取不到有效值。
+   * 开始时间
    */
-  Remark: string
+  StartTime: number
+  /**
+   * 结束时间
+   */
+  EndTime: number
+  /**
+   * 请求任务id
+   */
+  TaskRequestId: string
+  /**
+   * 查询起始位置
+   */
+  Offset?: number
+  /**
+   * 查询结果限制数量
+   */
+  Limit?: number
 }

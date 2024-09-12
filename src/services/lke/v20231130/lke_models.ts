@@ -30,11 +30,11 @@ export interface ModifyQAAttrRangeResponse {
  */
 export interface GetWsTokenResponse {
   /**
-   * token值
+   * token值（有效期60s）
    */
   Token?: string
   /**
-   * 余额; 余额大于 0 时表示有效.
+   * 余额; 余额大于 0 时表示有效
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Balance?: number
@@ -207,6 +207,10 @@ export interface DescribeQAResponse {
    */
   ExpireEnd?: string
   /**
+   * 相似问列表信息
+   */
+  SimilarQuestions?: Array<SimilarQuestion>
+  /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
@@ -324,6 +328,37 @@ export interface GetAnswerTypeDataCountRequest {
    * 登录用户子账号(集成商模式必填)
    */
   LoginSubAccountUin?: string
+}
+
+/**
+ * 节点信息
+ */
+export interface RunNodeInfo {
+  /**
+   * 节点类型，0:未指定，1:开始节点，2:API节点，3:询问节点，4:答案节点
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NodeType?: number
+  /**
+   * 节点ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NodeId?: string
+  /**
+   * 节点名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  NodeName?: string
+  /**
+   * 请求的API
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InvokeApi?: InvokeAPI
+  /**
+   * 当前节点的所有槽位的值，key：SlotID。没有值的时候也要返回空。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SlotValues?: Array<ValueInfo>
 }
 
 /**
@@ -595,34 +630,28 @@ export interface GetAppSecretResponse {
 }
 
 /**
- * 不满意回复
+ * ListRejectedQuestion请求参数结构体
  */
-export interface UnsatisfiedReply {
+export interface ListRejectedQuestionRequest {
   /**
-   * 不满意回复ID
-注意：此字段可能返回 null，表示取不到有效值。
+   * 应用ID
    */
-  ReplyBizId?: string
+  BotBizId: string
   /**
-   * 消息记录ID
-注意：此字段可能返回 null，表示取不到有效值。
+   * 页码
+
    */
-  RecordBizId?: string
+  PageNumber: number
   /**
-   * 用户问题
-注意：此字段可能返回 null，表示取不到有效值。
+   * 每页数量
+
    */
-  Question?: string
+  PageSize: number
   /**
-   * 应用回复
-注意：此字段可能返回 null，表示取不到有效值。
+   * 查询内容
+
    */
-  Answer?: string
-  /**
-   * 错误类型
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Reasons?: Array<string>
+  Query?: string
 }
 
 /**
@@ -757,6 +786,18 @@ export interface CreateReconstructDocumentFlowConfig {
 默认为1
    */
   TableResultType?: string
+  /**
+   * 智能文档解析返回结果的格式
+0：只返回全文MD；
+1：只返回每一页的OCR原始Json；
+2：只返回每一页的MD，
+3：返回全文MD + 每一页的OCR原始Json；
+4：返回全文MD + 每一页的MD，
+默认值为3（返回全文MD + 每一页的OCR原始Json）
+
+
+   */
+  ResultType?: string
 }
 
 /**
@@ -805,6 +846,16 @@ export interface Procedure {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Count?: number
+  /**
+   * 调试信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Debugging?: ProcedureDebugging
+  /**
+   * 计费资源状态，1：可用，2：不可用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ResourceStatus?: number
 }
 
 /**
@@ -1053,6 +1104,11 @@ export interface KnowledgeQaSearch {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Confidence?: number
+  /**
+   * 资源状态 1：资源可用；2：资源已用尽
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ResourceStatus?: number
 }
 
 /**
@@ -1074,7 +1130,7 @@ export interface CreateCorpResponse {
  */
 export interface ListQARequest {
   /**
-   * 机器人ID
+   * 应用ID
    */
   BotBizId: string
   /**
@@ -1094,7 +1150,7 @@ export interface ListQARequest {
    */
   AcceptStatus?: Array<number | bigint>
   /**
-   * 发布状态(2待发布 3发布中 4已发布 7审核中 8审核失败 9人工申述中 11人工申述失败)
+   * 发布状态(2待发布 3发布中 4已发布 7审核中 8审核失败 9人工申述中 11人工申述失败 12已过期 13超量失效 14超量失效恢复)
    */
   ReleaseStatus?: Array<number | bigint>
   /**
@@ -1294,6 +1350,52 @@ export interface ListModelRequest {
 }
 
 /**
+ * 请求的API信息
+ */
+export interface InvokeAPI {
+  /**
+   * 请求方法，如GET/POST等
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Method?: string
+  /**
+   * 请求地址
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Url?: string
+  /**
+   * header参数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  HeaderValues?: Array<StrValue>
+  /**
+   * 入参Query
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  QueryValues?: Array<StrValue>
+  /**
+   * Post请求的原始数据
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RequestPostBody?: string
+  /**
+   * 返回的原始数据
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ResponseBody?: string
+  /**
+   * 出参
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ResponseValues?: Array<ValueInfo>
+  /**
+   * 异常信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FailMessage?: string
+}
+
+/**
  * 知识摘要输出配置
  */
 export interface SummaryOutput {
@@ -1399,6 +1501,10 @@ export interface ModifyQARequest {
    * 有效结束时间，unix时间戳，0代表永久有效
    */
   ExpireEnd?: string
+  /**
+   * 相似问修改信息(相似问没有修改则不传)
+   */
+  SimilarQuestionModify?: SimilarQuestionModify
 }
 
 /**
@@ -1585,6 +1691,26 @@ export interface CreateQARequest {
    * 有效结束时间，unix时间戳，0代表永久有效
    */
   ExpireEnd?: string
+  /**
+   * 相似问内容
+   */
+  SimilarQuestions?: Array<string>
+}
+
+/**
+ * 检索知识
+ */
+export interface KnowledgeSummary {
+  /**
+   * 1是问答 2是文档片段
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Type?: number
+  /**
+   * 知识内容
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Content?: string
 }
 
 /**
@@ -1709,6 +1835,26 @@ export interface ListQaItem {
    * 问答字符数
    */
   QaCharSize?: string
+  /**
+   * 有效开始时间，unix时间戳
+   */
+  ExpireStart?: string
+  /**
+   * 有效结束时间，unix时间戳，0代表永久有效
+   */
+  ExpireEnd?: string
+  /**
+   * 属性标签适用范围 1：全部，2：按条件
+   */
+  AttrRange?: number
+  /**
+   * 属性标签
+   */
+  AttrLabels?: Array<AttrLabel>
+  /**
+   * 相似问个数
+   */
+  SimilarQuestionNum?: number
 }
 
 /**
@@ -1939,6 +2085,27 @@ export interface KnowledgeQaOutput {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   QuestionClarifyKeywords?: Array<string>
+  /**
+   * 是否打开推荐问题开关
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UseRecommended?: boolean
+}
+
+/**
+ * 字符串KV信息
+ */
+export interface StrValue {
+  /**
+   * 名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Name?: string
+  /**
+   * 值
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Value?: string
 }
 
 /**
@@ -2025,14 +2192,34 @@ export interface ModifyAttributeLabelRequest {
 }
 
 /**
- * 任务参数
+ * 调试信息
  */
-export interface TaskParams {
+export interface ProcedureDebugging {
   /**
-   * 下载地址,需要通过cos桶临时密钥去下载
+   * 检索query
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  CosPath?: string
+  Content?: string
+  /**
+   * 系统prompt
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  System?: string
+  /**
+   * 多轮历史信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Histories?: Array<HistorySummary>
+  /**
+   * 检索知识
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Knowledge?: Array<KnowledgeSummary>
+  /**
+   * 任务流程
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TaskFlow?: TaskFlowSummary
 }
 
 /**
@@ -2264,6 +2451,32 @@ export interface GetTaskStatusResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 任务流程调试信息
+ */
+export interface TaskFlowSummary {
+  /**
+   * 任务流程名
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IntentName?: string
+  /**
+   * 实体列表
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UpdatedSlotValues?: Array<ValueInfo>
+  /**
+   * 节点列表
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RunNodes?: Array<RunNodeInfo>
+  /**
+   * 意图判断
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Purposes?: Array<string>
 }
 
 /**
@@ -2552,7 +2765,7 @@ export interface RetryReleaseRequest {
  */
 export interface CreateAppRequest {
   /**
-   * 应用类型；knowledge_qa-知识问答管理；summary-知识摘要；classifys-知识标签提取
+   * 应用类型；knowledge_qa-知识问答管理
    */
   AppType: string
   /**
@@ -2764,6 +2977,72 @@ export interface ListReleaseDocPreviewRequest {
 }
 
 /**
+ * 当前执行的 token 统计信息
+ */
+export interface TokenStat {
+  /**
+   * 会话 ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SessionId?: string
+  /**
+   * 请求 ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RequestId?: string
+  /**
+   * 对应哪条会话, 会话 ID, 用于回答的消息存储使用, 可提前生成, 保存消息时使用
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RecordId?: string
+  /**
+   * token 已使用数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UsedCount?: number
+  /**
+   * 免费 token 数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  FreeCount?: number
+  /**
+   * 订单总 token 数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OrderCount?: number
+  /**
+   * 当前执行状态汇总, 常量: 使用中: processing, 成功: success, 失败: failed
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  StatusSummary?: string
+  /**
+   * 当前执行状态汇总后中文展示
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  StatusSummaryTitle?: string
+  /**
+   * 当前请求执行时间, 单位 ms
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Elapsed?: number
+  /**
+   * 当前请求消耗 token 数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TokenCount?: number
+  /**
+   * 执行过程信息
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Procedures?: Array<Procedure>
+  /**
+   * 执行过程信息TraceId
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TraceId?: string
+}
+
+/**
  * 文档片段
  */
 export interface DocSegment {
@@ -2817,6 +3096,37 @@ export interface DocSegment {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   DocUrl?: string
+}
+
+/**
+ * 不满意回复
+ */
+export interface UnsatisfiedReply {
+  /**
+   * 不满意回复ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ReplyBizId?: string
+  /**
+   * 消息记录ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RecordBizId?: string
+  /**
+   * 用户问题
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Question?: string
+  /**
+   * 应用回复
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Answer?: string
+  /**
+   * 错误类型
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Reasons?: Array<string>
 }
 
 /**
@@ -2959,7 +3269,7 @@ export interface Context {
  */
 export interface ListDocRequest {
   /**
-   * 机器人ID
+   * 应用ID
    */
   BotBizId: string
   /**
@@ -2975,7 +3285,7 @@ export interface ListDocRequest {
    */
   Query?: string
   /**
-   * 文档状态： 7 审核中、8 审核失败、10 待发布、11 发布中、12 已发布、13 学习中、14 学习失败 20 已过期
+   * 文档状态： 1-未生成 2-生成中 3-生成成功 4-生成失败 5-删除中 6-删除成功  7-审核中  8-审核失败 9-审核成功  10-待发布  11-发布中  12-已发布  13-学习中  14-学习失败  15-更新中  16-更新失败  17-解析中  18-解析失败  19-导入失败   20-已过期 21-超量失效 22-超量失效恢复
    */
   Status?: Array<number | bigint>
 }
@@ -3430,6 +3740,21 @@ export interface AppModel {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   TokenBalance?: number
+  /**
+   * 是否使用上下文指代轮次
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  IsUseContext?: boolean
+  /**
+   * 上下文记忆轮数
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  HistoryLimit?: number
+  /**
+   * 使用类型
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UsageType?: string
 }
 
 /**
@@ -3477,6 +3802,24 @@ export interface ReconstructDocumentRequest {
    * 配置选项，支持配置是否在生成的Markdown中是否嵌入图片
    */
   Config?: ReconstructDocumentConfig
+}
+
+/**
+ * 相似问修改(更新)信息
+ */
+export interface SimilarQuestionModify {
+  /**
+   * 需要添加的相似问(内容)列表
+   */
+  AddQuestions?: Array<string>
+  /**
+   * 需要更新的相似问列表
+   */
+  UpdateQuestions?: Array<SimilarQuestion>
+  /**
+   * 需要删除的相似问列表
+   */
+  DeleteQuestions?: Array<SimilarQuestion>
 }
 
 /**
@@ -3773,11 +4116,11 @@ export interface CreateReconstructDocumentFlowRequest {
    */
   FileType?: string
   /**
-   * 文件的 Base64 值。 支持的文件格式：PNG、JPG、JPEG、PDF。 支持的文件大小：所下载文件经Base64编码后不超过 8M。文件下载时间不超过 3 秒。 支持的图片像素：单边介于20-10000px之间。 文件的 FileUrl、FileBase64 必须提供一个，如果都提供，只使用 FileUrl。
+   * 文件的 Base64 值。支持的文件大小：所下载文件经Base64编码后不超过 8M。文件下载时间不超过 3 秒。支持的图片像素：单边介于20-10000px之间。文件的 FileUrl、FileBase64 必须提供一个，如果都提供，只使用 FileUrl。
    */
   FileBase64?: string
   /**
-   * 文件的 Url 地址。 支持的文件格式：PNG、JPG、JPEG、PDF。 支持的文件大小：所下载文件经 Base64 编码后不超过 100M。文件下载时间不超过 15 秒。 支持的图片像素：单边介于20-10000px之间。 文件存储于腾讯云的 Url 可保障更高的下载速度和稳定性，建议文件存储于腾讯云。 非腾讯云存储的 Url 速度和稳定性可能受一定影响。
+   * 文件的 Url 地址。支持的文件大小：所下载文件经 Base64 编码后不超过 100M。文件下载时间不超过 15 秒。支持的图片像素：单边介于20-10000px之间。 文件存储于腾讯云的 Url 可保障更高的下载速度和稳定性，建议文件存储于腾讯云。非腾讯云存储的 Url 速度和稳定性可能受一定影响。
    */
   FileUrl?: string
   /**
@@ -3792,6 +4135,52 @@ export interface CreateReconstructDocumentFlowRequest {
    * 创建文档解析任务配置信息
    */
   Config?: CreateReconstructDocumentFlowConfig
+}
+
+/**
+ * 任务流程参数信息
+ */
+export interface ValueInfo {
+  /**
+   * 值ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Id?: string
+  /**
+   * 名称
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Name?: string
+  /**
+   * 值类型：0:未知或者空, 1:string, 2:int, 3:float, 4:bool, 5:array(字符串数组), 6: object_array(结构体数组), 7: object(结构体)
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueType?: number
+  /**
+   * string
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueStr?: string
+  /**
+   * int（避免精度丢失使用字符串返回）
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueInt?: string
+  /**
+   * float
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueFloat?: number
+  /**
+   * bool
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueBool?: boolean
+  /**
+   * array
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ValueStrArray?: Array<string>
 }
 
 /**
@@ -3950,6 +4339,16 @@ export interface ModelInfo {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   AliasName?: string
+  /**
+   * 资源状态 1：资源可用；2：资源已用尽
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ResourceStatus?: number
+  /**
+   * 提示词内容字符限制
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  PromptWordsLimit?: string
 }
 
 /**
@@ -4203,15 +4602,15 @@ export interface GetWsTokenRequest {
    */
   Type: number
   /**
-   * 应用AppKey
+   * 应用AppKey（应用发布后在应用页面[发布管理]-[调用信息]-[API管理]处获取）
    */
   BotAppKey?: string
   /**
-   * 坐席ID
+   * 访客ID（外部输入，建议唯一，标识当前接入会话的用户）
    */
   VisitorBizId?: string
   /**
-   * 坐席标签
+   * 知识标签（用于知识库中知识的检索过滤）
    */
   VisitorLabels?: Array<GetWsTokenReq_Label>
 }
@@ -4426,7 +4825,10 @@ export interface BaseConfig {
    */
   Name: string
   /**
-   * 应用头像
+   * 应用头像url，在CreateApp和ModifyApp中作为入参必填。
+作为入参传入说明：
+1. 传入的url图片限制为jpeg和png，大小限制为500KB，url链接需允许head请求。
+2. 如果用户没有对象存储，可使用“获取文件上传临时密钥”(DescribeStorageCredential)接口，获取cos临时密钥和上传路径，自行上传头像至cos中并获取访问链接。
    */
   Avatar: string
   /**
@@ -4448,6 +4850,22 @@ export interface DescribeSegmentsResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 相似问信息
+ */
+export interface SimilarQuestion {
+  /**
+   * 相似问ID
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SimBizId?: string
+  /**
+   * 相似问内容
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Question?: string
 }
 
 /**
@@ -4763,64 +5181,14 @@ export interface CreateRejectedQuestionRequest {
 }
 
 /**
- * 当前执行的 token 统计信息
+ * 任务参数
  */
-export interface TokenStat {
+export interface TaskParams {
   /**
-   * 会话 ID
+   * 下载地址,需要通过cos桶临时密钥去下载
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  SessionId?: string
-  /**
-   * 请求 ID
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  RequestId?: string
-  /**
-   * 对应哪条会话, 会话 ID, 用于回答的消息存储使用, 可提前生成, 保存消息时使用
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  RecordId?: string
-  /**
-   * token 已使用数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  UsedCount?: number
-  /**
-   * 免费 token 数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  FreeCount?: number
-  /**
-   * 订单总 token 数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  OrderCount?: number
-  /**
-   * 当前执行状态汇总, 常量: 使用中: processing, 成功: success, 失败: failed
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  StatusSummary?: string
-  /**
-   * 当前执行状态汇总后中文展示
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  StatusSummaryTitle?: string
-  /**
-   * 当前请求执行时间, 单位 ms
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Elapsed?: number
-  /**
-   * 当前请求消耗 token 数
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  TokenCount?: number
-  /**
-   * 执行过程信息
-注意：此字段可能返回 null，表示取不到有效值。
-   */
-  Procedures?: Array<Procedure>
+  CosPath?: string
 }
 
 /**
@@ -5326,28 +5694,19 @@ export interface CreateReconstructDocumentFlowResponse {
 }
 
 /**
- * ListRejectedQuestion请求参数结构体
+ * 多轮历史信息
  */
-export interface ListRejectedQuestionRequest {
+export interface HistorySummary {
   /**
-   * 应用ID
+   * 助手
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  BotBizId: string
+  Assistant?: string
   /**
-   * 页码
-
+   * 用户
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  PageNumber: number
-  /**
-   * 每页数量
-
-   */
-  PageSize: number
-  /**
-   * 查询内容
-
-   */
-  Query?: string
+  User?: string
 }
 
 /**

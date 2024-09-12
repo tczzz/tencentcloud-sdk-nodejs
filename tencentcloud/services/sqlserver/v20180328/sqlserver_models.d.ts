@@ -227,6 +227,19 @@ export interface DescribeInquiryPriceParameterResponse {
     RequestId?: string;
 }
 /**
+ * ModifyDatabasePrivilege请求参数结构体
+ */
+export interface ModifyDatabasePrivilegeRequest {
+    /**
+     * 数据库实例ID，形如mssql-njj2mtpl
+     */
+    InstanceId: string;
+    /**
+     * 数据库权限变更信息
+     */
+    DataBaseSet: Array<DataBasePrivilegeModifyInfo>;
+}
+/**
  * DescribeCollationTimeZone返回参数结构体
  */
 export interface DescribeCollationTimeZoneResponse {
@@ -1230,6 +1243,19 @@ export interface DescribeRestoreTimeRangeResponse {
     RequestId?: string;
 }
 /**
+ * ModifyDatabasePrivilege返回参数结构体
+ */
+export interface ModifyDatabasePrivilegeResponse {
+    /**
+     * 异步任务流程ID
+     */
+    FlowId: number;
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
+}
+/**
  * CreateIncrementalMigration返回参数结构体
  */
 export interface CreateIncrementalMigrationResponse {
@@ -1600,19 +1626,6 @@ export interface QueryMigrationCheckProcessRequest {
      * 迁移任务ID
      */
     MigrateId: number;
-}
-/**
- * ModifyDBRemark请求参数结构体
- */
-export interface ModifyDBRemarkRequest {
-    /**
-     * 实例ID，形如mssql-rljoi3bf
-     */
-    InstanceId: string;
-    /**
-     * 数据库名称及备注数组，每个元素包含数据库名和对应的备注
-     */
-    DBRemarks: Array<DBRemark>;
 }
 /**
  * RestartDBInstance返回参数结构体
@@ -2116,6 +2129,15 @@ export interface DeleteIncrementalMigrationRequest {
      * 增量备份导入任务ID，由CreateIncrementalMigration接口返回
      */
     IncrementalMigrationId: string;
+}
+/**
+ * CutXEvents返回参数结构体
+ */
+export interface CutXEventsResponse {
+    /**
+     * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+     */
+    RequestId?: string;
 }
 /**
  * DescribeBackups请求参数结构体
@@ -2846,13 +2868,17 @@ export interface TerminateDBInstanceResponse {
     RequestId?: string;
 }
 /**
- * DescribeMigrationDetail请求参数结构体
+ * ModifyDBRemark请求参数结构体
  */
-export interface DescribeMigrationDetailRequest {
+export interface ModifyDBRemarkRequest {
     /**
-     * 迁移任务ID
+     * 实例ID，形如mssql-rljoi3bf
      */
-    MigrateId: number;
+    InstanceId: string;
+    /**
+     * 数据库名称及备注数组，每个元素包含数据库名和对应的备注
+     */
+    DBRemarks: Array<DBRemark>;
 }
 /**
  * DescribeAccountPrivilegeByDB返回参数结构体
@@ -4299,33 +4325,17 @@ export interface CreateBasicDBInstancesResponse {
     RequestId?: string;
 }
 /**
- * DescribeAccounts请求参数结构体
+ * 数据库账号权限变更信息
  */
-export interface DescribeAccountsRequest {
+export interface DataBasePrivilegeModifyInfo {
     /**
-     * 实例ID
+     * 数据库名称
      */
-    InstanceId: string;
+    DataBaseName: string;
     /**
-     * 分页返回，每页返回的数目，取值为1-100，默认值为20
+     * 数据库权限变更信息
      */
-    Limit?: number;
-    /**
-     * 分页返回，页编号，默认值为第0页
-     */
-    Offset?: number;
-    /**
-     * 账号名称
-     */
-    Name?: string;
-    /**
-     * createTime,updateTime,passTime" note:"排序字段，默认按照账号创建时间倒序
-     */
-    OrderBy?: string;
-    /**
-     * 排序规则（desc-降序，asc-升序），默认desc
-     */
-    OrderByType?: string;
+    AccountPrivileges: Array<AccountPrivilege>;
 }
 /**
  * DescribeMaintenanceSpan返回参数结构体
@@ -5026,6 +5036,15 @@ export interface DescribeFlowStatusResponse {
     RequestId?: string;
 }
 /**
+ * CutXEvents请求参数结构体
+ */
+export interface CutXEventsRequest {
+    /**
+     * 实例ID
+     */
+    InstanceId: string;
+}
+/**
  * SwitchCloudInstanceHA返回参数结构体
  */
 export interface SwitchCloudInstanceHAResponse {
@@ -5407,7 +5426,7 @@ export interface AccountPrivilegeModifyInfo {
      */
     UserName: string;
     /**
-     * 账号权限变更信息
+     * 账号权限变更信息。参数DBPrivileges和AccAllDB只能二选一
      */
     DBPrivileges: Array<DBPrivilegeModifyInfo>;
     /**
@@ -5418,6 +5437,10 @@ export interface AccountPrivilegeModifyInfo {
      * 账号类型，IsAdmin字段的扩展字段。 L0-超级权限(基础版独有),L1-高级权限,L2-特殊权限,L3-普通权限，默认L3
      */
     AccountType?: string;
+    /**
+     * 全量修改指定账号下的所有DB权限，只支持特殊权限账号和普通权限账号。参数DBPrivileges和AccAllDB只能二选一
+     */
+    AccAllDB?: SelectAllDB;
 }
 /**
  * 账号创建信息
@@ -5721,6 +5744,24 @@ export interface RenewPostpaidDBInstanceRequest {
      * 实例ID，格式如：mssql-3l3fgqn7 或 mssqlro-3l3fgqn7
      */
     InstanceId: string;
+}
+/**
+ * DescribeMigrationDetail请求参数结构体
+ */
+export interface DescribeMigrationDetailRequest {
+    /**
+     * 迁移任务ID
+     */
+    MigrateId: number;
+}
+/**
+ * DB权限修改类型
+ */
+export interface SelectAllDB {
+    /**
+     * 权限变更信息。ReadWrite表示可读写，ReadOnly表示只读，Delete表示删除账号对该DB的权限，DBOwner所有者
+     */
+    Privilege: string;
 }
 /**
  * DescribeReadOnlyGroupDetails请求参数结构体
@@ -6256,11 +6297,11 @@ export interface DescribeRegionsResponse {
     /**
      * 返回地域信息总的条目
      */
-    TotalCount: number;
+    TotalCount?: number;
     /**
      * 地域信息数组
      */
-    RegionSet: Array<RegionInfo>;
+    RegionSet?: Array<RegionInfo>;
     /**
      * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
      */
@@ -6758,31 +6799,6 @@ export interface RecycleReadOnlyGroupResponse {
     RequestId?: string;
 }
 /**
- * DescribeDBPrivilegeByAccount请求参数结构体
- */
-export interface DescribeDBPrivilegeByAccountRequest {
-    /**
-     * 实例ID，形如mssql-njj2mtpl
-     */
-    InstanceId: string;
-    /**
-     * 账号名称
-     */
-    AccountName: string;
-    /**
-     * 账号关联的数据库名称
-     */
-    DBName?: string;
-    /**
-     * 分页返回，每页返回的数目，取值为1-100，默认值为20
-     */
-    Limit?: number;
-    /**
-     * 分页返回，页编号，默认值为第0页
-     */
-    Offset?: number;
-}
-/**
  * DescribeHASwitchLog请求参数结构体
  */
 export interface DescribeHASwitchLogRequest {
@@ -7004,6 +7020,35 @@ export interface DescribeUploadIncrementalInfoRequest {
     IncrementalMigrationId: string;
 }
 /**
+ * DescribeAccounts请求参数结构体
+ */
+export interface DescribeAccountsRequest {
+    /**
+     * 实例ID
+     */
+    InstanceId: string;
+    /**
+     * 分页返回，每页返回的数目，取值为1-100，默认值为20
+     */
+    Limit?: number;
+    /**
+     * 分页返回，页编号，默认值为第0页
+     */
+    Offset?: number;
+    /**
+     * 账号名称
+     */
+    Name?: string;
+    /**
+     * createTime,updateTime,passTime" note:"排序字段，默认按照账号创建时间倒序
+     */
+    OrderBy?: string;
+    /**
+     * 排序规则（desc-降序，asc-升序），默认desc
+     */
+    OrderByType?: string;
+}
+/**
  * DescribeBackupByFlowId返回参数结构体
  */
 export interface DescribeBackupByFlowIdResponse {
@@ -7202,37 +7247,29 @@ export interface ModifyDBInstanceSecurityGroupsResponse {
     RequestId?: string;
 }
 /**
- * 安全组
+ * DescribeDBPrivilegeByAccount请求参数结构体
  */
-export interface SecurityGroup {
+export interface DescribeDBPrivilegeByAccountRequest {
     /**
-     * 项目ID
+     * 实例ID，形如mssql-njj2mtpl
      */
-    ProjectId: number;
+    InstanceId: string;
     /**
-     * 创建时间，时间格式：yyyy-mm-dd hh:mm:ss
+     * 账号名称
      */
-    CreateTime: string;
+    AccountName: string;
     /**
-     * 入站规则
+     * 账号关联的数据库名称
      */
-    InboundSet: Array<SecurityGroupPolicy>;
+    DBName?: string;
     /**
-     * 出站规则
+     * 分页返回，每页返回的数目，取值为1-100，默认值为20
      */
-    OutboundSet: Array<SecurityGroupPolicy>;
+    Limit?: number;
     /**
-     * 安全组ID
+     * 分页返回，页编号，默认值为第0页
      */
-    SecurityGroupId: string;
-    /**
-     * 安全组名称
-     */
-    SecurityGroupName: string;
-    /**
-     * 安全组备注
-     */
-    SecurityGroupRemark: string;
+    Offset?: number;
 }
 /**
  * 只读副本实例
@@ -7410,6 +7447,39 @@ export interface DescribeBackupMigrationRequest {
      * 排序方式，desc-递减排序，asc-递增排序。默认按照asc排序，且在OrderBy为有效值时，本参数有效
      */
     OrderByType?: string;
+}
+/**
+ * 安全组
+ */
+export interface SecurityGroup {
+    /**
+     * 项目ID
+     */
+    ProjectId: number;
+    /**
+     * 创建时间，时间格式：yyyy-mm-dd hh:mm:ss
+     */
+    CreateTime: string;
+    /**
+     * 入站规则
+     */
+    InboundSet: Array<SecurityGroupPolicy>;
+    /**
+     * 出站规则
+     */
+    OutboundSet: Array<SecurityGroupPolicy>;
+    /**
+     * 安全组ID
+     */
+    SecurityGroupId: string;
+    /**
+     * 安全组名称
+     */
+    SecurityGroupName: string;
+    /**
+     * 安全组备注
+     */
+    SecurityGroupRemark: string;
 }
 /**
  * 实例的数据库信息

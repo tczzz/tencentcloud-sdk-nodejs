@@ -166,6 +166,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ModifyConnectionConfig", req, cb);
     }
     /**
+     * 本接口（DescribeInstanceLogDelivery）用于查询实例的日志投递配置。
+     */
+    async DescribeInstanceLogDelivery(req, cb) {
+        return this.request("DescribeInstanceLogDelivery", req, cb);
+    }
+    /**
      * 修改实例相关信息
      */
     async ModifyInstance(req, cb) {
@@ -260,6 +266,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async RenewInstance(req, cb) {
         return this.request("RenewInstance", req, cb);
+    }
+    /**
+     * 本接口（ModifyInstanceLogDelivery）用于开启或关闭投递实例日志到CLS。
+     */
+    async ModifyInstanceLogDelivery(req, cb) {
+        return this.request("ModifyInstanceLogDelivery", req, cb);
     }
     /**
      * 开通外网
@@ -466,6 +478,12 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("DescribeInstanceMonitorBigKey", req, cb);
     }
     /**
+     * 查询Redis独享集群列表
+     */
+    async DescribeRedisClusters(req, cb) {
+        return this.request("DescribeRedisClusters", req, cb);
+    }
+    /**
      * 本接口（KillMasterGroup）模拟故障。
      */
     async KillMasterGroup(req, cb) {
@@ -506,6 +524,12 @@ class Client extends abstract_client_1.AbstractClient {
      */
     async SwitchInstanceVip(req, cb) {
         return this.request("SwitchInstanceVip", req, cb);
+    }
+    /**
+     * 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
+     */
+    async DescribeDBSecurityGroups(req, cb) {
+        return this.request("DescribeDBSecurityGroups", req, cb);
     }
     /**
      * 本接口（DescribeReplicationGroup）用于查询复制组。
@@ -598,16 +622,16 @@ class Client extends abstract_client_1.AbstractClient {
         return this.request("ChangeMasterInstance", req, cb);
     }
     /**
-     * 变更实例配置
+     * 本接口（UpgradeInstance）用于变更实例的配置规格。
      */
     async UpgradeInstance(req, cb) {
         return this.request("UpgradeInstance", req, cb);
     }
     /**
-     * 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
+     * 查询Redis独享集群概览信息
      */
-    async DescribeDBSecurityGroups(req, cb) {
-        return this.request("DescribeDBSecurityGroups", req, cb);
+    async DescribeRedisClusterOverview(req, cb) {
+        return this.request("DescribeRedisClusterOverview", req, cb);
     }
     /**
      * 应用参数模板到实例

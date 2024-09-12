@@ -261,11 +261,27 @@ export interface DescribeRoundPlaysRequest {
    */
   SubAppId?: number
   /**
-   * 轮播播单标识过滤条件，数组长度限制：100。
+   * 过滤条件：轮播播单标识，数组长度限制：100。
    */
   RoundPlayIds?: Array<string>
   /**
-   * 分页偏移量，默认值：0。
+   * 过滤条件，轮播播单状态，可选值： <li>Enabled：启动状态；</li> <li>Disabled：停止状态。</li>
+   */
+  Status?: string
+  /**
+   * 过滤条件：轮播播单创建时间。
+   */
+  CreateTime?: TimeRange
+  /**
+   * 过滤条件：轮播播单更新时间。
+   */
+  UpdateTime?: TimeRange
+  /**
+   * 翻页标识，分批拉取时使用：当单次请求无法拉取所有数据，接口将会返回 ScrollToken，下一次请求携带该 Token，将会从下一条记录开始获取。
+   */
+  ScrollToken?: string
+  /**
+   * 分页偏移量，默认值：0。已经废弃，请根据 ScrollToken 参数进行分批次查询。
    */
   Offset?: number
   /**
@@ -1516,28 +1532,6 @@ export interface RefreshUrlCacheRequest {
 }
 
 /**
- * DescribeAIAnalysisTemplates请求参数结构体
- */
-export interface DescribeAIAnalysisTemplatesRequest {
-  /**
-   * <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
-   */
-  SubAppId?: number
-  /**
-   * 音视频内容分析模板唯一标识过滤条件，数组长度最大值：100。
-   */
-  Definitions?: Array<number | bigint>
-  /**
-   * 分页偏移量，默认值：0。
-   */
-  Offset?: number
-  /**
-   * 返回记录条数，默认值：10，最大值：100。
-   */
-  Limit?: number
-}
-
-/**
  * 音视频审核模板详情
  */
 export interface ContentReviewTemplateItem {
@@ -1674,6 +1668,60 @@ export interface AudioTransform {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   VolumeParam?: AudioVolumeParam
+}
+
+/**
+ * 视频转码任务信息，该结构仅用于对 2017 版[视频转码](https://cloud.tencent.com/document/product/266/7822)接口发起的任务。
+ */
+export interface TranscodeTask2017 {
+  /**
+   * 转码任务 ID。
+   */
+  TaskId: string
+  /**
+   * 错误码
+<li>0：成功；</li>
+<li>其他值：失败。</li>
+   */
+  ErrCode: number
+  /**
+   * 错误信息。
+   */
+  Message: string
+  /**
+   * 被转码文件 ID。
+   */
+  FileId: string
+  /**
+   * 被转码文件名称。
+   */
+  FileName: string
+  /**
+   * 视频时长，单位：秒。
+   */
+  Duration: number
+  /**
+   * 封面地址。
+   */
+  CoverUrl: string
+  /**
+   * 视频转码后生成的播放信息。
+   */
+  PlayInfoSet: Array<TranscodePlayInfo2017>
+}
+
+/**
+ * DescribeCurrentPlaylist返回参数结构体
+ */
+export interface DescribeCurrentPlaylistResponse {
+  /**
+   * 当前播放列表信息。
+   */
+  CurrentPlaylist?: Array<RoundPlayFilePlayInfo>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -1858,6 +1906,16 @@ export interface RoundPlayInfo {
    * 轮播播放地址。
    */
   Url?: string
+  /**
+   * 创建时间，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#52)。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  CreateTime?: string
+  /**
+   * 更新时间，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#52)。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  UpdateTime?: string
 }
 
 /**
@@ -2082,6 +2140,31 @@ export interface TextWatermarkTemplateInput {
 默认值：1。
    */
   FontAlpha: number
+}
+
+/**
+ * 用户自定义语音审核任务控制参数
+ */
+export interface UserDefineAsrTextReviewTemplateInfoForUpdate {
+  /**
+   * 用户自定语音审核任务开关，可选值：
+<li>ON：开启自定义语音审核任务；</li>
+<li>OFF：关闭自定义语音审核任务。</li>
+   */
+  Switch?: string
+  /**
+   * 用户自定义语音过滤标签，审核结果包含选择的标签则返回结果，如果过滤标签为空，则审核结果全部返回。如果要使用标签过滤功能，添加自定义语音关键词素材时需要添加对应标签。
+标签个数最多 10 个，每个标签长度最多 16 个字符。
+   */
+  LabelSet?: Array<string>
+  /**
+   * 判定涉嫌违规的分数阈值，当审核达到该分数以上，认为涉嫌违规。取值范围：0~100。
+   */
+  BlockConfidence?: number
+  /**
+   * 判定需人工复核是否违规的分数阈值，当审核达到该分数以上，认为需人工复核。取值范围：0~100。
+   */
+  ReviewConfidence?: number
 }
 
 /**
@@ -3996,6 +4079,34 @@ export interface ModifyQualityInspectTemplateResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * DescribeProcedureTemplates请求参数结构体
+ */
+export interface DescribeProcedureTemplatesRequest {
+  /**
+   * <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+   */
+  SubAppId?: number
+  /**
+   * 任务流模板名字过滤条件，数组长度限制：100。
+   */
+  Names?: Array<string>
+  /**
+   * 任务流模板类型过滤条件，可选值：
+<li>Preset：系统预置任务流模板；</li>
+<li>Custom：用户自定义任务流模板。</li>
+   */
+  Type?: string
+  /**
+   * 分页偏移量，默认值：0。
+   */
+  Offset?: number
+  /**
+   * 返回记录条数，默认值：10，最大值：100。
+   */
+  Limit?: number
 }
 
 /**
@@ -6246,9 +6357,7 @@ export interface ModifyRoundPlayRequest {
    */
   Desc?: string
   /**
-   * 播放状态，可选值：
-<li>Disabled：结束播放，结束后轮播任务不能再次启动。</li>
-
+   * 播放状态，可选值：<li>Disabled：停止播放。</li><li>Enabled：启播时长到达后启动播放。</li>
    */
   Status?: string
   /**
@@ -6545,23 +6654,17 @@ export interface ModifyAnimatedGraphicsTemplateRequest {
 }
 
 /**
- * DescribeProcedureTemplates请求参数结构体
+ * DescribeAIAnalysisTemplates请求参数结构体
  */
-export interface DescribeProcedureTemplatesRequest {
+export interface DescribeAIAnalysisTemplatesRequest {
   /**
    * <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
    */
   SubAppId?: number
   /**
-   * 任务流模板名字过滤条件，数组长度限制：100。
+   * 音视频内容分析模板唯一标识过滤条件，数组长度最大值：100。
    */
-  Names?: Array<string>
-  /**
-   * 任务流模板类型过滤条件，可选值：
-<li>Preset：系统预置任务流模板；</li>
-<li>Custom：用户自定义任务流模板。</li>
-   */
-  Type?: string
+  Definitions?: Array<number | bigint>
   /**
    * 分页偏移量，默认值：0。
    */
@@ -6661,6 +6764,24 @@ export interface DeleteWordSamplesRequest {
    * <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
    */
   SubAppId?: number
+}
+
+/**
+ * FastEditMedia返回参数结构体
+ */
+export interface FastEditMediaResponse {
+  /**
+   * 快速编辑后的视频的媒体文件的唯一标识。
+   */
+  FileId?: string
+  /**
+   * 快速编辑后的媒体播放地址。
+   */
+  Url?: string
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -8317,7 +8438,7 @@ export interface ManageTaskRequest {
 }
 
 /**
- * 轮播媒体文件信息
+ * 轮播播放节目信息
  */
 export interface RoundPlayListItemInfo {
   /**
@@ -8331,6 +8452,10 @@ export interface RoundPlayListItemInfo {
 Type 对应的格式必须为 HLS 格式。
    */
   AudioVideoType: string
+  /**
+   * 播放节目的 ID，由系统分配。
+   */
+  ItemId?: string
   /**
    * 指定播放的转码模版，当 AudioVideoType 为 Transcode 时必须指定。
    */
@@ -9409,13 +9534,13 @@ export interface SetVodDomainCertificateResponse {
  */
 export interface ExtractTraceWatermarkTaskOutput {
   /**
-   * 播放者的 ID，以十六进制表示，共6位，该参数用于 [溯源水印](https://cloud.tencent.com/document/product/266/75789) 使用场景。
+   * 播放者的 ID，以十六进制表示，共6位。
    */
-  Uv: string
+  Uv?: string
   /**
    * 该字段已废弃。
    */
-  Uid: string
+  Uid?: string
 }
 
 /**
@@ -13153,11 +13278,11 @@ export interface TranscodeTaskInput {
    */
   WatermarkSet?: Array<WatermarkInput>
   /**
-   * 溯源水印。
+   * 溯源水印，该功能已不再支持使用。
    */
   TraceWatermark?: TraceWatermarkInput
   /**
-   * 版权水印。
+   * 版权水印，该功能已不再支持使用。
    */
   CopyRightWatermark?: CopyRightWatermarkInput
   /**
@@ -13603,6 +13728,20 @@ export interface ProhibitedAsrReviewTemplateInfo {
    * 判定需人工复核是否违规的分数阈值，当审核达到该分数以上，认为需人工复核，不填默认为 75 分。取值范围：0~100。
    */
   ReviewConfidence?: number
+}
+
+/**
+ * HandleCurrentPlaylist返回参数结构体
+ */
+export interface HandleCurrentPlaylistResponse {
+  /**
+   * 操作成功的节目列表。
+   */
+  RoundPlaylist?: Array<RoundPlayListItemInfo>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -15194,11 +15333,11 @@ export interface AdaptiveDynamicStreamingTaskInput {
    */
   WatermarkSet?: Array<WatermarkInput>
   /**
-   * 溯源水印。
+   * 溯源水印，该功能已不再支持使用。
    */
   TraceWatermark?: TraceWatermarkInput
   /**
-   * 版权水印。
+   * 版权水印，该功能已不再支持使用。
    */
   CopyRightWatermark?: CopyRightWatermarkInput
   /**
@@ -17676,28 +17815,39 @@ export interface ReviewTemplate {
 }
 
 /**
- * 用户自定义语音审核任务控制参数
+ * DescribeCurrentPlaylist请求参数结构体
  */
-export interface UserDefineAsrTextReviewTemplateInfoForUpdate {
+export interface DescribeCurrentPlaylistRequest {
   /**
-   * 用户自定语音审核任务开关，可选值：
-<li>ON：开启自定义语音审核任务；</li>
-<li>OFF：关闭自定义语音审核任务。</li>
+   * <b>点播[应用](/document/product/266/14574) ID。</b>
    */
-  Switch?: string
+  SubAppId: number
   /**
-   * 用户自定义语音过滤标签，审核结果包含选择的标签则返回结果，如果过滤标签为空，则审核结果全部返回。如果要使用标签过滤功能，添加自定义语音关键词素材时需要添加对应标签。
-标签个数最多 10 个，每个标签长度最多 16 个字符。
+   * 轮播播单唯一标识。
    */
-  LabelSet?: Array<string>
+  RoundPlayId: string
   /**
-   * 判定涉嫌违规的分数阈值，当审核达到该分数以上，认为涉嫌违规。取值范围：0~100。
+   * 返回的播放列表的长度。最大10，默认值为5。
    */
-  BlockConfidence?: number
+  Limit?: number
+}
+
+/**
+ * FastEditMedia请求参数结构体
+ */
+export interface FastEditMediaRequest {
   /**
-   * 判定需人工复核是否违规的分数阈值，当审核达到该分数以上，认为需人工复核。取值范围：0~100。
+   * 输入的媒体文件信息。最多支持传入100个媒体。
    */
-  ReviewConfidence?: number
+  FileInfos: Array<FastEditMediaFileInfo>
+  /**
+   * ClipMode 用来表示剪辑时间点落在一个 TS 分片中间时，是否包含这个分片。共有两种取值： <li>StartInclusiveEndInclusive：当剪辑起始时间点和结束时间点落在一个分片的中间时，都会包含这个分片；</li> <li>StartInclusiveEndExclusive：当起始时间点落在一个分片的中间时，会包含这个分片；而当结束时间点落在一个分片的中间时，不会包含这个分片。</li> 不填时，默认为 StartInclusiveEndInclusive。
+   */
+  ClipMode?: string
+  /**
+   * <b>点播[应用](/document/product/266/14574) ID。从2023年12月25日起开通点播的客户，如访问点播应用中的资源（无论是默认应用还是新创建的应用），必须将该字段填写为应用 ID。</b>
+   */
+  SubAppId?: number
 }
 
 /**
@@ -17887,13 +18037,17 @@ export interface WeChatMiniProgramPublishResponse {
  */
 export interface DescribeRoundPlaysResponse {
   /**
-   * 符合过滤条件的轮播播单总数。
+   * 符合过滤条件的轮播播单总数。已经废弃，分批次查询请请使用 ScrollToken 参数。
    */
   TotalCount?: number
   /**
    * 轮播播单详情列表。
    */
   RoundPlaySet?: Array<RoundPlayInfo>
+  /**
+   * 翻页标识，当请求未返回所有数据，该字段表示下一条记录的 ID。当该字段为空，说明已无更多数据。
+   */
+  ScrollToken?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -19985,6 +20139,32 @@ export interface DescribeHeadTailTemplatesResponse {
 }
 
 /**
+ * HandleCurrentPlaylist请求参数结构体
+ */
+export interface HandleCurrentPlaylistRequest {
+  /**
+   * <b>点播[应用](/document/product/266/14574) ID。</b>
+   */
+  SubAppId: number
+  /**
+   * 轮播播单唯一标识。
+   */
+  RoundPlayId: string
+  /**
+   * 操作类型，取值有：<li>Insert：向当前播放列表插入播放节目。</li> <li>InsertTemporary：向当前播放列表临时插入播放节目。只能插入到当前正在播放的节目后面，临时插入的节目只在本次轮播过程生效。</li><li>Delete：删除播放列表中的播放节目。不能删除正在播放的节目。</li>
+   */
+  Operation: string
+  /**
+   * 播单节目 ID。当 Operation 为 Insert 时必填，表示插入的节目列表位于该播放节目之后。插入的位置必须在当前正在播放的节目之后。
+   */
+  ItemId?: string
+  /**
+   * 节目列表。当 Operation 为 Insert、InsertTemporary、Delete 时必填，表示要操作的节目列表。列表长度最大为10。
+   */
+  RoundPlaylist?: Array<RoundPlayListItemInfo>
+}
+
+/**
  * 鉴别涉及令人不安全的信息的任务控制参数
  */
 export interface TerrorismConfigureInfo {
@@ -20370,6 +20550,35 @@ export interface MediaTrack {
 }
 
 /**
+ * 快速媒体编辑操作的输入媒体类型
+ */
+export interface FastEditMediaFileInfo {
+  /**
+   * 媒体的 ID。
+   */
+  FileId: string
+  /**
+   * 操作的音视频类型，可选值有：
+<li>Transcode：转码输出；</li>
+<li>Original：原始音视频。</li>
+注意：操作的音视频，必须为 HLS 格式。
+   */
+  AudioVideoType: string
+  /**
+   * 当 AudioVideoType 为 Transcode 时有效，表示操作媒体的的转码模板 ID。
+   */
+  TranscodeDefinition?: number
+  /**
+   * 媒体剪辑起始的偏移时间，单位：秒。
+   */
+  StartTimeOffset?: number
+  /**
+   * 媒体剪辑结束的时间偏移，单位：秒。
+   */
+  EndTimeOffset?: number
+}
+
+/**
  * 云点播存储用量的分区统计数据
  */
 export interface StorageStatData {
@@ -20402,43 +20611,31 @@ export interface StorageStatData {
 }
 
 /**
- * 视频转码任务信息，该结构仅用于对 2017 版[视频转码](https://cloud.tencent.com/document/product/266/7822)接口发起的任务。
+ * 轮播节目播放信息
  */
-export interface TranscodeTask2017 {
+export interface RoundPlayFilePlayInfo {
   /**
-   * 转码任务 ID。
+   * 播单节目的 ID，由系统分配。
    */
-  TaskId: string
+  ItemId?: string
   /**
-   * 错误码
-<li>0：成功；</li>
-<li>其他值：失败。</li>
+   * 媒体文件标识。
    */
-  ErrCode: number
+  FileId?: string
   /**
-   * 错误信息。
+   * 启播时间，格式按照 ISO 8601标准表示，详见 [ISO 日期格式说明](https://cloud.tencent.com/document/product/266/11732#52)。
    */
-  Message: string
+  StartPlayTime?: string
   /**
-   * 被转码文件 ID。
+   * 播放时长，单位为秒。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  FileId: string
+  Duration?: number
   /**
-   * 被转码文件名称。
+   * 播放进度，单位为秒。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  FileName: string
-  /**
-   * 视频时长，单位：秒。
-   */
-  Duration: number
-  /**
-   * 封面地址。
-   */
-  CoverUrl: string
-  /**
-   * 视频转码后生成的播放信息。
-   */
-  PlayInfoSet: Array<TranscodePlayInfo2017>
+  Progress?: number
 }
 
 /**
@@ -20814,6 +21011,11 @@ export interface EditMediaTEHDConfig {
    * 极速高清类型，可选值：<li>TEHD-100 表示极速高清-100;</li> <li>OFF 表示关闭极速高清。</li>不填表示 OFF。
    */
   Type: string
+  /**
+   * 视频码率上限，当 Type 指定了极速高清类型时有效。
+不填或填0表示不设视频码率上限。
+   */
+  MaxVideoBitrate?: number
 }
 
 /**

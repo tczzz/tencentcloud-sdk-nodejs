@@ -64,13 +64,13 @@ export interface UpgradeSmallVersionRequest {
  */
 export interface ModifyInstanceParamsResponse {
   /**
-   * 说明修改参数配置是否成功。<br><li>true：指修改成功；<br><li>false：指修改失败。<br>
+   * 说明修改参数配置是否成功。<br><li>true：指修改成功；</li><li>false：指修改失败。</li>
    */
-  Changed: boolean
+  Changed?: boolean
   /**
    * 任务ID。
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -198,6 +198,20 @@ export interface DescribeInstanceMonitorTopNCmdResponse {
    * 访问命令信息
    */
   Data?: Array<SourceCommand>
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
+}
+
+/**
+ * ModifyInstanceAvailabilityZones返回参数结构体
+ */
+export interface ModifyInstanceAvailabilityZonesResponse {
+  /**
+   * 任务ID。
+   */
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -484,7 +498,7 @@ export interface ModifyConnectionConfigResponse {
   /**
    * 任务ID
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -632,7 +646,7 @@ export interface ModifyInstanceRequest {
    */
   Operation: string
   /**
-   * 实例Id
+   * 实例Id，每次请求的实例的上限为10。
    */
   InstanceIds?: Array<string>
   /**
@@ -682,7 +696,7 @@ export interface RenewInstanceResponse {
   /**
    * 交易ID。
    */
-  DealId: string
+  DealId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -728,7 +742,7 @@ export interface DescribeCommonDBInstancesRequest {
    */
   PayMode?: number
   /**
-   * 实例ID过滤信息列表
+   * 实例ID过滤信息列表，数组最大长度限制为100
    */
   InstanceIds?: Array<string>
   /**
@@ -907,6 +921,117 @@ export interface DescribeInstancesResponse {
 }
 
 /**
+ * 任务信息详情
+ */
+export interface TaskInfoDetail {
+  /**
+   * 任务 ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TaskId?: number
+  /**
+   * 任务开始时间。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  StartTime?: string
+  /**
+   * 任务类型。
+- FLOW_CREATE: "001"，新建实例
+- FLOW_RESIZE ： "002"，配置变更
+- FLOW_CLOSE："003"，关闭实例
+- FLOW_CLEAN： "004"，清空实例
+- FLOW_STARTUP："005"，实例启用。
+- FLOW_DELETE："006"，删除实例。
+- FLOW_SETPWD："007"，重置密码。
+- FLOW_EXPORTBACKUP："009"，导出备份文件。
+- FLOW_RESTOREBACKUP："010"，恢复备份。
+- FLOW_BACKUPINSTANCE："012"，备份实例。
+- FLOW_MIGRATEINSTANCE："013"，迁移实例。
+- FLOW_DELBACKUP："014"，删除备份。
+- FLOW_EXCHANGEINSTANCE： "016"，切换实例流程。
+- FLOW_AUTOBACKUP："017"，自动备份实例。
+- FLOW_MIGRATECHECK： "022"，迁移参数校验。
+- FLOW_MIGRATETASK："023"，数据迁移中。
+- FLOW_CLEANDB："025"，清空某个数据库。
+- FLOW_CLONEBACKUP："026"，克隆备份。
+- FLOW_CHANGEVIP： "027"，改变vip地址。
+- FLOW_EXPORSHR ："028"，扩缩容。
+- FLOW_ADDNODES："029"，加（减）节点。
+- FLOW_CHANGENET："031"，改变网络类型。
+- FLOW_MODIFYINSTACEREADONLY："033"，只读策略变更。
+- FLOW_MODIFYINSTANCEPARAMS："034"，修改实例参数。
+- FLOW_MODIFYINSTANCEPASSWORDFREE："035"，设置免密。
+- FLOW_SWITCHINSTANCEVIP："036"，实例VIP切换。
+- FLOW_MODIFYINSTANCEACCOUNT："037"，实例帐号变更。
+- FLOW_MODIFYINSTANCEBANDWIDTH："038"，实例带宽变更。
+- FLOW_ENABLEINSTANCE_REPLICATE："039"，开启副本只读。
+- FLOW_DISABLEINSTANCE_REPLICATE："040"，关闭副本只读。
+- FLOW_UpgradeArch："041"，实例架构升级，主从升集群。
+- FLOW_DowngradeArch： "042"，实例架构降级，集群降主从。
+- FLOW_UpgradeVersion： "043"，版本升级。
+- FLOW_MODIFYCONNECTIONCONFIG："044"，带宽连接数调整。
+- FLOW_CLEARNETWORK："045"，更换网络，
+- FLOW_REMOVE_BACKUP_FILE："046"，删除备份。
+- FLOW_UPGRADE_SUPPORT_MULTI_AZ："047"，升级实例支持多可用区。
+- FLOW_SHUTDOWN_MASTER："048"，模拟故障。
+- FLOW_CHANGE_REPLICA_TO_MASTER："049"，手动提主。
+- FLOW_CODE_ADD_REPLICATION_INSTANCE："050"，新增复制组。
+- FLOW_OPEN_WAN："052"，开通外网。
+- FLOW_CLOSE_WAN："053"，关闭外网FLOW_UPDATE_WAN："054"，更新外网。
+- FLOW_CODE_DELETE_REPLICATION_INSTANCE："055"，解绑复制组。
+- FLOW_CODE_CHANGE_MASTER_INSTANCE："056"，复制组实例切主。
+- FLOW_CODE_CHANGE_INSTANCE_ROLE： "057"，更改复制组实例角色。
+- FLOW_MIGRATE_NODE："058"，迁移节点。
+- FLOW_SWITCH_NODE："059"，切换节点。
+- FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redi s版本。
+- FLOW_UPGRADE_PROXY_VERSION："061"，升级 Proxy 版本。
+- FLOW_MODIFY_INSTANCE_NETWORK： "062"，实例修改网络。
+- FLOW_MIGRATE_PROXY_NODE："063"，迁移proxy节点。
+- FLOW_MIGRATION_INSTANCE_ZONE："066"，实例可用区迁移中。
+- FLOW_UPGRADE_INSTANCE_CACHE_AND_PROXY： "067"，实例版本升级中。
+- FLOW_MODIFY_PROXY_NUM："069"，加（减）Proxy 节点。
+- FLOW_MODIFYBACKUPMOD："070"，变更实例备份模式。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  TaskType?: string
+  /**
+   * 实例名称。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceName?: string
+  /**
+   * 实例 ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  InstanceId?: string
+  /**
+   * 项目 ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ProjectId?: number
+  /**
+   * 任务进度。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Progress?: number
+  /**
+   * 任务执行结束时间。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  EndTime?: string
+  /**
+   * 任务执行状态。
+
+0：任务初始化。
+1：执行中。
+2：完成。
+4：失败。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Result?: number
+}
+
+/**
  * DescribeInstanceZoneInfo返回参数结构体
  */
 export interface DescribeInstanceZoneInfoResponse {
@@ -1030,7 +1155,7 @@ export interface ResetPasswordResponse {
   /**
    * 任务ID（修改密码时的任务ID，如果时切换免密码或者非免密码实例，则无需关注此返回值）
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -1135,19 +1260,19 @@ export interface DescribeBandwidthRangeResponse {
   /**
    * 标准带宽。指购买实例时，系统为每个节点分配的带宽。
    */
-  BaseBandwidth: number
+  BaseBandwidth?: number
   /**
    * 指实例的附加带宽。标准带宽不满足需求的情况下，用户可自行增加的带宽。<ul><li>开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数 * Max ([只读副本数量, 1])，标准架构的分片数 = 1。</li><li>没有开启副本只读时，实例总带宽 = 附加带宽 * 分片数 + 标准带宽 * 分片数，标准架构的分片数 = 1。</li></ul>
    */
-  AddBandwidth: number
+  AddBandwidth?: number
   /**
    * 附加带宽设置下限。
    */
-  MinAddBandwidth: number
+  MinAddBandwidth?: number
   /**
    * 附加带宽设置上限。
    */
-  MaxAddBandwidth: number
+  MaxAddBandwidth?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -1169,14 +1294,16 @@ export interface DescribeParamTemplatesRequest {
 - 9：Redis 5.0 内存版（集群架构）。
 - 15：Redis 6.2 内存版（标准架构）。
 - 16：Redis 6.2 内存版（集群架构）。
+- 17：Redis 7.0 内存版（标准架构）。
+- 18：Redis 7.0 内存版（集群架构）。
    */
   ProductTypes?: Array<number | bigint>
   /**
-   * 模板名称数组。
+   * 模板名称数组。数组最大长度限制为50
    */
   TemplateNames?: Array<string>
   /**
-   * 模板ID数组。
+   * 模板ID数组。数组最大长度限制为50
    */
   TemplateIds?: Array<string>
 }
@@ -1343,11 +1470,11 @@ export interface DescribeInstanceParamRecordsResponse {
   /**
    * 总的修改历史记录数。
    */
-  TotalCount: number
+  TotalCount?: number
   /**
    * 修改历史记录信息。
    */
-  InstanceParamHistory: Array<InstanceParamHistory>
+  InstanceParamHistory?: Array<InstanceParamHistory>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -1424,7 +1551,7 @@ export interface InstanceMultiParam {
  */
 export interface DescribeInstanceDealDetailRequest {
   /**
-   * 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。
+   * 订单交易ID数组，即 [CreateInstances](https://cloud.tencent.com/document/api/239/20026) 的输出参数DealId。数组最大长度限制为10
    */
   DealIds: Array<string>
 }
@@ -1535,13 +1662,21 @@ export interface DescribeInstanceShardsResponse {
 }
 
 /**
- * DestroyPrepaidInstance请求参数结构体
+ * DescribeRedisClusterOverview返回参数结构体
  */
-export interface DestroyPrepaidInstanceRequest {
+export interface DescribeRedisClusterOverviewResponse {
   /**
-   * 实例ID
+   * 资源包总数
    */
-  InstanceId: string
+  TotalBundle: number
+  /**
+   * 资源包总内存大小，单位：GB
+   */
+  TotalMemory: number
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -1555,114 +1690,75 @@ export interface DisableReplicaReadonlyRequest {
 }
 
 /**
- * 任务信息详情
+ * redis独享集群详细信息
  */
-export interface TaskInfoDetail {
+export interface CDCResource {
   /**
-   * 任务 ID。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 用户的Appid
    */
-  TaskId?: number
+  AppId: number
   /**
-   * 任务开始时间。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 地域id
    */
-  StartTime?: string
+  RegionId: number
   /**
-   * 任务类型。
-- FLOW_CREATE: "001"，新建实例
-- FLOW_RESIZE ： "002"，配置变更
-- FLOW_CLOSE："003"，关闭实例
-- FLOW_CLEAN： "004"，清空实例
-- FLOW_STARTUP："005"，实例启用。
-- FLOW_DELETE："006"，删除实例。
-- FLOW_SETPWD："007"，重置密码。
-- FLOW_EXPORTBACKUP："009"，导出备份文件。
-- FLOW_RESTOREBACKUP："010"，恢复备份。
-- FLOW_BACKUPINSTANCE："012"，备份实例。
-- FLOW_MIGRATEINSTANCE："013"，迁移实例。
-- FLOW_DELBACKUP："014"，删除备份。
-- FLOW_EXCHANGEINSTANCE： "016"，切换实例流程。
-- FLOW_AUTOBACKUP："017"，自动备份实例。
-- FLOW_MIGRATECHECK： "022"，迁移参数校验。
-- FLOW_MIGRATETASK："023"，数据迁移中。
-- FLOW_CLEANDB："025"，清空某个数据库。
-- FLOW_CLONEBACKUP："026"，克隆备份。
-- FLOW_CHANGEVIP： "027"，改变vip地址。
-- FLOW_EXPORSHR ："028"，扩缩容。
-- FLOW_ADDNODES："029"，加（减）节点。
-- FLOW_CHANGENET："031"，改变网络类型。
-- FLOW_MODIFYINSTACEREADONLY："033"，只读策略变更。
-- FLOW_MODIFYINSTANCEPARAMS："034"，修改实例参数。
-- FLOW_MODIFYINSTANCEPASSWORDFREE："035"，设置免密。
-- FLOW_SWITCHINSTANCEVIP："036"，实例VIP切换。
-- FLOW_MODIFYINSTANCEACCOUNT："037"，实例帐号变更。
-- FLOW_MODIFYINSTANCEBANDWIDTH："038"，实例带宽变更。
-- FLOW_ENABLEINSTANCE_REPLICATE："039"，开启副本只读。
-- FLOW_DISABLEINSTANCE_REPLICATE："040"，关闭副本只读。
-- FLOW_UpgradeArch："041"，实例架构升级，主从升集群。
-- FLOW_DowngradeArch： "042"，实例架构降级，集群降主从。
-- FLOW_UpgradeVersion： "043"，版本升级。
-- FLOW_MODIFYCONNECTIONCONFIG："044"，带宽连接数调整。
-- FLOW_CLEARNETWORK："045"，更换网络，
-- FLOW_REMOVE_BACKUP_FILE："046"，删除备份。
-- FLOW_UPGRADE_SUPPORT_MULTI_AZ："047"，升级实例支持多可用区。
-- FLOW_SHUTDOWN_MASTER："048"，模拟故障。
-- FLOW_CHANGE_REPLICA_TO_MASTER："049"，手动提主。
-- FLOW_CODE_ADD_REPLICATION_INSTANCE："050"，新增复制组。
-- FLOW_OPEN_WAN："052"，开通外网。
-- FLOW_CLOSE_WAN："053"，关闭外网FLOW_UPDATE_WAN："054"，更新外网。
-- FLOW_CODE_DELETE_REPLICATION_INSTANCE："055"，解绑复制组。
-- FLOW_CODE_CHANGE_MASTER_INSTANCE："056"，复制组实例切主。
-- FLOW_CODE_CHANGE_INSTANCE_ROLE： "057"，更改复制组实例角色。
-- FLOW_MIGRATE_NODE："058"，迁移节点。
-- FLOW_SWITCH_NODE："059"，切换节点。
-- FLOW_UPGRADE_SMALL_VERSION："060"，升级 Redi s版本。
-- FLOW_UPGRADE_PROXY_VERSION："061"，升级 Proxy 版本。
-- FLOW_MODIFY_INSTANCE_NETWORK： "062"，实例修改网络。
-- FLOW_MIGRATE_PROXY_NODE："063"，迁移proxy节点。
-- FLOW_MIGRATION_INSTANCE_ZONE："066"，实例可用区迁移中。
-- FLOW_UPGRADE_INSTANCE_CACHE_AND_PROXY： "067"，实例版本升级中。
-- FLOW_MODIFY_PROXY_NUM："069"，加（减）Proxy 节点。
-- FLOW_MODIFYBACKUPMOD："070"，变更实例备份模式。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 可用区id
    */
-  TaskType?: string
+  ZoneId: number
   /**
-   * 实例名称。
-注意：此字段可能返回 null，表示取不到有效值。
+   * redis独享集群id
    */
-  InstanceName?: string
+  RedisClusterId: string
   /**
-   * 实例 ID。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 计费模式，1-包年包月，0-按量计费
    */
-  InstanceId?: string
+  PayMode: number
   /**
-   * 项目 ID。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 项目id
    */
-  ProjectId?: number
+  ProjectId: number
   /**
-   * 任务进度。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 自动续费标识，0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
    */
-  Progress?: number
+  AutoRenewFlag: number
   /**
-   * 任务执行结束时间。
-注意：此字段可能返回 null，表示取不到有效值。
+   * 独享集群名称
    */
-  EndTime?: string
+  ClusterName: string
   /**
-   * 任务执行状态。
+   * 实例创建时间
+   */
+  StartTime: string
+  /**
+   * 实例到期时间
+   */
+  EndTime: string
+  /**
+   * 集群状态：1-流程中，2-运行中，3-已隔离
+   */
+  Status: number
+  /**
+   * 基础管控资源包
+   */
+  BaseBundles: Array<ResourceBundle>
+  /**
+   * 资源包列表
+   */
+  ResourceBundles: Array<ResourceBundle>
+  /**
+   * 所属本地专有集群id
+   */
+  DedicatedClusterId: string
+}
 
-0：任务初始化。
-1：执行中。
-2：完成。
-4：失败。
-注意：此字段可能返回 null，表示取不到有效值。
+/**
+ * ModifyInstanceLogDelivery返回参数结构体
+ */
+export interface ModifyInstanceLogDeliveryResponse {
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
-  Result?: number
+  RequestId?: string
 }
 
 /**
@@ -1707,11 +1803,21 @@ export interface DisableReplicaReadonlyResponse {
    * 任务ID
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * DestroyPrepaidInstance请求参数结构体
+ */
+export interface DestroyPrepaidInstanceRequest {
+  /**
+   * 实例ID
+   */
+  InstanceId: string
 }
 
 /**
@@ -1750,42 +1856,42 @@ export interface DescribeInstanceDTSInfoResponse {
    * DTS任务ID
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  JobId: string
+  JobId?: string
   /**
    * DTS任务名称
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  JobName: string
+  JobName?: string
   /**
    * 任务状态,取值为：1-创建中(Creating),3-校验中(Checking)4-校验通过(CheckPass),5-校验不通过（CheckNotPass）,7-任务运行(Running),8-准备完成（ReadyComplete）,9-任务成功（Success）,10-任务失败（Failed）,11-撤销中（Stopping）,12-完成中（Completing）
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Status: number
+  Status?: number
   /**
    * 状态描述
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  StatusDesc: string
+  StatusDesc?: string
   /**
    * 同步时延，单位：字节
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Offset: number
+  Offset?: number
   /**
    * 断开时间
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  CutDownTime: string
+  CutDownTime?: string
   /**
    * 源实例信息
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  SrcInfo: DescribeInstanceDTSInstanceInfo
+  SrcInfo?: DescribeInstanceDTSInstanceInfo
   /**
    * 目标实例信息
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  DstInfo: DescribeInstanceDTSInstanceInfo
+  DstInfo?: DescribeInstanceDTSInstanceInfo
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2258,6 +2364,54 @@ export interface DescribeDBSecurityGroupsRequest {
 }
 
 /**
+ * ModifyInstanceLogDelivery请求参数结构体
+ */
+export interface ModifyInstanceLogDeliveryRequest {
+  /**
+   * 实例ID。
+   */
+  InstanceId: string
+  /**
+   * 日志类型。当前仅支持设置为slowlog，指慢查询日志。
+   */
+  LogType: string
+  /**
+   * 日志投递开启状态。
+- true：开启。
+- false：关闭。
+   */
+  Enabled: boolean
+  /**
+   * 投递的日志集ID。
+   */
+  LogsetId?: string
+  /**
+   * 投递的日志主题ID。
+   */
+  TopicId?: string
+  /**
+   * 日志集名称。若**LogsetId**未指定具体的日志集ID，请配置该参数，设置日志集名称，系统会以设置的日志集名称自动创建新的日志集。
+   */
+  LogsetName?: string
+  /**
+   * 日志主题名称，TopicId为空时必传，会自动创建新的日志主题。
+   */
+  TopicName?: string
+  /**
+   * 日志集所在地域，不传默认使用实例所在地域。
+   */
+  LogRegion?: string
+  /**
+   * 日志存储时间，默认为30天，可选范围1-3600天。
+   */
+  Period?: number
+  /**
+   * 创建日志主题时，是否创建索引。
+   */
+  CreateIndex?: boolean
+}
+
+/**
  * DescribeProductInfo请求参数结构体
  */
 export type DescribeProductInfoRequest = null
@@ -2584,11 +2738,11 @@ export interface AllocateWanAddressResponse {
   /**
    * 异步流程ID
    */
-  FlowId: number
+  FlowId?: number
   /**
    * 开通外网的状态
    */
-  WanStatus: string
+  WanStatus?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2633,6 +2787,17 @@ export interface DeleteReplicationInstanceRequest {
    * 数据同步类型，true:需要数据强同步,false:不需要强同步，仅限删除主实例
    */
   SyncType: boolean
+}
+
+/**
+ * SwitchAccessNewInstance请求参数结构体
+ */
+export interface SwitchAccessNewInstanceRequest {
+  /**
+   * 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
+示例值：crs-asdasdas
+   */
+  InstanceId: string
 }
 
 /**
@@ -2812,6 +2977,20 @@ export interface InstanceTextParam {
 - 2：修改完成。
    */
   Status?: number
+}
+
+/**
+ * DescribeInstanceLogDelivery返回参数结构体
+ */
+export interface DescribeInstanceLogDeliveryResponse {
+  /**
+   * 实例慢日志投递信息。
+   */
+  SlowLog?: LogDeliveryInfo
+  /**
+   * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
+   */
+  RequestId?: string
 }
 
 /**
@@ -3370,7 +3549,7 @@ export interface CleanUpInstanceResponse {
   /**
    * 任务ID
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3653,12 +3832,12 @@ export interface EnableReplicaReadonlyResponse {
    * 错误：ERROR，正确OK（已废弃）
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Status: string
+  Status?: string
   /**
    * 任务ID
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3707,11 +3886,11 @@ export interface ReleaseWanAddressResponse {
   /**
    * 异步流程ID
    */
-  FlowId: number
+  FlowId?: number
   /**
    * 关闭外网的状态
    */
-  WanStatus: string
+  WanStatus?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3880,9 +4059,9 @@ export interface SwitchProxyResponse {
  */
 export interface StartupInstanceResponse {
   /**
-   * 任务id
+   * 该字段已废弃，请通过查询实例接口获取到的状态来判断实例是否已解隔离
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -3894,45 +4073,45 @@ export interface StartupInstanceResponse {
  */
 export interface DescribeInstanceDTSInstanceInfo {
   /**
-   * 地域ID
+   * 地域 ID。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  RegionId: number
+  RegionId?: number
   /**
-   * 实例ID
+   * 实例 ID。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  InstanceId: string
+  InstanceId?: string
   /**
-   * 仓库ID
+   * 仓库ID。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  SetId: number
+  SetId?: number
   /**
-   * 可用区ID
+   * 可用区ID。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  ZoneId: number
+  ZoneId?: number
   /**
-   * 实例类型
+   * 实例类型。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Type: number
+  Type?: number
   /**
-   * 实例名称
+   * 实例名称。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  InstanceName: string
+  InstanceName?: string
   /**
-   * 实例访问地址
+   * 实例访问地址。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Vip: string
+  Vip?: string
   /**
-   * 状态
+   * 状态。
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Status: number
+  Status?: number
 }
 
 /**
@@ -4014,29 +4193,29 @@ export interface AssociateSecurityGroupsResponse {
 }
 
 /**
- * 实例节点组信息
+ * 日志投递信息
  */
-export interface ReplicaGroup {
+export interface LogDeliveryInfo {
   /**
-   * 节点组 ID。
+   * 日志投递开启状态，开启：true，关闭：false
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  GroupId?: number
+  Enabled?: boolean
   /**
-   * 节点组的名称，主节点为空。
+   * 日志集ID。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  GroupName?: string
+  LogsetId?: string
   /**
-   * 节点的可用区ID，比如ap-guangzhou-1
+   * 日志主题ID。
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  ZoneId?: string
+  TopicId?: string
   /**
-   * 节点组类型，master为主节点，replica为副本节点。
+   * 日志集所在地域
+注意：此字段可能返回 null，表示取不到有效值。
    */
-  Role?: string
-  /**
-   * 节点组节点列表
-   */
-  RedisNodes?: Array<RedisNode>
+  LogRegion?: string
 }
 
 /**
@@ -4157,7 +4336,6 @@ export interface Groups {
 - 1：广州 
 - 4：上海 
 - 5：中国香港 
-- 6：多伦多 
 - 7：上海金融 
 - 8：北京 
 - 9：新加坡
@@ -4599,7 +4777,7 @@ export interface UpgradeInstanceResponse {
   /**
    * 订单ID。
    */
-  DealId: string
+  DealId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -4607,14 +4785,21 @@ export interface UpgradeInstanceResponse {
 }
 
 /**
- * SwitchAccessNewInstance请求参数结构体
+ * redis独享集群资源包
  */
-export interface SwitchAccessNewInstanceRequest {
+export interface ResourceBundle {
   /**
-   * 指定实例 ID。例如：crs-xjhsdj****。请登录[Redis控制台](https://console.cloud.tencent.com/redis#/)在实例列表复制实例 ID。
-示例值：crs-asdasdas
+   * 资源包名称
    */
-  InstanceId: string
+  ResourceBundleName: string
+  /**
+   * 可售卖内存，单位：GB
+   */
+  AvailableMemory: number
+  /**
+   * 资源包个数
+   */
+  Count: number
 }
 
 /**
@@ -4716,7 +4901,7 @@ export interface InstanceSet {
    */
   ProjectId?: number
   /**
-   * 地域 ID。<ul><li>1：广州。</li><li>4：上海。</li><li>5：中国香港。</li><li>6：多伦多。</li> <li>7：上海金融。</li> <li>8：北京。</li> <li>9：新加坡。</li> <li>11：深圳金融。</li> <li>15：美西（硅谷）。</li><li>16：成都。</li><li>17：法兰克福。</li><li>18：首尔。</li><li>19：重庆。</li><li>21：孟买。</li><li>22：美东（弗吉尼亚）。</li><li>23：曼谷。</li><li>25：东京。</li></ul>
+   * 地域 ID。<ul><li>1：广州。</li><li>4：上海。</li><li>5：中国香港。</li><li>7：上海金融。</li> <li>8：北京。</li> <li>9：新加坡。</li> <li>11：深圳金融。</li> <li>15：美西（硅谷）。</li><li>16：成都。</li><li>17：法兰克福。</li><li>18：首尔。</li><li>19：重庆。</li><li>21：孟买。</li><li>22：美东（弗吉尼亚）。</li><li>23：曼谷。</li><li>25：东京。</li></ul>
    */
   RegionId?: number
   /**
@@ -4939,6 +5124,21 @@ export interface InstanceSet {
    */
   PolarisServer?: string
   /**
+   * CDC Redis集群ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RedisClusterId?: string
+  /**
+   * CDC 集群ID。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  DedicatedClusterId?: string
+  /**
+   * 产品版本。<ul><li>local：本地盘。</li><li>cloud：云盘版。</li><li>cdc：CDC 集群版本。</li></ul>
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  ProductVersion?: string
+  /**
    * 实例当前Proxy版本。
 注意：此字段可能返回 null，表示取不到有效值。
    */
@@ -4996,7 +5196,7 @@ export interface CloseSSLResponse {
   /**
    * 任务ID。
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5010,7 +5210,7 @@ export interface ModifyMaintenanceWindowResponse {
   /**
    * 修改状态：success 或者 failed
    */
-  Status: string
+  Status?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5070,11 +5270,47 @@ export interface DestroyPrepaidInstanceResponse {
   /**
    * 订单Id
    */
-  DealId: string
+  DealId?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * 实例节点组信息
+ */
+export interface ReplicaGroup {
+  /**
+   * 节点组 ID。
+   */
+  GroupId?: number
+  /**
+   * 节点组的名称，主节点为空。
+   */
+  GroupName?: string
+  /**
+   * 节点的可用区ID，比如ap-guangzhou-1
+   */
+  ZoneId?: string
+  /**
+   * 节点组类型，master为主节点，replica为副本节点。
+   */
+  Role?: string
+  /**
+   * 节点组节点列表
+   */
+  RedisNodes?: Array<RedisNode>
+}
+
+/**
+ * DescribeRedisClusterOverview请求参数结构体
+ */
+export interface DescribeRedisClusterOverviewRequest {
+  /**
+   * 本地专用集群id
+   */
+  DedicatedClusterId?: string
 }
 
 /**
@@ -5162,6 +5398,48 @@ Redis2.8标准架构、CKV标准架构无需填写。
 - cdc：独享集群版。
    */
   ProductVersion?: string
+}
+
+/**
+ * DescribeRedisClusters请求参数结构体
+ */
+export interface DescribeRedisClustersRequest {
+  /**
+   * Redis独享集群id
+   */
+  RedisClusterIds?: Array<string>
+  /**
+   * 集群状态：1-流程中，2-运行中，3-已隔离
+   */
+  Status?: Array<number | bigint>
+  /**
+   * 项目ID数组
+   */
+  ProjectIds?: Array<number | bigint>
+  /**
+   * 续费模式：0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+   */
+  AutoRenewFlag?: Array<number | bigint>
+  /**
+   * Redis独享集群名称
+   */
+  ClusterName?: string
+  /**
+   * 搜索关键词：支持集群Id、集群名称
+   */
+  SearchKey?: string
+  /**
+   * 分页限制返回大小，不传则默认为20
+   */
+  Limit?: number
+  /**
+   * 偏移量，取Limit整数倍
+   */
+  Offset?: number
+  /**
+   * 本地专用集群id
+   */
+  DedicatedClusterId?: string
 }
 
 /**
@@ -5296,6 +5574,16 @@ export interface DescribeInstanceSupportFeatureResponse {
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
   RequestId?: string
+}
+
+/**
+ * DescribeInstanceLogDelivery请求参数结构体
+ */
+export interface DescribeInstanceLogDeliveryRequest {
+  /**
+   * 实例ID。
+   */
+  InstanceId: string
 }
 
 /**
@@ -5479,13 +5767,17 @@ export interface DescribeProxySlowLogRequest {
 }
 
 /**
- * ModifyInstanceAvailabilityZones返回参数结构体
+ * DescribeRedisClusters返回参数结构体
  */
-export interface ModifyInstanceAvailabilityZonesResponse {
+export interface DescribeRedisClustersResponse {
   /**
-   * 任务ID。
+   * 集群总数
    */
-  TaskId?: number
+  Total: number
+  /**
+   * CDC集群资源列表
+   */
+  Resources: Array<CDCResource>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5585,16 +5877,18 @@ export interface DescribeParamTemplateInfoResponse {
   Name?: string
   /**
    * 产品类型。
-- 2：Redis 2.8内存版（标准架构）。
-- 3：CKV 3.2内存版（标准架构）。
-- 4：CKV 3.2内存版（集群架构）。
-- 5：Redis 2.8内存版（单机）。
-- 6：Redis 4.0内存版（标准架构）。
-- 7：Redis 4.0内存版（集群架构）。
-- 8：Redis 5.0内存版（标准架构）。
-- 9：Redis 5.0内存版（集群架构）。
-- 15：Redis 6.2内存版（标准架构）。
-- 16：Redis 6.2内存版（集群架构）。
+- 2：Redis 2.8 内存版（标准架构）。
+- 3：CKV 3.2 内存版（标准架构）。
+- 4：CKV 3.2 内存版（集群架构）。
+- 5：Redis 2.8 内存版（单机）。
+- 6：Redis 4.0 内存版（标准架构）。
+- 7：Redis 4.0 内存版（集群架构）。
+- 8：Redis 5.0 内存版（标准架构）。
+- 9：Redis 5.0 内存版（集群架构）。
+- 15：Redis 6.2 内存版（标准架构）。
+- 16：Redis 6.2 内存版（集群架构）。
+- 17：Redis 7.0 内存版（标准架构）。
+- 18：Redis 7.0 内存版（集群架构）。
    */
   ProductType?: number
   /**
@@ -5870,7 +6164,7 @@ export interface DeleteInstanceAccountResponse {
   /**
    * 任务ID
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -6076,7 +6370,7 @@ export interface UpgradeInstanceRequest {
    */
   RedisReplicasNum?: number
   /**
-   * 多AZ实例，增加副本时的附带信息，包括副本的可用区和副本的类型（NodeType为1）。非多AZ实例不需要配置该参数。
+   * 多AZ实例，增加副本时的节点信息，包括副本的 ID 编号及可用区信息。非多AZ实例不需要配置该参数。
    */
   NodeSet?: Array<RedisNodeInfo>
 }
@@ -6149,7 +6443,7 @@ export interface Instances {
    */
   InstanceName?: string
   /**
-   * 地域ID。<ul><li>1：广州。</li><li>4：上海。</li><li> 5：香港。</li> <li> 6：多伦多。</li> <li> 7：上海金融。</li> <li> 8：北京。</li> <li> 9：新加坡。</li> <li> 11：深圳金融。</li> <li> 15：美西（硅谷）。</li> </ul>
+   * 地域ID。<ul><li>1：广州。</li><li>4：上海。</li><li> 5：香港。</li>  <li> 7：上海金融。</li> <li> 8：北京。</li> <li> 9：新加坡。</li> <li> 11：深圳金融。</li> <li> 15：美西（硅谷）。</li> </ul>
    */
   RegionId?: number
   /**
@@ -6280,7 +6574,7 @@ export interface ClearInstanceResponse {
   /**
    * 任务ID
    */
-  TaskId: number
+  TaskId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */

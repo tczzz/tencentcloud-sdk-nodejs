@@ -20,8 +20,7 @@ export declare class Client extends AbstractClient {
      */
     DescribePublicDirectConnectTunnelRoutes(req: DescribePublicDirectConnectTunnelRoutesRequest, cb?: (error: string, rep: DescribePublicDirectConnectTunnelRoutesResponse) => void): Promise<DescribePublicDirectConnectTunnelRoutesResponse>;
     /**
-     * 查询物理专线接入点
-
+     * 查询物理专线接入点。
      */
     DescribeAccessPoints(req: DescribeAccessPointsRequest, cb?: (error: string, rep: DescribeAccessPointsResponse) => void): Promise<DescribeAccessPointsResponse>;
     /**
@@ -33,16 +32,15 @@ export declare class Client extends AbstractClient {
      */
     CreateDirectConnectTunnel(req: CreateDirectConnectTunnelRequest, cb?: (error: string, rep: CreateDirectConnectTunnelResponse) => void): Promise<CreateDirectConnectTunnelResponse>;
     /**
-     * 本接口（DescribeDirectConnectTunnelExtra）用于查询专用通道扩展信息
+     * 查询专用通道扩展信息。
      */
     DescribeDirectConnectTunnelExtra(req: DescribeDirectConnectTunnelExtraRequest, cb?: (error: string, rep: DescribeDirectConnectTunnelExtraResponse) => void): Promise<DescribeDirectConnectTunnelExtraResponse>;
     /**
-     * 删除物理专线。
-只能删除处于已连接状态的物理专线。
+     * 删除物理专线。只能删除处于已连接状态的物理专线。
      */
     DeleteDirectConnect(req: DeleteDirectConnectRequest, cb?: (error: string, rep: DeleteDirectConnectResponse) => void): Promise<DeleteDirectConnectResponse>;
     /**
-     * 接受专用通道申请
+     * 接受专用通道申请。
      */
     AcceptDirectConnectTunnel(req: AcceptDirectConnectTunnelRequest, cb?: (error: string, rep: AcceptDirectConnectTunnelResponse) => void): Promise<AcceptDirectConnectTunnelResponse>;
     /**
@@ -50,7 +48,7 @@ export declare class Client extends AbstractClient {
      */
     DescribeInternetAddressStatistics(req?: DescribeInternetAddressStatisticsRequest, cb?: (error: string, rep: DescribeInternetAddressStatisticsResponse) => void): Promise<DescribeInternetAddressStatisticsResponse>;
     /**
-     * 删除专用通道
+     * 删除专用通道。
      */
     DeleteDirectConnectTunnel(req: DeleteDirectConnectTunnelRequest, cb?: (error: string, rep: DeleteDirectConnectTunnelResponse) => void): Promise<DeleteDirectConnectTunnelResponse>;
     /**
@@ -81,7 +79,7 @@ export declare class Client extends AbstractClient {
      */
     CreateDirectConnect(req: CreateDirectConnectRequest, cb?: (error: string, rep: CreateDirectConnectResponse) => void): Promise<CreateDirectConnectResponse>;
     /**
-     * 拒绝专用通道申请
+     * 拒绝专用通道申请。
      */
     RejectDirectConnectTunnel(req: RejectDirectConnectTunnelRequest, cb?: (error: string, rep: RejectDirectConnectTunnelResponse) => void): Promise<RejectDirectConnectTunnelResponse>;
     /**
@@ -93,7 +91,7 @@ export declare class Client extends AbstractClient {
      */
     ReleaseInternetAddress(req: ReleaseInternetAddressRequest, cb?: (error: string, rep: ReleaseInternetAddressResponse) => void): Promise<ReleaseInternetAddressResponse>;
     /**
-     * 修改专用通道属性
+     * 修改专用通道属性。
      */
     ModifyDirectConnectTunnelAttribute(req: ModifyDirectConnectTunnelAttributeRequest, cb?: (error: string, rep: ModifyDirectConnectTunnelAttributeResponse) => void): Promise<ModifyDirectConnectTunnelAttributeResponse>;
 }

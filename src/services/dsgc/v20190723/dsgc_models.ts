@@ -1398,19 +1398,19 @@ export interface CreateDSPAMetaResourcesResponse {
   /**
    * 本次更新的ID号，用来标记一次完整的更新过程。
    */
-  UpdateId: string
+  UpdateId?: string
   /**
    * 资源类型，支持：cdb（云数据库 MySQL）、dcdb（TDSQL MySQL版）、mariadb（云数据库 MariaDB）、postgres（云数据库 PostgreSQL）、cynosdbpg（TDSQL-C PostgreSQL版）、cynosdbmysql（TDSQL-C MySQL版）
    */
-  MetaType: string
+  MetaType?: string
   /**
    * DSPA实例ID。
    */
-  DspaId: string
+  DspaId?: string
   /**
    * 资源所处地域。
    */
-  ResourceRegion: string
+  ResourceRegion?: string
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -2603,6 +2603,10 @@ export interface CreateDSPADiscoveryRuleRequest {
    * COS类敏感数据识别规则
    */
   COSRules?: DspaDiscoveryCOSRules
+  /**
+   * 规则状态；0 不启用, 1 启用
+   */
+  Status?: number
 }
 
 /**
@@ -2632,32 +2636,37 @@ export interface DspaDiscoveryRuleDetail {
    * 规则ID
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  RuleId: number
+  RuleId?: number
   /**
    * 规则名称
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Name: string
+  Name?: string
   /**
    * 规则描述
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Description: string
+  Description?: string
   /**
    * 规则来源，取值：0 内置, 1 自定义
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  Source: number
+  Source?: number
   /**
    * RDB规则详情
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  RDBRules: DspaDiscoveryRDBRules
+  RDBRules?: DspaDiscoveryRDBRules
   /**
    * COS规则详情
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  COSRules: DspaDiscoveryCOSRules
+  COSRules?: DspaDiscoveryCOSRules
+  /**
+   * 0关闭，1开启
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Status?: number
 }
 
 /**
@@ -3953,6 +3962,10 @@ export interface ModifyDSPADiscoveryRuleRequest {
    * COS类敏感数据识别规则
    */
   COSRules?: ScanTaskCOSRules
+  /**
+   * 规则状态
+   */
+  Status?: number
 }
 
 /**
@@ -4742,7 +4755,7 @@ export interface CreateDSPADiscoveryRuleResponse {
   /**
    * 规则ID
    */
-  RuleId: number
+  RuleId?: number
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */
@@ -5967,12 +5980,12 @@ export interface DspaUserResourceMeta {
    */
   ResourceAuthAccount?: string
   /**
-   * x
+   * 实例类型
 注意：此字段可能返回 null，表示取不到有效值。
    */
   InstanceType?: string
   /**
-   * x
+   * 实例值
 注意：此字段可能返回 null，表示取不到有效值。
    */
   InstanceValue?: string
@@ -7143,6 +7156,27 @@ export interface DescribeDSPARDBDataAssetDetailRequest {
    */
   ComplianceId: number
   /**
+   * 过滤数组。支持的Name：
+DataSourceID 数据源ID
+DbName 数据库名称
+CategoryID 敏感数据分类ID
+RuleID 规则ID
+LevelID 敏感分级ID
+ResourceRegion 资源所在地域
+SensitiveField 过滤敏感字段，可选值为1，或者无此SensitiveField字段
+DataSourceType 数据源类型，不填默认过滤非自建的所有关系型数据源类型，填selfbuilt-db只过滤自建类型
+注意：每个name默认支持最多5个values。
+   */
+  Filters?: Array<Filter>
+  /**
+   * 偏移量，默认为0。
+   */
+  Offset?: number
+  /**
+   * 返回数量，默认为20，最大值为100。
+   */
+  Limit?: number
+  /**
    * 可信分排序，ASC-升序
 DESC降序
    */
@@ -7443,14 +7477,14 @@ export interface ModifyDSPAAssessmentRiskLatestRequest {
    */
   DspaId: string
   /**
-   * 最新风险项Id
-   * @deprecated
-   */
-  RiskLatestTableId: number
-  /**
    * 风险状态（waiting:待处理，processing:处理中，finished:已处理，ignored:已忽略）
    */
   Status: string
+  /**
+   * 最新风险项Id
+   * @deprecated
+   */
+  RiskLatestTableId?: number
   /**
    * 备注
    */
@@ -8127,6 +8161,22 @@ export interface ExportAssetDetailDataResponse {
 }
 
 /**
+ * 分类分级规则数量
+ */
+export interface RuleEffectItem {
+  /**
+   * 规则描述
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Name?: string
+  /**
+   * 规则值
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Value?: number
+}
+
+/**
  * 分类规则信息
  */
 export interface CategoryRule {
@@ -8164,6 +8214,16 @@ export interface CategoryRule {
 注意：此字段可能返回 null，表示取不到有效值。
    */
   AliasRuleName?: string
+  /**
+   * 各类分类分级规则数量
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RuleEffectItems?: Array<RuleEffectItem>
+  /**
+   * 规则状态
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  RuleStatus?: number
 }
 
 /**
@@ -9143,7 +9203,7 @@ export interface DescribeDSPACategoryRulesResponse {
    * 分类规则信息
 注意：此字段可能返回 null，表示取不到有效值。
    */
-  CategoryRules: Array<CategoryRule>
+  CategoryRules?: Array<CategoryRule>
   /**
    * 唯一请求 ID，由服务端生成，每次请求都会返回（若请求因其他原因未能抵达服务端，则该次请求不会获得 RequestId）。定位问题时需要提供该次请求的 RequestId。
    */

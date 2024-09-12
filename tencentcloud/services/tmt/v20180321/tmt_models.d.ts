@@ -32,7 +32,7 @@ export interface ImageTranslateRequest {
      */
     Scene: string;
     /**
-     * 图片数据的Base64字符串，图片大小上限为4M，建议对源图片进行一定程度压缩
+     * 图片数据的Base64字符串，经Base64编码后不超过 7M，分辨率建议600*800以上，支持PNG、JPG、JPEG、BMP、PDF格式。图片中包含文字需要少于6000字符。
      */
     Data: string;
     /**
@@ -75,7 +75,7 @@ export interface GetFileTranslateData {
      */
     Status?: string;
     /**
-     * 文件数据
+     * 文件数据，目标文件必须小于50M，否则请通过回调方式请求文件翻译接口
   注意：此字段可能返回 null，表示取不到有效值。
      */
     FileData?: string;
@@ -228,8 +228,8 @@ export interface TextTranslateBatchRequest {
     /**
      * 目标语言，各源语言的目标语言支持列表如下
   
-  <li> zh（简体中文）：en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）</li>
-  <li>zh-TW（繁体中文）：en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）</li>
+  <li> zh（简体中文）：en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）</li>
+  <li>zh-TW（繁体中文）：en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）</li>
   <li>en（英语）：zh（中文）、zh-TW（繁体中文）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）、hi（印地语）</li>
   <li>ja（日语）：zh（中文）、zh-TW（繁体中文）、en（英语）、ko（韩语）</li>
   <li>ko（韩语）：zh（中文）、zh-TW（繁体中文）、en（英语）、ja（日语）</li>
@@ -244,7 +244,7 @@ export interface TextTranslateBatchRequest {
   <li>id（印尼语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>th（泰语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>ms（马来语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
-  <li>ar（阿拉伯语）：en（英语）</li>
+  <li>ar（阿拉伯语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>hi（印地语）：en（英语）</li>
      */
     Target: string;
@@ -414,7 +414,7 @@ export interface FileTranslateRequest {
      */
     SourceType?: number;
     /**
-     * 需要翻译文件url，文件限制如下：docx/xIsx/html/markdown文件不超过800万字符，doc/pdf/pptx文件不超过300页，txt/po文件不超过10MB，pdf/docx/pptx/xlsx不超过40MB
+     * 需要翻译文件url，URL长度不能超过1000字符。文件限制如下：docx/xIsx/html/markdown文件不超过800万字符，doc/pdf/pptx文件不超过300页，txt/po文件不超过10MB，pdf/docx/pptx/xlsx不超过40MB
      */
     Url?: string;
     /**
@@ -422,7 +422,7 @@ export interface FileTranslateRequest {
      */
     BasicDocumentType?: string;
     /**
-     * 回调url，文件大于10MB，建议采用回调方式；回调时，所有内容会放入 Body 中，具体请参见[文件翻译回调说明](https://cloud.tencent.com/document/product/551/91138)。
+     * 回调url，URL长度不能超过256字符。文件大于10MB或字符较多时，建议采用回调方式；回调时，所有内容会放入 Body 中，具体请参见[文件翻译回调说明](https://cloud.tencent.com/document/product/551/91138)。
      */
     CallbackUrl?: string;
     /**
@@ -464,8 +464,8 @@ export interface TextTranslateRequest {
     /**
      * 目标语言，各源语言的目标语言支持列表如下
   
-  <li> zh（简体中文）：zh-TW（繁体中文）、en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）</li>
-  <li>zh-TW（繁体中文）：zh（简体中文）、en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）</li>
+  <li> zh（简体中文）：zh-TW（繁体中文）、en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）</li>
+  <li>zh-TW（繁体中文）：zh（简体中文）、en（英语）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）</li>
   <li>en（英语）：zh（中文）、zh-TW（繁体中文）、ja（日语）、ko（韩语）、fr（法语）、es（西班牙语）、it（意大利语）、de（德语）、tr（土耳其语）、ru（俄语）、pt（葡萄牙语）、vi（越南语）、id（印尼语）、th（泰语）、ms（马来语）、ar（阿拉伯语）、hi（印地语）</li>
   <li>ja（日语）：zh（中文）、zh-TW（繁体中文）、en（英语）、ko（韩语）</li>
   <li>ko（韩语）：zh（中文）、zh-TW（繁体中文）、en（英语）、ja（日语）</li>
@@ -480,7 +480,7 @@ export interface TextTranslateRequest {
   <li>id（印尼语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>th（泰语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>ms（马来语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
-  <li>ar（阿拉伯语）：en（英语）</li>
+  <li>ar（阿拉伯语）：zh（中文）、zh-TW（繁体中文）、en（英语）</li>
   <li>hi（印地语）：en（英语）</li>
      */
     Target: string;

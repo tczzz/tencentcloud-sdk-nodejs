@@ -30,6 +30,7 @@ import {
   SpecConfig,
   UpgradeHourDCDBInstanceResponse,
   ModifyRealServerAccessStrategyResponse,
+  ModifyBackupConfigsRequest,
   ActiveHourDCDBInstanceResponse,
   DescribeDCDBPriceResponse,
   ModifyInstanceVportResponse,
@@ -37,7 +38,7 @@ import {
   ModifyInstanceVipResponse,
   AssociateSecurityGroupsRequest,
   ShardBriefInfo,
-  TerminateDedicatedDBInstanceResponse,
+  NewBackupConfig,
   FlushBinlogResponse,
   DescribeDBSecurityGroupsResponse,
   CancelDcnJobResponse,
@@ -93,6 +94,7 @@ import {
   ModifyRealServerAccessStrategyRequest,
   ExpandShardConfig,
   ModifyAccountConfigRequest,
+  TerminateDedicatedDBInstanceResponse,
   ShardZoneChooseInfo,
   RenewDCDBInstanceRequest,
   DescribeDBEncryptAttributesResponse,
@@ -110,6 +112,7 @@ import {
   TmpInstance,
   ModifyDBParametersRequest,
   DCDBInstanceInfo,
+  DescribeBackupConfigsRequest,
   ModifyDBInstanceSecurityGroupsRequest,
   DescribeDcnDetailRequest,
   DescribeFileDownloadUrlResponse,
@@ -124,6 +127,8 @@ import {
   DescribeDatabaseObjectsResponse,
   ModifyDBInstanceNameRequest,
   DescribeDcnDetailResponse,
+  DescribeBackupConfigsResponse,
+  ModifyDBEncryptAttributesRequest,
   TableColumn,
   SecurityGroupBound,
   ColumnPrivilege,
@@ -132,11 +137,13 @@ import {
   DescribeDCDBRenewalPriceResponse,
   UpgradeDedicatedDCDBInstanceRequest,
   AssociateSecurityGroupsResponse,
+  DescribeDCDBBinlogTimeRequest,
   DescribeShardSpecResponse,
   DescribeDCDBShardsResponse,
   ZonesInfo,
   InstanceBackupFileItem,
   CreateHourDCDBInstanceResponse,
+  BackupConfig,
   Database,
   GrantAccountPrivilegesResponse,
   CancelDcnJobRequest,
@@ -145,6 +152,7 @@ import {
   ModifyInstanceVipRequest,
   OpenDBExtranetAccessRequest,
   ReservedNetResource,
+  ModifyBackupConfigsResponse,
   DatabasePrivilege,
   DescribeDCDBSaleInfoResponse,
   ModifyDBInstancesProjectRequest,
@@ -174,7 +182,7 @@ import {
   UserTaskInfo,
   DatabaseProcedure,
   DescribeDBTmpInstancesResponse,
-  ModifyDBEncryptAttributesRequest,
+  DescribeDCDBBinlogTimeResponse,
   AddShardConfig,
   ModifyDBSyncModeRequest,
   ModifyAccountConfigResponse,
@@ -570,6 +578,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 获取实例回档时可选的时间范围
+   */
+  async DescribeDCDBBinlogTime(
+    req: DescribeDCDBBinlogTimeRequest,
+    cb?: (error: string, rep: DescribeDCDBBinlogTimeResponse) => void
+  ): Promise<DescribeDCDBBinlogTimeResponse> {
+    return this.request("DescribeDCDBBinlogTime", req, cb)
+  }
+
+  /**
    * 本接口（DescribeProjectSecurityGroups）用于查询项目安全组信息
    */
   async DescribeProjectSecurityGroups(
@@ -837,6 +855,16 @@ export class Client extends AbstractClient {
   }
 
   /**
+   * 本接口（TerminateDedicatedDBInstance）用于销毁已隔离的独享分布式数据库实例。
+   */
+  async TerminateDedicatedDBInstance(
+    req: TerminateDedicatedDBInstanceRequest,
+    cb?: (error: string, rep: TerminateDedicatedDBInstanceResponse) => void
+  ): Promise<TerminateDedicatedDBInstanceResponse> {
+    return this.request("TerminateDedicatedDBInstance", req, cb)
+  }
+
+  /**
    * 本接口（DescribeDBSecurityGroups）用于查询实例安全组信息
    */
   async DescribeDBSecurityGroups(
@@ -877,13 +905,13 @@ export class Client extends AbstractClient {
   }
 
   /**
-   * 本接口（TerminateDedicatedDBInstance）用于销毁已隔离的独享分布式数据库实例。
+   * 本接口(DescribeBackupConfigs)用于查询数据库备份配置信息。
    */
-  async TerminateDedicatedDBInstance(
-    req: TerminateDedicatedDBInstanceRequest,
-    cb?: (error: string, rep: TerminateDedicatedDBInstanceResponse) => void
-  ): Promise<TerminateDedicatedDBInstanceResponse> {
-    return this.request("TerminateDedicatedDBInstance", req, cb)
+  async DescribeBackupConfigs(
+    req: DescribeBackupConfigsRequest,
+    cb?: (error: string, rep: DescribeBackupConfigsResponse) => void
+  ): Promise<DescribeBackupConfigsResponse> {
+    return this.request("DescribeBackupConfigs", req, cb)
   }
 
   /**
@@ -904,6 +932,18 @@ export class Client extends AbstractClient {
     cb?: (error: string, rep: CreateTmpDCDBInstanceResponse) => void
   ): Promise<CreateTmpDCDBInstanceResponse> {
     return this.request("CreateTmpDCDBInstance", req, cb)
+  }
+
+  /**
+     * 本接口(ModifyBackupConfigs)用于修改数据库备份配置信息。
+
+1. 修改数据库超期备份配置，目前按年、按月、按日只支持一种，存在互斥关系，如当前策略按年备份，如果传入按月备份策略将会覆盖当前的按年备份策略，务必注意。
+     */
+  async ModifyBackupConfigs(
+    req: ModifyBackupConfigsRequest,
+    cb?: (error: string, rep: ModifyBackupConfigsResponse) => void
+  ): Promise<ModifyBackupConfigsResponse> {
+    return this.request("ModifyBackupConfigs", req, cb)
   }
 
   /**

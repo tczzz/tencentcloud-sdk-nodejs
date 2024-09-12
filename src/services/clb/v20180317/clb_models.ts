@@ -566,6 +566,10 @@ export interface ModifyRuleRequest {
    * TRPC调用服务接口，ForwardType为TRPC时必填。目前暂未对外开放。
    */
   TrpcFunc?: string
+  /**
+   * OAuth配置信息。
+   */
+  OAuth?: OAuth
 }
 
 /**
@@ -3366,6 +3370,11 @@ WRR、LEAST_CONN、IP_HASH分别表示按权重轮询、最小连接数、IP Has
 注意：此字段可能返回 null，表示取不到有效值。
    */
   TargetGroupList?: Array<BasicTargetGroupInfo>
+  /**
+   * OAuth配置状态信息。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OAuth?: OAuth
 }
 
 /**
@@ -3736,13 +3745,17 @@ export interface CreateListenerRequest {
    */
   MaxCps?: number
   /**
-   * 空闲连接超时时间，此参数仅适用于TCP监听器，单位：秒。默认值：900，取值范围：共享型实例和独占型实例支持：300～900，性能容量型实例支持：300~2000。如需设置超过2000s，请通过 [工单申请](https://console.cloud.tencent.com/workorder/category),最大可设置到3600s。
+   * 空闲连接超时时间，此参数仅适用于TCP监听器，单位：秒。取值范围：共享型实例和独占型实例支持：300-900，性能容量型实例支持：300-2000。如需设置请通过 [工单申请](https://console.cloud.tencent.com/workorder/category)。
    */
   IdleConnectTimeout?: number
   /**
    * 是否开启SNAT。
    */
   SnatEnable?: boolean
+  /**
+   * 全端口段监听器的结束端口
+   */
+  FullEndPorts?: Array<number | bigint>
 }
 
 /**
@@ -4193,7 +4206,7 @@ export interface LoadBalancerDetail {
   LoadBalancerName?: string
   /**
    * 负载均衡实例的网络类型：
-Public：公网属性， Private：内网属性。
+OPEN：公网属性，INTERNAL：内网属性。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   LoadBalancerType?: string
@@ -4378,6 +4391,22 @@ Public：公网属性， Private：内网属性。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Egress?: string
+  /**
+   * 负载均衡的属性
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  AttributeFlags?: Array<string>
+  /**
+   * 负载均衡实例的规格类型信息<ul><li> clb.c1.small：简约型规格 </li><li>clb.c2.medium：标准型规格 </li><li> clb.c3.small：高阶型1规格 </li><li> clb.c3.medium：高阶型2规格 </li><li> clb.c4.small：超强型1规格 </li><li> clb.c4.medium：超强型2规格 </li><li> clb.c4.large：超强型3规格 </li><li> clb.c4.xlarge：超强型4规格 </li><li>""：非性能容量型实例</li></ul>
+
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  SlaType?: string
+  /**
+   * 0：表示非独占型实例，1：表示独占型态实例。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Exclusive?: number
 }
 
 /**
@@ -5264,6 +5293,25 @@ export interface InternetAccessible {
 }
 
 /**
+ * OAuth配置信息。
+ */
+export interface OAuth {
+  /**
+   * 开启或关闭鉴权。
+True: 开启;
+False: 关闭
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OAuthEnable?: boolean
+  /**
+   * IAP全部故障后，拒绝请求还是放行。BYPASS:通过,
+REJECT: 拒绝
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  OAuthFailureStatus?: string
+}
+
+/**
  * DescribeClassicalLBTargets返回参数结构体
  */
 export interface DescribeClassicalLBTargetsResponse {
@@ -5871,7 +5919,7 @@ OPEN：公网属性， INTERNAL：内网属性。
    */
   SnatIps?: Array<SnatIp>
   /**
-   * 性能容量型规格。<ul><li> clb.c2.medium：标准型规格 </li><li> clb.c3.small：高阶型1规格 </li><li> clb.c3.medium：高阶型2规格 </li><li> clb.c4.small：超强型1规格 </li><li> clb.c4.medium：超强型2规格 </li><li> clb.c4.large：超强型3规格 </li><li> clb.c4.xlarge：超强型4规格 </li><li>null：共享型实例</li></ul>
+   * 性能容量型规格。<ul><li> clb.c1.small：简约型规格 </li><li> clb.c2.medium：标准型规格 </li><li> clb.c3.small：高阶型1规格 </li><li> clb.c3.medium：高阶型2规格 </li><li> clb.c4.small：超强型1规格 </li><li> clb.c4.medium：超强型2规格 </li><li> clb.c4.large：超强型3规格 </li><li> clb.c4.xlarge：超强型4规格 </li><li>""：非性能容量型实例</li></ul>
 注意：此字段可能返回 null，表示取不到有效值。
    */
   SlaType?: string
@@ -5940,4 +5988,9 @@ OPEN：公网属性， INTERNAL：内网属性。
 注意：此字段可能返回 null，表示取不到有效值。
    */
   Egress?: string
+  /**
+   * 实例类型是否为独占型。1：独占型实例。0：非独占型实例。
+注意：此字段可能返回 null，表示取不到有效值。
+   */
+  Exclusive?: number
 }
