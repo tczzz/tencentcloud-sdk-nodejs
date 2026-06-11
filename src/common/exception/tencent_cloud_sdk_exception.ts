@@ -22,6 +22,11 @@ export default class TencentCloudSDKHttpException extends Error {
    */
   code?: string
 
+  /**
+   * Whether it is an exception that can trigger domain failover
+   */
+  failover = false
+
   constructor(error: string, requestId = "", traceId = "") {
     super(error)
     this.requestId = requestId || ""

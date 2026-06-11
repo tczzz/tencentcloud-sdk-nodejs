@@ -13,12 +13,13 @@ import TencentCloudSDKHttpException from "./exception/tencent_cloud_sdk_exceptio
 import { Response } from "node-fetch"
 import { SSEResponseModel } from "./sse_response_model"
 import { v4 as uuidv4 } from "uuid"
+import { EndpointFailover } from "./endpoint_failover"
 
 /**
  * Callback function type for API responses
- * @template TReuslt Type of the response data
+ * @template TResult Type of the response data
  */
-export type ResponseCallback<TReuslt = any> = (error: string, rep: TReuslt) => void
+export type ResponseCallback<TResult = any> = (error: string, rep: TResult) => void
 
 /**
  * Options for HTTP requests
@@ -50,7 +51,7 @@ interface RequestData {
   SecretId?: string
   region?: string
   Token?: string
-  SinatureMethod?: string
+  SignatureMethod?: string
   [key: string]: any
 }
 type ResponseData = any
@@ -90,6 +91,10 @@ export class AbstractClient {
    * Optional configuration instance
    */
   profile: ClientProfile
+  /**
+   * Per-client domain failover handler, or null when disabled. Set at construction.
+   */
+  private endpointFailover: EndpointFailover | null
 
   /**
    * Constructs a new AbstractClient instance
@@ -164,6 +169,7 @@ export class AbstractClient {
         profile && profile.httpProfile
       ),
       language: profile.language,
+      backupEndpoint: profile && profile.backupEndpoint,
     }
 
     if (this.profile.language && !SUPPORT_LANGUAGE_LIST.includes(this.profile.language)) {
@@ -171,6 +177,12 @@ export class AbstractClient {
         `Language invalid, choices: ${SUPPORT_LANGUAGE_LIST.join("|")}`
       )
     }
+
+    // Decide domain failover once at construction time.
+    this.endpointFailover =
+      this.profile.httpProfile.domainFailover !== false
+        ? new EndpointFailover({ backupEndpoint: this.profile.backupEndpoint })
+        : null
   }
 
   /**
@@ -278,8 +290,6 @@ export class AbstractClient {
     if (this.profile.signMethod === "TC3-HMAC-SHA256") {
       return this.doRequestWithSign3(action, req, options)
     }
-    let params = this.mergeData(req)
-    params = await this.formatRequestData(action, params)
 
     const headers = Object.assign({}, this.profile.httpProfile.headers, options.headers)
     let traceId = ""
@@ -294,11 +304,13 @@ export class AbstractClient {
       headers["X-TC-TraceId"] = traceId
     }
 
-    let res
-    try {
-      res = await HttpConnection.doRequest({
+    // Re-sign per endpoint: the signature is bound to the host.
+    const doFetch = async (endpoint: string) => {
+      let params = this.mergeData(req)
+      params = await this.formatRequestData(action, params, endpoint)
+      return HttpConnection.doRequest({
         method: this.profile.httpProfile.reqMethod,
-        url: this.profile.httpProfile.protocol + this.endpoint + this.path,
+        url: this.profile.httpProfile.protocol + endpoint + this.path,
         data: params,
         timeout: this.profile.httpProfile.reqTimeout * 1000,
         headers,
@@ -306,7 +318,20 @@ export class AbstractClient {
         proxy: this.profile.httpProfile.proxy,
         signal: options.signal,
       })
+    }
+
+    let res
+    try {
+      if (this.endpointFailover) {
+        return await this.endpointFailover.execute(this.endpoint, doFetch, (r) =>
+          this.parseResponse(r)
+        )
+      }
+      res = await doFetch(this.endpoint)
     } catch (error) {
+      if (error instanceof TencentCloudSDKHttpException) {
+        throw error
+      }
       throw new TencentCloudSDKHttpException((error as any).message, "", traceId)
     }
     return this.parseResponse(res)
@@ -333,17 +358,16 @@ export class AbstractClient {
       headers["X-TC-TraceId"] = traceId
     }
 
-    let res
-    try {
+    const doFetch = async (endpoint: string) => {
       const credential = await this.getCredential()
-      res = await HttpConnection.doRequestWithSign3({
+      return HttpConnection.doRequestWithSign3({
         method: this.profile.httpProfile.reqMethod,
-        url: this.profile.httpProfile.protocol + this.endpoint + this.path,
+        url: this.profile.httpProfile.protocol + endpoint + this.path,
         secretId: credential.secretId,
         secretKey: credential.secretKey,
         region: this.region,
         data: params || "",
-        service: this.endpoint.split(".")[0],
+        service: endpoint.split(".")[0],
         action: action,
         version: this.apiVersion,
         multipart: options && options.multipart,
@@ -357,7 +381,20 @@ export class AbstractClient {
         signal: options.signal,
         skipSign: options.skipSign,
       })
+    }
+
+    let res
+    try {
+      if (this.endpointFailover) {
+        return await this.endpointFailover.execute(this.endpoint, doFetch, (r) =>
+          this.parseResponse(r)
+        )
+      }
+      res = await doFetch(this.endpoint)
     } catch (e) {
+      if (e instanceof TencentCloudSDKHttpException) {
+        throw e
+      }
       throw new TencentCloudSDKHttpException((e as any).message, "", traceId)
     }
     return this.parseResponse(res)
@@ -374,12 +411,26 @@ export class AbstractClient {
     if (res.status !== 200) {
       const tcError = new TencentCloudSDKHttpException(res.statusText, "", traceId)
       tcError.httpCode = res.status
+      tcError.failover = true
       throw tcError
     } else {
       if (res.headers.get("content-type") === "text/event-stream") {
         return new SSEResponseModel(res.body)
       } else {
-        const data = await res.json()
+        let data
+        try {
+          data = await res.json()
+        } catch (e) {
+          // Body is not valid JSON
+          const tcError = new TencentCloudSDKHttpException((e as any).message, "", traceId)
+          tcError.failover = true
+          throw tcError
+        }
+        if (!data || !data.Response || !data.Response.RequestId) {
+          const tcError = new TencentCloudSDKHttpException("unexpected response", "", traceId)
+          tcError.failover = true
+          throw tcError
+        }
         if (data.Response.Error) {
           const tcError = new TencentCloudSDKHttpException(
             data.Response.Error.Message,
@@ -420,9 +471,14 @@ export class AbstractClient {
    * Format request data with required fields and signature
    * @param {string} action API action name
    * @param {RequestData} params Request parameters
+   * @param {string} [endpoint] Host to bind the signature to (defaults to this.endpoint)
    * @returns {Promise<RequestData>} Promise that resolves with formatted request data
    */
-  private async formatRequestData(action: string, params: RequestData): Promise<RequestData> {
+  private async formatRequestData(
+    action: string,
+    params: RequestData,
+    endpoint: string = this.endpoint
+  ): Promise<RequestData> {
     params.Action = action
     params.RequestClient = this.sdkVersion
     params.Nonce = Math.round(Math.random() * 65535)
@@ -450,7 +506,7 @@ export class AbstractClient {
     if (this.profile.signMethod) {
       params.SignatureMethod = this.profile.signMethod
     }
-    const signStr = this.formatSignString(params)
+    const signStr = this.formatSignString(params, endpoint)
 
     params.Signature = Sign.sign(credential.secretKey, signStr, this.profile.signMethod)
     return params
@@ -459,9 +515,10 @@ export class AbstractClient {
   /**
    * Format string for signature calculation
    * @param {RequestData} params Request parameters
+   * @param {string} [endpoint] Host to bind the signature to (defaults to this.endpoint)
    * @returns {string} String to be signed
    */
-  private formatSignString(params: RequestData): string {
+  private formatSignString(params: RequestData, endpoint: string = this.endpoint): string {
     let strParam = ""
     const keys = Object.keys(params)
     keys.sort()
@@ -474,7 +531,7 @@ export class AbstractClient {
     }
     const strSign =
       this.profile.httpProfile.reqMethod.toLocaleUpperCase() +
-      this.endpoint +
+      endpoint +
       this.path +
       "?" +
       strParam.slice(1)

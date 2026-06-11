@@ -41,6 +41,15 @@ export interface ClientProfile {
    * Optional
    */
   language?: "zh-CN" | "en-US"
+  /**
+   * Backup endpoint for domain failover. On network/TLS failures or an unhealthy
+   * response, the SDK retries against this host. Accepts "tencentcloudapi.cn"
+   * (service prefix auto-prepended) or "cvm.tencentcloudapi.cn" (used as-is).
+   * Applies to any host; requires httpProfile.domainFailover (default on).
+   * @type {string}
+   * Optional
+   */
+  backupEndpoint?: string
 }
 
 export interface HttpProfile {
@@ -84,6 +93,15 @@ export interface HttpProfile {
    * HTTP request proxy, e.g. "http://127.0.0.1:8899"
    */
   proxy?: string
+  /**
+   * Whether to enable domain failover (default true). On network/TLS failures or
+   * an unhealthy response, the SDK retries against backup domains via suffix
+   * rotation (.com / .cn / .com.cn, preserving the host prefix; region-pinned
+   * hosts excluded) or, when backupEndpoint is set, an origin -> backup fallback.
+   * Read once at construction.
+   * @default true
+   */
+  domainFailover?: boolean
 }
 
 /**
