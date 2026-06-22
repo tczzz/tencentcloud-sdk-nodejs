@@ -64,6 +64,8 @@ describe("EndpointFailover", () => {
       const m = suffixMatchOf("cvm.ap-guangzhou.tencentcloudapi.com")
       expect(m).not.toBeNull()
       expect(m!.hasRegion).toBe(true)
+      expect(m!.servicePrefix).toBe("cvm.ap-guangzhou")
+      expect(m!.serviceWithoutRegion).toBe("cvm")
     })
 
     it("preserves ai. prefix verbatim, no region", () => {
@@ -72,13 +74,6 @@ describe("EndpointFailover", () => {
       expect(m!.suffixIdx).toBe(1)
       expect(m!.hasRegion).toBe(false)
       expect(m!.servicePrefix).toBe("hunyuan.ai")
-    })
-
-    it("flags region on an ai. host", () => {
-      const m = suffixMatchOf("hunyuan.ai.ap-guangzhou.tencentcloudapi.com")
-      expect(m).not.toBeNull()
-      expect(m!.hasRegion).toBe(true)
-      expect(m!.servicePrefix).toBe("hunyuan.ai.ap-guangzhou")
     })
 
     it("preserves internal. prefix and resolves .com.cn", () => {
@@ -273,7 +268,7 @@ describe("EndpointFailover", () => {
       expect(calls).toEqual(["cvm.internal.tencentcloudapi.cn"])
     })
 
-    it("does NOT fail over a region-pinned host (propagates, single attempt)", async () => {
+    it("attempts only one host on first failure for region-pinned hosts (no in-call failover)", async () => {
       const failover = new EndpointFailover()
       const calls: string[] = []
       await expect(
@@ -286,7 +281,27 @@ describe("EndpointFailover", () => {
           echo
         )
       ).rejects.toThrow("dns miss")
-      expect(calls.length).toBe(1)
+      expect(calls).toEqual(["cvm.ap-guangzhou.tencentcloudapi.com"])
+    })
+
+    it("rotates a region-pinned host to the region-stripped candidate after its breaker opens", async () => {
+      const failover = new EndpointFailover()
+      await driveBreakerOpen(
+        failover,
+        "cvm.ap-guangzhou.tencentcloudapi.com",
+        "cvm.ap-guangzhou.tencentcloudapi.com"
+      )
+
+      const calls: string[] = []
+      await failover.execute(
+        "cvm.ap-guangzhou.tencentcloudapi.com",
+        async (endpoint) => {
+          calls.push(endpoint)
+          return "ok"
+        },
+        echo
+      )
+      expect(calls).toEqual(["cvm.tencentcloudapi.com"])
     })
 
     it("throws 'circuit breaker open' once every suffix breaker is open", async () => {

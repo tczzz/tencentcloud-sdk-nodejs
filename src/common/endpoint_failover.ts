@@ -45,6 +45,8 @@ export interface SuffixMatch {
   hasRegion: boolean
   /** The host prefix preserved verbatim (e.g. "cvm", "hunyuan.ai"). */
   servicePrefix: string
+  /** Service prefix with any regional labels stripped (e.g. "cvm" from "cvm.ap-guangzhou"). */
+  serviceWithoutRegion: string
 }
 
 /** One failover candidate host. */
@@ -75,8 +77,9 @@ class FailoverState {
 /**
  * Domain failover for Tencent Cloud API calls. Two modes share one pipeline:
  * backupEndpoint fallback, or suffix rotation (.com / .cn / .com.cn) preserving
- * the host prefix (region-pinned hosts opt out). Per-host CircuitBreakers
- * suppress repeated attempts; state is per AbstractClient instance.
+ * the host prefix. Region-pinned hosts try the original host first, then
+ * rotate over candidates with the region label stripped. Per-host
+ * CircuitBreakers suppress repeated attempts; state is per AbstractClient instance.
  */
 export class EndpointFailover {
   private backupEndpoint: string | null
@@ -146,8 +149,21 @@ export class EndpointFailover {
       return [{ host: endpoint }, { host: backupHost }]
     }
     const m = suffixMatchOf(endpoint)
-    if (!m || m.hasRegion) {
+    if (!m) {
       return null
+    }
+    // For region-pinned hosts, rotate over candidates with the region label stripped,
+    // while still trying the original host (region preserved) first.
+    if (m.hasRegion) {
+      const order = suffixTryOrder(m.suffixIdx)
+      const candidates: Candidate[] = [{ host: endpoint }]
+      for (const s of order) {
+        const host = m.serviceWithoutRegion + "." + KNOWN_API_SUFFIXES[s]
+        if (host !== endpoint) {
+          candidates.push({ host })
+        }
+      }
+      return candidates
     }
     return suffixTryOrder(m.suffixIdx).map((s) => ({
       host: m.servicePrefix + "." + KNOWN_API_SUFFIXES[s],
@@ -225,8 +241,12 @@ function suffixMatchOf(host: string): SuffixMatch | null {
     return null
   }
   const prefix = host.substring(0, host.length - KNOWN_API_SUFFIXES[suffixIdx].length - 1)
-  const hasRegion = prefix.split(".").some(looksLikeRegionLabel)
-  return { suffixIdx, hasRegion, servicePrefix: prefix }
+  const labels = prefix.split(".")
+  const hasRegion = labels.some(looksLikeRegionLabel)
+  const serviceWithoutRegion = hasRegion
+    ? labels.filter((l) => !looksLikeRegionLabel(l)).join(".")
+    : prefix
+  return { suffixIdx, hasRegion, servicePrefix: prefix, serviceWithoutRegion }
 }
 
 /** Index of the longest KNOWN_API_SUFFIXES entry suffixing host, or -1. */
