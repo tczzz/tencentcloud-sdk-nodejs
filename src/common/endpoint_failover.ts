@@ -7,8 +7,8 @@ import { CircuitBreaker, CircuitBreakerToken } from "./circuit_breaker"
  */
 const KNOWN_API_SUFFIXES: readonly string[] = [
   "tencentcloudapi.com",
-  "tencentcloudapi.cn",
   "tencentcloudapi.com.cn",
+  "tencentcloudapi.cn",
 ]
 
 /** Prefixes that identify a regional label (e.g. "ap-shanghai"). */
