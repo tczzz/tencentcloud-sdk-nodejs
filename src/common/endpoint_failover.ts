@@ -136,7 +136,8 @@ export class EndpointFailover {
       }
     }
 
-    throw new Error(`skipped ${candidates[0].host}: circuit breaker open`)
+    // All candidate breakers are open; fall back to the original endpoint directly.
+    return parseFn(await requestFn(endpoint))
   }
 
   /**

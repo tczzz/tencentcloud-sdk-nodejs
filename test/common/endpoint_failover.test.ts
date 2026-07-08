@@ -304,7 +304,7 @@ describe("EndpointFailover", () => {
       expect(calls).toEqual(["cvm.tencentcloudapi.com"])
     })
 
-    it("throws 'circuit breaker open' once every suffix breaker is open", async () => {
+    it("falls back to the original endpoint once every suffix breaker is open", async () => {
       const failover = new EndpointFailover()
       const alwaysFail = async () => {
         throw makeNetErr("ENOTFOUND")
@@ -315,17 +315,16 @@ describe("EndpointFailover", () => {
       }
 
       const calls: string[] = []
-      await expect(
-        failover.execute(
-          "cvm.tencentcloudapi.com",
-          async (endpoint) => {
-            calls.push(endpoint)
-            return "ok"
-          },
-          echo
-        )
-      ).rejects.toThrow("skipped cvm.tencentcloudapi.com: circuit breaker open")
-      expect(calls.length).toBe(0)
+      const result = await failover.execute(
+        "cvm.tencentcloudapi.com",
+        async (endpoint) => {
+          calls.push(endpoint)
+          return "ok"
+        },
+        echo
+      )
+      expect(result).toBe("ok")
+      expect(calls).toEqual(["cvm.tencentcloudapi.com"])
     })
 
     it("does not fail over on non-network errors", async () => {
@@ -517,7 +516,7 @@ describe("EndpointFailover", () => {
       expect(calls).toEqual(["svc.backup.example.com"])
     })
 
-    it("throws 'circuit breaker open' once both origin and backup breakers are open", async () => {
+    it("falls back to the original endpoint once both origin and backup breakers are open", async () => {
       const failover = new EndpointFailover({ backupEndpoint: "ap-shanghai.tencentcloudapi.com" })
       const alwaysFail = async () => {
         throw makeNetErr("ENOTFOUND")
@@ -527,9 +526,17 @@ describe("EndpointFailover", () => {
         await failover.execute("cvm.tencentcloudapi.com", alwaysFail, echo).catch((): void => undefined)
       }
 
-      await expect(
-        failover.execute("cvm.tencentcloudapi.com", alwaysFail, echo)
-      ).rejects.toThrow("skipped cvm.tencentcloudapi.com: circuit breaker open")
+      const calls: string[] = []
+      const result = await failover.execute(
+        "cvm.tencentcloudapi.com",
+        async (endpoint) => {
+          calls.push(endpoint)
+          return "ok"
+        },
+        echo
+      )
+      expect(result).toBe("ok")
+      expect(calls).toEqual(["cvm.tencentcloudapi.com"])
     })
 
     it("propagates a non-failover error directly", async () => {
