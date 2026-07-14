@@ -28,18 +28,9 @@ describe("EndpointFailover", () => {
       expect(EndpointFailover.isKnownTencentCloudHost("cvm.tencentcloudapi.com.cn")).toBe(true)
     })
 
-    it("recognizes region-pinned hosts (still known, even if not eligible for rotation)", () => {
-      expect(
-        EndpointFailover.isKnownTencentCloudHost("cvm.ap-shanghai.tencentcloudapi.com")
-      ).toBe(true)
-    })
-
     it("recognizes ai. and internal. prefixes", () => {
       expect(EndpointFailover.isKnownTencentCloudHost("hunyuan.ai.tencentcloudapi.com")).toBe(true)
       expect(EndpointFailover.isKnownTencentCloudHost("cvm.internal.tencentcloudapi.com")).toBe(true)
-      expect(
-        EndpointFailover.isKnownTencentCloudHost("cvm.internal.ap-guangzhou.tencentcloudapi.com")
-      ).toBe(true)
     })
 
     it("rejects non-tencentcloud hosts", () => {
@@ -52,35 +43,31 @@ describe("EndpointFailover", () => {
   })
 
   describe("suffixMatchOf", () => {
-    it("classifies plain host, no region", () => {
+    it("classifies plain host", () => {
       const m = suffixMatchOf("cvm.tencentcloudapi.com")
       expect(m).not.toBeNull()
       expect(m!.suffixIdx).toBe(0)
-      expect(m!.hasRegion).toBe(false)
       expect(m!.servicePrefix).toBe("cvm")
     })
 
-    it("classifies region-pinned host", () => {
-      const m = suffixMatchOf("cvm.ap-guangzhou.tencentcloudapi.com")
-      expect(m).not.toBeNull()
-      expect(m!.hasRegion).toBe(true)
-      expect(m!.servicePrefix).toBe("cvm.ap-guangzhou")
-      expect(m!.serviceWithoutRegion).toBe("cvm")
-    })
-
-    it("preserves ai. prefix verbatim, no region", () => {
+    it("preserves ai. prefix verbatim", () => {
       const m = suffixMatchOf("hunyuan.ai.tencentcloudapi.cn")
       expect(m).not.toBeNull()
-      expect(m!.suffixIdx).toBe(1)
-      expect(m!.hasRegion).toBe(false)
+      expect(m!.suffixIdx).toBe(2)
       expect(m!.servicePrefix).toBe("hunyuan.ai")
     })
 
     it("preserves internal. prefix and resolves .com.cn", () => {
       const m = suffixMatchOf("cvm.internal.tencentcloudapi.com.cn")
       expect(m).not.toBeNull()
-      expect(m!.suffixIdx).toBe(2)
+      expect(m!.suffixIdx).toBe(1)
       expect(m!.servicePrefix).toBe("cvm.internal")
+    })
+
+    it("keeps only the leading service label for other dotted prefixes", () => {
+      const m = suffixMatchOf("cvm.ap-guangzhou.tencentcloudapi.com")
+      expect(m).not.toBeNull()
+      expect(m!.servicePrefix).toBe("cvm")
     })
 
     it("returns null for unknown hosts", () => {
@@ -211,7 +198,7 @@ describe("EndpointFailover", () => {
       expect(calls).toEqual(["cvm.tencentcloudapi.com"])
     })
 
-    it("routes from .com to .cn only after the origin breaker opens", async () => {
+    it("routes from .com to .com.cn only after the origin breaker opens", async () => {
       const failover = new EndpointFailover()
       await driveBreakerOpen(failover, "cvm.tencentcloudapi.com", "cvm.tencentcloudapi.com")
 
@@ -225,7 +212,7 @@ describe("EndpointFailover", () => {
         echo
       )
       expect(result).toBe("ok")
-      expect(calls).toEqual(["cvm.tencentcloudapi.cn"])
+      expect(calls).toEqual(["cvm.tencentcloudapi.com.cn"])
     })
 
     it("stays within the ai. prefix when routing onward", async () => {
@@ -245,7 +232,7 @@ describe("EndpointFailover", () => {
         },
         echo
       )
-      expect(calls).toEqual(["hunyuan.ai.tencentcloudapi.cn"])
+      expect(calls).toEqual(["hunyuan.ai.tencentcloudapi.com.cn"])
     })
 
     it("stays within the internal. prefix when routing onward", async () => {
@@ -265,26 +252,10 @@ describe("EndpointFailover", () => {
         },
         echo
       )
-      expect(calls).toEqual(["cvm.internal.tencentcloudapi.cn"])
+      expect(calls).toEqual(["cvm.internal.tencentcloudapi.com.cn"])
     })
 
-    it("attempts only one host on first failure for region-pinned hosts (no in-call failover)", async () => {
-      const failover = new EndpointFailover()
-      const calls: string[] = []
-      await expect(
-        failover.execute(
-          "cvm.ap-guangzhou.tencentcloudapi.com",
-          async (endpoint) => {
-            calls.push(endpoint)
-            throw makeNetErr("ENOTFOUND", "dns miss")
-          },
-          echo
-        )
-      ).rejects.toThrow("dns miss")
-      expect(calls).toEqual(["cvm.ap-guangzhou.tencentcloudapi.com"])
-    })
-
-    it("rotates a region-pinned host to the region-stripped candidate after its breaker opens", async () => {
+    it("rotates other dotted prefixes to just the service label", async () => {
       const failover = new EndpointFailover()
       await driveBreakerOpen(
         failover,
@@ -301,7 +272,9 @@ describe("EndpointFailover", () => {
         },
         echo
       )
-      expect(calls).toEqual(["cvm.tencentcloudapi.com"])
+      expect(calls[0]).not.toBe("cvm.ap-guangzhou.tencentcloudapi.com")
+      expect(calls[0].startsWith("cvm.")).toBe(true)
+      expect(calls[0].includes("ap-guangzhou")).toBe(false)
     })
 
     it("falls back to the original endpoint once every suffix breaker is open", async () => {
@@ -351,7 +324,7 @@ describe("EndpointFailover", () => {
         const failover = new EndpointFailover()
         await driveBreakerOpen(failover, "cvm.tencentcloudapi.com", "cvm.tencentcloudapi.com")
 
-        // Origin breaker is open: calls route to .cn.
+        // Origin breaker is open: calls route to .com.cn.
         let calls: string[] = []
         await failover.execute(
           "cvm.tencentcloudapi.com",
@@ -361,7 +334,7 @@ describe("EndpointFailover", () => {
           },
           echo
         )
-        expect(calls).toEqual(["cvm.tencentcloudapi.cn"])
+        expect(calls).toEqual(["cvm.tencentcloudapi.com.cn"])
 
         // After the breaker timeout it half-opens; the origin is tried first again.
         vi.advanceTimersByTime(60 * 1000)
@@ -409,7 +382,7 @@ describe("EndpointFailover", () => {
         async () => "ok"
       )
       expect(result).toBe("ok")
-      expect(calls).toEqual(["cvm.tencentcloudapi.cn"])
+      expect(calls).toEqual(["cvm.tencentcloudapi.com.cn"])
     })
 
     it("propagates a non-failoverable parse error (business error) without retry", async () => {
@@ -480,7 +453,7 @@ describe("EndpointFailover", () => {
       expect(calls).toEqual(["cvm.ap-shanghai.tencentcloudapi.com"])
     })
 
-    it("routes a region-pinned host to the backup after its breaker opens", async () => {
+    it("routes to the backup after its breaker opens for a host with a dotted prefix", async () => {
       const failover = new EndpointFailover({ backupEndpoint: "ap-shanghai.tencentcloudapi.com" })
       await driveBreakerOpen(
         failover,
@@ -560,8 +533,8 @@ describe("EndpointFailover", () => {
     it("exposes the three known endpoint suffixes", () => {
       expect(KNOWN_API_SUFFIXES).toEqual([
         "tencentcloudapi.com",
-        "tencentcloudapi.cn",
         "tencentcloudapi.com.cn",
+        "tencentcloudapi.cn",
       ])
     })
   })
